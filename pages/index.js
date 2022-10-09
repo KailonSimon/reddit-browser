@@ -70,7 +70,7 @@ export default function Home() {
 
   useEffect(() => {
     refetch();
-  }, [subreddits, sorting]);
+  }, [subreddits, sorting, refetch]);
 
   return status === "loading" ? (
     <div
