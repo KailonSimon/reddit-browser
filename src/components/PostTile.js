@@ -51,6 +51,7 @@ function PostTile({ post }) {
       <Image
         withPlaceholder
         src={post.url}
+        alt={post.title}
         height={75}
         width={75}
         styles={{ placeholder: { background: "#1A1A1B" } }}
@@ -79,6 +80,7 @@ function PostTile({ post }) {
             <a
               href={`https://www.reddit.com/r/${post.subreddit}/`}
               target="_blank"
+              rel="noreferrer"
             >
               r/{post.subreddit}
             </a>
@@ -91,6 +93,7 @@ function PostTile({ post }) {
             <Anchor
               href={`https://www.reddit.com/user/${post.author}`}
               target="_blank"
+              rel="noreferrer"
               color="dimmed"
               sx={(theme) => ({
                 ":hover": {
