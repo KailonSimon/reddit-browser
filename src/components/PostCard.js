@@ -36,7 +36,7 @@ function PostCard({ post }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!post.is_self) {
+    if (!post.is_self && !post.post_hint == "image") {
       setIsLoading(true);
       encodeURIComponent();
       fetch(`/api/get-open-graph/${encodeURIComponent(post.url)}`)
