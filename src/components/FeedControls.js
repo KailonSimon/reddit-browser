@@ -19,6 +19,9 @@ function FeedControls({
         border: "1px solid #474748",
         borderRadius: 4,
         padding: "1rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.5rem",
       }}
     >
       <MultiSelect

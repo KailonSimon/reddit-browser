@@ -12,6 +12,7 @@ import { ArrowLeft } from "tabler-icons-react";
 import Layout from "../../src/components/Layout";
 import moment from "moment";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
+import CommentSection from "../../src/components/CommentSection";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -45,7 +46,7 @@ function Post({ post }) {
             display: "flex",
             flexDirection: "column",
             padding: "1rem",
-            color: "#C1C2C5",
+            color: "#D7DADC",
             border: "1px solid #474748",
             background: "#1A1A1B",
             borderRadius: 4,
@@ -95,7 +96,11 @@ function Post({ post }) {
               {moment.unix(post.created).fromNow()}
             </Text>
           </div>
-          <Title order={1} style={{ fontSize: 20 }}>
+          <Title
+            order={1}
+            style={{ fontSize: 20, fontFamily: "Chillax" }}
+            variant="text"
+          >
             {post.title}
           </Title>
           {post.link_flair_text && (
@@ -123,6 +128,7 @@ function Post({ post }) {
             ))}
           {post.selftext && <Text mt={4}>{post.selftext}</Text>}
         </div>
+        <CommentSection postId={post.id} />
       </div>
     </Layout>
   );

@@ -3,6 +3,9 @@ import PostTile from "./PostTile";
 import { Button, createStyles, Modal } from "@mantine/core";
 import PostCard from "./PostCard";
 import { useRouter } from "next/router";
+import CommentSection from "./CommentSection";
+import Link from "next/link";
+import { ArrowLeft } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   posts: {
@@ -25,18 +28,38 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
           centered
           size="xl"
           withCloseButton={false}
-          overlayOpacity={0.55}
+          overlayOpacity={0.65}
           overlayBlur={3}
+          padding="md"
           onClose={() => router.push("/", undefined, { scroll: false })}
-          styles={{ modal: { border: "1px solid #D7DADC", borderRadius: 4 } }}
+          styles={{
+            modal: {
+              background: "transparent",
+            },
+          }}
         >
-          <PostCard
-            post={
-              posts[0].data.children.find(
-                (post) => post.data.id == router.query.post
-              ).data
-            }
-          />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.5rem",
+              alignItems: "flex-start",
+            }}
+          >
+            <Link href={"/"} passHref scroll={false}>
+              <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
+                Return to feed
+              </Button>
+            </Link>
+            <PostCard
+              post={
+                posts[0].data.children.find(
+                  (post) => post.data.id == router.query.post
+                ).data
+              }
+            />
+            <CommentSection postId={router.query.post} />
+          </div>
         </Modal>
       )}
       <div className={classes.posts}>

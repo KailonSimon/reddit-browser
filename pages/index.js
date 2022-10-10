@@ -8,9 +8,7 @@ import Layout from "../src/components/Layout";
 
 export default function Home() {
   const [subreddits, setSubreddits] = useState([
-    "LearnProgramming",
     "ProgrammerHumor",
-    "WebDev",
     "WorldNews",
     "Futurology",
     "Science",

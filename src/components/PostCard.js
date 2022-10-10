@@ -1,13 +1,18 @@
 import { createStyles, Title, Text, Anchor, Image, Badge } from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
 import React, { useEffect } from "react";
-import { ClockHour3 } from "tabler-icons-react";
 import moment from "moment";
+import CommentSection from "./CommentSection";
 
 const useStyles = createStyles((theme) => ({
   container: {
     display: "flex",
     flexDirection: "column",
+    color: "#D7DADC",
+    border: "1px solid #474748",
+    background: "#1A1A1B",
+    borderRadius: 4,
+    padding: "1rem",
   },
   details: {
     display: "flex",
@@ -19,27 +24,58 @@ const useStyles = createStyles((theme) => ({
 
 function PostCard({ post }) {
   const { classes } = useStyles();
-  useEffect(() => {
-    console.log(post);
-  }, [post]);
 
   return (
     <div className={classes.container}>
       <div className={classes.details}>
-        <Text size="sm" weight="bold" sx={{ whiteSpace: "nowrap" }}>
+        <Text
+          size="sm"
+          weight="bold"
+          component="a"
+          href={`https://www.reddit.com/r/${post.subreddit}/`}
+          target="_blank"
+          rel="noreferrer"
+          sx={(theme) => ({
+            whiteSpace: "nowrap",
+            ":hover": {
+              cursor: "pointer",
+              textDecoration: "underline",
+              color: theme.colors.brand,
+            },
+          })}
+        >
           r/{post.subreddit}
         </Text>
         <span style={{ margin: "0 4px", fontSize: 8 }}>•</span>
         <Text size="sm" sx={{ whiteSpace: "nowrap" }}>
-          Posted by u/{post.author}
+          Posted by{" "}
+          <Anchor
+            href={`https://www.reddit.com/user/${post.author}`}
+            target="_blank"
+            rel="noreferrer"
+            color="inherit"
+            variant="text"
+            sx={(theme) => ({
+              ":hover": {
+                cursor: "pointer",
+                textDecoration: "underline",
+                color: theme.colors.accent,
+              },
+            })}
+          >
+            u/{post.author}
+          </Anchor>
         </Text>
 
         <Text size="sm" ml={4}>
           {moment.unix(post.created).fromNow()}
         </Text>
       </div>
-
-      <Title order={1} style={{ fontSize: 20 }}>
+      <Title
+        order={1}
+        style={{ fontSize: 20, fontFamily: "Chillax" }}
+        variant="text"
+      >
         {post.title}
       </Title>
       {post.link_flair_text && (
