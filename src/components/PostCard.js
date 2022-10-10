@@ -151,6 +151,10 @@ function PostCard({ post }) {
                 target="_blank"
                 rel="noreferrer"
                 component="a"
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                }}
               >
                 {parseUrl(post.url).hostname}
               </Anchor>
