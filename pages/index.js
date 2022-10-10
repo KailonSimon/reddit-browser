@@ -5,6 +5,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import FeedControls from "../src/components/FeedControls";
 import Feed from "../src/components/Feed";
 import Layout from "../src/components/Layout";
+import Head from "next/head";
 
 export default function Home() {
   const [subreddits, setSubreddits] = useState([
@@ -62,21 +63,28 @@ export default function Home() {
   ) : status === "error" ? (
     <Text>Error: {error.message}</Text>
   ) : (
-    <Layout>
-      <FeedControls
-        subreddits={subreddits}
-        setSubreddits={setSubreddits}
-        sorting={sorting}
-        setSorting={setSorting}
-        isRefetching={isRefetching}
-      />
+    <>
+      <Head>
+        <title>Reddit Browser | Home</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta property="og:title" content="Reddit Browser | Home" />
+      </Head>
+      <Layout>
+        <FeedControls
+          subreddits={subreddits}
+          setSubreddits={setSubreddits}
+          sorting={sorting}
+          setSorting={setSorting}
+          isRefetching={isRefetching}
+        />
 
-      <Feed
-        posts={data.pages}
-        fetchNextPage={fetchNextPage}
-        hasNextPage={hasNextPage}
-        isFetchingNextPage={isFetchingNextPage}
-      />
-    </Layout>
+        <Feed
+          posts={data.pages}
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+        />
+      </Layout>
+    </>
   );
 }

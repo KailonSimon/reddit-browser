@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import CommentSection from "./CommentSection";
 import Link from "next/link";
 import { ArrowLeft } from "tabler-icons-react";
+import Head from "next/head";
 
 const useStyles = createStyles((theme) => ({
   posts: {
@@ -23,44 +24,55 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
   return (
     <>
       {router.query.post && (
-        <Modal
-          opened
-          centered
-          size="xl"
-          withCloseButton={false}
-          overlayOpacity={0.65}
-          overlayBlur={3}
-          padding="md"
-          onClose={() => router.push("/", undefined, { scroll: false })}
-          styles={{
-            modal: {
-              background: "transparent",
-            },
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.5rem",
-              alignItems: "flex-start",
-            }}
-          >
-            <Link href={"/"} passHref scroll={false}>
-              <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
-                Return to feed
-              </Button>
-            </Link>
-            <PostCard
-              post={
+        <>
+          <Head>
+            <title>
+              {
                 posts[0].data.children.find(
                   (post) => post.data.id == router.query.post
-                ).data
+                ).data.title
               }
-            />
-            <CommentSection postId={router.query.post} />
-          </div>
-        </Modal>
+            </title>
+          </Head>
+          <Modal
+            opened
+            centered
+            size="xl"
+            withCloseButton={false}
+            overlayOpacity={0.65}
+            overlayBlur={3}
+            padding="md"
+            onClose={() => router.push("/", undefined, { scroll: false })}
+            styles={{
+              modal: {
+                background: "transparent",
+              },
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+                alignItems: "flex-start",
+              }}
+            >
+              <Link href={"/"} passHref scroll={false}>
+                <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
+                  Return to feed
+                </Button>
+              </Link>
+              <PostCard
+                post={
+                  posts[0].data.children.find(
+                    (post) => post.data.id == router.query.post
+                  ).data
+                }
+              />
+              <CommentSection postId={router.query.post} />
+            </div>
+          </Modal>
+        </>
       )}
       <div className={classes.posts}>
         {posts.map((group, i) => (
