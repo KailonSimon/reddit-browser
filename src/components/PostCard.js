@@ -1,8 +1,15 @@
-import { createStyles, Title, Text, Anchor, Image, Badge } from "@mantine/core";
+import {
+  createStyles,
+  Title,
+  Text,
+  Anchor,
+  Image,
+  Badge,
+  Loader,
+} from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
-import CommentSection from "./CommentSection";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -25,6 +32,21 @@ const useStyles = createStyles((theme) => ({
 
 function PostCard({ post }) {
   const { classes } = useStyles();
+  const [externalData, setExternalData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!post.is_self) {
+      setIsLoading(true);
+      encodeURIComponent();
+      fetch(`/api/get-open-graph/${encodeURIComponent(post.url)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setExternalData(data.result);
+        })
+        .finally(setIsLoading(false));
+    }
+  }, [post]);
 
   return (
     <div className={classes.container}>
@@ -99,16 +121,41 @@ function PostCard({ post }) {
             styles={{ root: { marginTop: 8 } }}
           />
         ) : (
-          <Anchor
-            href={post.url}
-            mt={4}
-            size="sm"
-            target="_blank"
-            rel="noreferrer"
-            component="a"
+          <div
+            style={{ display: "flex", justifyContent: "center", marginTop: 8 }}
           >
-            {parseUrl(post.url).hostname}
-          </Anchor>
+            {isLoading ? (
+              <Loader />
+            ) : externalData?.ogImage?.url ? (
+              <Image
+                src={externalData.ogImage.url}
+                alt={externalData.ogTitle}
+                caption={
+                  <Anchor
+                    href={post.url}
+                    mt={4}
+                    size="sm"
+                    target="_blank"
+                    rel="noreferrer"
+                    component="a"
+                  >
+                    {parseUrl(post.url).hostname}
+                  </Anchor>
+                }
+              />
+            ) : (
+              <Anchor
+                href={post.url}
+                mt={4}
+                size="sm"
+                target="_blank"
+                rel="noreferrer"
+                component="a"
+              >
+                {parseUrl(post.url).hostname}
+              </Anchor>
+            )}
+          </div>
         ))}
       {post.selftext && <Text mt={4}>{post.selftext}</Text>}
     </div>
