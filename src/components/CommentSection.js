@@ -46,7 +46,7 @@ function CommentSection({ postId }) {
         {comments ? (
           <>
             {comments.map((comment) => (
-              <CommentTile comment={comment.data} />
+              <CommentTile comment={comment.data} key={comment.data.id} />
             ))}
           </>
         ) : (
