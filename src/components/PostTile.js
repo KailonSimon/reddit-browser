@@ -1,4 +1,11 @@
-import { Image, createStyles, Text, Anchor, Skeleton } from "@mantine/core";
+import {
+  Image,
+  createStyles,
+  Text,
+  Anchor,
+  Skeleton,
+  Badge,
+} from "@mantine/core";
 import React from "react";
 import {
   ArrowBigDown,
@@ -6,8 +13,9 @@ import {
   ClockHour3,
   Messages,
 } from "tabler-icons-react";
-import moment from "moment/moment";
+import moment from "moment";
 import numeral from "numeral";
+import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -17,15 +25,17 @@ const useStyles = createStyles((theme) => ({
     padding: "0.5rem",
     display: "flex",
     gap: "1rem",
-    [theme.fn.largerThan("sm")]: {
-      borderRadius: "8px",
+    position: "relative",
+    borderRadius: "4px",
+    "&:hover": {
+      border: "1px solid #D7DADC",
     },
   },
   upArrow: {
-    "&:hover": { color: "#FF8b60", cursor: "pointer" },
+    "&:hover": { color: theme.colors.brand, cursor: "pointer" },
   },
   downArrow: {
-    "&:hover": { color: "#9494FF", cursor: "pointer" },
+    "&:hover": { color: theme.colors.accent, cursor: "pointer" },
   },
 }));
 
@@ -59,7 +69,29 @@ function PostTile({ post }) {
         />
       ) : null}
       <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <Text weight={700}>{post.title}</Text>
+        <div>
+          {post.link_flair_text && (
+            <Badge mr={4} variant="dot">
+              {post.link_flair_text}
+            </Badge>
+          )}
+          <Link
+            href={`/?post=${post.id}`}
+            as={`/post/${post.id}`}
+            scroll={false}
+            passHref
+          >
+            <Anchor
+              weight={700}
+              component="a"
+              underline={false}
+              variant="text"
+              color="#D7DADC"
+            >
+              {post.title}
+            </Anchor>
+          </Link>
+        </div>
         <div
           style={{
             display: "flex",
