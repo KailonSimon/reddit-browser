@@ -1,12 +1,9 @@
 import { Anchor, Text } from "@mantine/core";
-import React, { useEffect } from "react";
+import React from "react";
 import moment from "moment";
 import { ArrowUp } from "tabler-icons-react";
 
 function CommentTile({ comment }) {
-  useEffect(() => {
-    console.log({ comment });
-  }, [comment]);
   if (!comment.body || comment.stickied || comment.body == "[removed]") {
     return null;
   }
