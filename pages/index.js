@@ -8,20 +8,22 @@ import Layout from "../src/components/Layout";
 import Head from "next/head";
 
 export default function Home() {
-  const [subreddits, setSubreddits] = useState([
-    "ProgrammerHumor",
-    "WorldNews",
-    "Futurology",
-    "Science",
-  ]);
+  const [subreddits, setSubreddits] = useState([]);
   const [sorting, setSorting] = useState("hot");
 
   const fetchPosts = async ({ pageParam = "" }) => {
-    const res = await fetch(
-      `https://www.reddit.com/r/${subreddits.join(
-        "+"
-      )}/${sorting}.json?limit=25&after=${pageParam}`
-    );
+    let res;
+    if (subreddits.length) {
+      res = await fetch(
+        `https://www.reddit.com/r/${subreddits.join(
+          "+"
+        )}/${sorting}.json?limit=25&after=${pageParam}`
+      );
+    } else {
+      res = await fetch(
+        `https://www.reddit.com/r/all/${sorting}.json?limit=25&after=${pageParam}`
+      );
+    }
     return res.json();
   };
 
