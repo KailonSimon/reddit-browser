@@ -122,7 +122,14 @@ function Post({ post }) {
                 styles={{ root: { marginTop: 8 } }}
               />
             ) : (
-              <Anchor href={post.url} mt={4} size="sm">
+              <Anchor
+                href={post.url}
+                mt={4}
+                size="sm"
+                target="_blank"
+                rel="noreferrer"
+                component="a"
+              >
                 {parseUrl(post.url).hostname}
               </Anchor>
             ))}
