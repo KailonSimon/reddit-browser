@@ -7,9 +7,7 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     maxWidth: 800,
-    [theme.fn.largerThan("sm")]: {
-      gap: 8,
-    },
+    gap: 8,
   },
 }));
 

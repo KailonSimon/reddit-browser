@@ -1,5 +1,5 @@
-import { Image, createStyles, Text, Anchor } from "@mantine/core";
-import React, { useEffect } from "react";
+import { Image, createStyles, Text, Anchor, Skeleton } from "@mantine/core";
+import React from "react";
 import {
   ArrowBigDown,
   ArrowBigTop,
@@ -12,7 +12,7 @@ import numeral from "numeral";
 const useStyles = createStyles((theme) => ({
   container: {
     minHeight: 100,
-    border: "thin solid #818384",
+    border: "1px solid #474748",
     background: "#1A1A1B",
     padding: "0.5rem",
     display: "flex",
@@ -31,9 +31,6 @@ const useStyles = createStyles((theme) => ({
 
 function PostTile({ post }) {
   const { classes } = useStyles();
-  useEffect(() => {
-    console.log(post);
-  }, [post]);
 
   return (
     <div className={classes.container}>
