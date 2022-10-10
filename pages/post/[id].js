@@ -43,6 +43,7 @@ function Post({ post }) {
         </Link>
         <div
           style={{
+            width: "100%",
             display: "flex",
             flexDirection: "column",
             padding: "1rem",

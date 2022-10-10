@@ -13,6 +13,7 @@ const useStyles = createStyles((theme) => ({
     background: "#1A1A1B",
     borderRadius: 4,
     padding: "1rem",
+    width: "100%",
   },
   details: {
     display: "flex",
