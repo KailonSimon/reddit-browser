@@ -31,6 +31,9 @@ const useStyles = createStyles((theme) => ({
 
 function PostTile({ post }) {
   const { classes } = useStyles();
+  useEffect(() => {
+    console.log(post);
+  }, [post]);
 
   return (
     <div className={classes.container}>
@@ -48,14 +51,16 @@ function PostTile({ post }) {
         </Text>
         <ArrowBigDown size={20} className={classes.downArrow} />
       </div>
-      <Image
-        withPlaceholder
-        src={post.url}
-        alt={post.title}
-        height={75}
-        width={75}
-        styles={{ placeholder: { background: "#1A1A1B" } }}
-      />
+      {post.post_hint && post.post_hint === "image" ? (
+        <Image
+          withPlaceholder
+          src={post.url}
+          alt={post.title}
+          height={75}
+          width={75}
+          styles={{ placeholder: { background: "#1A1A1B" } }}
+        />
+      ) : null}
       <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <Text weight={700}>{post.title}</Text>
         <div
