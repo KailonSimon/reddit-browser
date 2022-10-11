@@ -123,7 +123,7 @@ function FeedControls({
             label: (
               <Center>
                 <Flame size={16} />
-                <Box ml={10}>Hot</Box>
+                <Box ml={6}>Hot</Box>
               </Center>
             ),
           },
@@ -132,7 +132,7 @@ function FeedControls({
             label: (
               <Center>
                 <Medal size={16} />
-                <Box ml={10}>Top</Box>
+                <Box ml={6}>Top</Box>
               </Center>
             ),
           },
@@ -141,7 +141,7 @@ function FeedControls({
             label: (
               <Center>
                 <EggCracked size={16} />
-                <Box ml={10}>New</Box>
+                <Box ml={6}>New</Box>
               </Center>
             ),
           },
@@ -150,7 +150,7 @@ function FeedControls({
             label: (
               <Center>
                 <TrendingUp size={16} />
-                <Box ml={10}>Rising</Box>
+                <Box ml={6}>Rising</Box>
               </Center>
             ),
           },
