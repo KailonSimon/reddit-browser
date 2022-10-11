@@ -8,16 +8,14 @@ import Layout from "../src/components/Layout";
 import Head from "next/head";
 
 export default function Home() {
-  const [subreddits, setSubreddits] = useState([]);
+  const [subreddit, setSubreddit] = useState(null);
   const [sorting, setSorting] = useState("hot");
 
   const fetchPosts = async ({ pageParam = "" }) => {
     let res;
-    if (subreddits.length) {
+    if (subreddit) {
       res = await fetch(
-        `https://www.reddit.com/r/${subreddits.join(
-          "+"
-        )}/${sorting}.json?limit=25&after=${pageParam}`
+        `https://www.reddit.com/r/${subreddit}/${sorting}.json?limit=25&after=${pageParam}`
       );
     } else {
       res = await fetch(
@@ -48,7 +46,7 @@ export default function Home() {
 
   useEffect(() => {
     refetch();
-  }, [subreddits, sorting, refetch]);
+  }, [subreddit, sorting, refetch]);
 
   return status === "loading" ? (
     <div
@@ -73,8 +71,8 @@ export default function Home() {
       </Head>
       <Layout>
         <FeedControls
-          subreddits={subreddits}
-          setSubreddits={setSubreddits}
+          subreddit={subreddit}
+          setSubreddit={setSubreddit}
           sorting={sorting}
           setSorting={setSorting}
           isRefetching={isRefetching}
