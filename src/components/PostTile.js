@@ -1,11 +1,4 @@
-import {
-  Image,
-  createStyles,
-  Text,
-  Anchor,
-  Skeleton,
-  Badge,
-} from "@mantine/core";
+import { Image, createStyles, Text, Anchor, Badge } from "@mantine/core";
 import React from "react";
 import {
   ArrowBigDown,
@@ -65,10 +58,21 @@ function PostTile({ post }) {
           alt={post.title}
           height={75}
           width={75}
-          styles={{ placeholder: { background: "#1A1A1B" } }}
+          radius={4}
+          styles={{
+            placeholder: { background: "#1A1A1B" },
+            image: { border: "1px solid #474748" },
+          }}
         />
       ) : null}
-      <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          flex: 1,
+        }}
+      >
         <div>
           {post.link_flair_text && (
             <Badge mr={4} variant="dot">
