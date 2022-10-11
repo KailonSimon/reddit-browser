@@ -1,17 +1,13 @@
-import { forwardRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Autocomplete,
   Box,
   Center,
-  Group,
-  Image,
   Loader,
-  MultiSelect,
   SegmentedControl,
   Select,
   Text,
 } from "@mantine/core";
-import { useDebouncedState, useDebouncedValue } from "@mantine/hooks";
+
 import {
   BrandReddit,
   EggCracked,
@@ -21,33 +17,7 @@ import {
   TrendingUp,
 } from "tabler-icons-react";
 
-const AutoCompleteItem = forwardRef(
-  ({ value, title, image, ...others }, ref) => {
-    return (
-      <div ref={ref} key={value} {...others}>
-        <Group noWrap>
-          {image && (
-            <Image
-              src={image}
-              alt={value}
-              height={30}
-              width={30}
-              fit="contain"
-            />
-          )}
-          <div>
-            <Text>{value}</Text>
-            {value !== title && (
-              <Text size="xs" color="dimmed">
-                {title}
-              </Text>
-            )}
-          </div>
-        </Group>
-      </div>
-    );
-  }
-);
+import AutoCompleteItem from "./AutoCompleteItem";
 
 function FeedControls({
   subreddit,
@@ -63,7 +33,7 @@ function FeedControls({
 
   useEffect(() => {
     setSubreddit(value);
-  }, [value]);
+  }, [value, setSubreddit]);
 
   useEffect(() => {
     setData([]);
@@ -95,7 +65,7 @@ function FeedControls({
         })
         .finally(() => setLoading(false));
     }
-  }, [searchValue]);
+  }, [searchValue, setData, setLoading]);
   return (
     <div
       style={{
