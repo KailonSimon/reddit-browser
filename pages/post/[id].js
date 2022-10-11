@@ -8,11 +8,13 @@ import PostCard from "../../src/components/PostCard";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    maxWidth: 800,
+    maxWidth: 600,
+    width: "100%",
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
     gap: "0.5rem",
+    padding: "0 0.5rem",
   },
   details: {
     display: "flex",
@@ -36,15 +38,17 @@ function Post({ post }) {
         )}
       </Head>
       <Layout>
-        <div className={classes.container}>
-          <Link href={"/"} passHref>
-            <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
-              Go to feed
-            </Button>
-          </Link>
-          <PostCard post={post} />
-          <CommentSection postId={post.id} />
-        </div>
+        <>
+          <div className={classes.container}>
+            <Link href={"/"} passHref>
+              <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
+                Go to feed
+              </Button>
+            </Link>
+            <PostCard post={post} />
+            <CommentSection postId={post.id} />
+          </div>
+        </>
       </Layout>
     </>
   );

@@ -118,7 +118,13 @@ function PostCard({ post }) {
           <Image
             src={post.url}
             alt={post.title}
-            styles={{ root: { marginTop: 8 } }}
+            styles={{
+              root: {
+                marginTop: 8,
+                marginLeft: "auto",
+                marginRight: "auto",
+              },
+            }}
           />
         ) : (
           <div

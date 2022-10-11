@@ -56,7 +56,7 @@ function CommentTile({ comment }) {
           {moment.unix(comment.created).fromNow()}
         </Text>
       </div>
-      <Text weight={700} sx={{ fontSize: 14 }}>
+      <Text weight={700} sx={{ fontSize: 14, wordBreak: "break-word" }}>
         {comment.body}
       </Text>
     </div>

@@ -14,8 +14,8 @@ function FeedControls({
       style={{
         marginBottom: "16px",
         background: "#1A1A1B",
-        width: "100%",
-        maxWidth: 800,
+        width: 600,
+        maxWidth: "100%",
         border: "1px solid #474748",
         borderRadius: 4,
         padding: "1rem",

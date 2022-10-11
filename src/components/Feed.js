@@ -12,7 +12,8 @@ const useStyles = createStyles((theme) => ({
   posts: {
     display: "flex",
     flexDirection: "column",
-    maxWidth: 800,
+    width: 600,
+    maxWidth: "100%",
     gap: 8,
     height: "100%",
   },
@@ -46,31 +47,27 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
             styles={{
               modal: {
                 background: "transparent",
-              },
-            }}
-          >
-            <div
-              style={{
+                maxWidth: 600,
                 display: "flex",
                 flexDirection: "column",
                 gap: "0.5rem",
                 alignItems: "flex-start",
-              }}
-            >
-              <Link href={"/"} passHref scroll={false}>
-                <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
-                  Return to feed
-                </Button>
-              </Link>
-              <PostCard
-                post={
-                  posts[0].data.children.find(
-                    (post) => post.data.id == router.query.post
-                  ).data
-                }
-              />
-              <CommentSection postId={router.query.post} />
-            </div>
+              },
+            }}
+          >
+            <Link href={"/"} passHref scroll={false}>
+              <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
+                Return to feed
+              </Button>
+            </Link>
+            <PostCard
+              post={
+                posts[0].data.children.find(
+                  (post) => post.data.id == router.query.post
+                ).data
+              }
+            />
+            <CommentSection postId={router.query.post} />
           </Modal>
         </>
       )}

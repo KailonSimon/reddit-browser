@@ -9,6 +9,7 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+
     [theme.fn.largerThan("xs")]: {
       padding: "2rem 1rem",
     },
