@@ -154,15 +154,6 @@ function FeedControls({
               </Center>
             ),
           },
-          {
-            value: "controversial",
-            label: (
-              <Center>
-                <MoodNeutral size={16} />
-                <Box ml={10}>Controversial</Box>
-              </Center>
-            ),
-          },
         ]}
         variant="default"
         disabled={isRefetching}
