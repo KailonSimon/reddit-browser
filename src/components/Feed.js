@@ -50,6 +50,10 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
                 maxWidth: 600,
                 display: "flex",
                 flexDirection: "column",
+              },
+              body: {
+                display: "flex",
+                flexDirection: "column",
                 gap: "0.5rem",
                 alignItems: "flex-start",
               },
