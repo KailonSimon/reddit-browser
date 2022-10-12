@@ -17,11 +17,15 @@ const useStyles = createStyles((theme) => ({
     background: "#1A1A1B",
     padding: "0.5rem",
     display: "flex",
-    gap: "1rem",
+    gap: "0.75rem",
+    justifyContent: "flex-start",
     position: "relative",
     borderRadius: "4px",
     "&:hover": {
       border: "1px solid #D7DADC",
+    },
+    [theme.fn.largerThan("xs")]: {
+      gap: "1rem",
     },
   },
   upArrow: {
@@ -82,32 +86,42 @@ function PostTile({ post }) {
         style={{
           display: "flex",
           flexDirection: "column",
+          maxWidth: "65%",
           gap: 2,
           flex: 1,
         }}
       >
         <div>
-          {post.link_flair_text && (
-            <Badge mr={4} variant="dot">
-              {post.link_flair_text}
-            </Badge>
-          )}
-          <Link
-            href={`/?post=${post.id}`}
-            as={`/post/${post.id}`}
-            scroll={false}
-            passHref
-          >
-            <Anchor
-              weight={700}
-              component="a"
-              underline={false}
-              variant="text"
-              color="#D7DADC"
+          <div>
+            <Link
+              href={`/?post=${post.id}`}
+              as={`/post/${post.id}`}
+              scroll={false}
+              passHref
             >
-              {post.title}
-            </Anchor>
-          </Link>
+              <Anchor
+                weight={700}
+                component="a"
+                underline={false}
+                variant="text"
+                color="#D7DADC"
+                sx={{
+                  wordWrap: "break-word",
+                  wordBreak: "break-word",
+                  whiteSpace: "pre-wrap",
+                  textOverflow: "ellipsis",
+                  overflowWrap: "break-word",
+                }}
+              >
+                {post.title}
+              </Anchor>
+            </Link>
+            {post.link_flair_text && (
+              <Badge ml={4} variant="dot" sx={{ maxWidth: "85%" }}>
+                {post.link_flair_text}
+              </Badge>
+            )}
+          </div>
         </div>
         <div
           style={{
