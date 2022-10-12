@@ -25,52 +25,11 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
   return (
     <>
       {router.query.post && (
-        <>
-          <Head>
-            <title>
-              {
-                posts.find((post) => post.data.id == router.query.post).data
-                  .title
-              }
-            </title>
-          </Head>
-          <Modal
-            opened
-            centered
-            size="xl"
-            withCloseButton={false}
-            overlayOpacity={0.65}
-            overlayBlur={3}
-            padding="md"
-            onClose={() => router.push("/", undefined, { scroll: false })}
-            styles={{
-              modal: {
-                background: "transparent",
-                maxWidth: 600,
-                display: "flex",
-                flexDirection: "column",
-              },
-              body: {
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5rem",
-                alignItems: "flex-start",
-              },
-            }}
-          >
-            <Link href={"/"} passHref scroll={false}>
-              <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
-                Return to feed
-              </Button>
-            </Link>
-            <PostCard
-              post={
-                posts.find((post) => post.data.id == router.query.post).data
-              }
-            />
-            <CommentSection postId={router.query.post} />
-          </Modal>
-        </>
+        <Head>
+          <title>
+            {posts.find((post) => post.data.id == router.query.post).data.title}
+          </title>
+        </Head>
       )}
       <div className={classes.posts}>
         {posts.map((post) => (
@@ -91,6 +50,46 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
             : "Nothing more to load"}
         </Button>
       </div>
+      <Modal
+        opened={router.query.post}
+        size="xl"
+        withCloseButton={false}
+        overlayOpacity={0.65}
+        overlayBlur={3}
+        padding="md"
+        onClose={() => router.push("/", undefined, { scroll: false })}
+        transition="slide-right"
+        styles={{
+          modal: {
+            background: "transparent",
+            maxWidth: 600,
+            display: "flex",
+            flexDirection: "column",
+          },
+          body: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+            alignItems: "flex-start",
+          },
+        }}
+      >
+        {router.query.post && (
+          <>
+            <Link href={"/"} passHref scroll={false}>
+              <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
+                Return to feed
+              </Button>
+            </Link>
+            <PostCard
+              post={
+                posts.find((post) => post.data.id == router.query.post).data
+              }
+            />
+            <CommentSection postId={router.query.post} />
+          </>
+        )}
+      </Modal>
     </>
   );
 }
