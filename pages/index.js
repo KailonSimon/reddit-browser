@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Loader, Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import FeedControls from "../src/components/FeedControls";
@@ -7,6 +7,7 @@ import Feed from "../src/components/Feed";
 import Layout from "../src/components/Layout";
 import Head from "next/head";
 import { mergePages } from "../utils";
+import LoadingScreen from "../src/components/LoadingScreen";
 
 export default function Home() {
   const [subreddit, setSubreddit] = useState(null);
@@ -50,17 +51,7 @@ export default function Home() {
   }, [subreddit, sorting, refetch]);
 
   return status === "loading" ? (
-    <div
-      style={{
-        height: "100vh",
-        width: "100vw",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Loader />
-    </div>
+    <LoadingScreen />
   ) : status === "error" ? (
     <Text>Error: {error.message}</Text>
   ) : (

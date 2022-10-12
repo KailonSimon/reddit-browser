@@ -1,4 +1,5 @@
-import { createStyles, Title } from "@mantine/core";
+import { Anchor, createStyles, Title } from "@mantine/core";
+import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -20,9 +21,18 @@ function Layout({ children }) {
   const { classes } = useStyles();
   return (
     <div className={classes.container}>
-      <Title align="center" mb={8} sx={{ fontFamily: "Chillax" }} color="brand">
-        Reddit<span>B</span>rowser
-      </Title>
+      <Link href="/" passHref>
+        <Anchor
+          align="center"
+          mb={8}
+          sx={{ fontFamily: "Chillax" }}
+          color="brand"
+          variant="text"
+          size={24}
+        >
+          Reddit<span>B</span>rowser
+        </Anchor>
+      </Link>
       {children}
     </div>
   );

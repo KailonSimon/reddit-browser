@@ -74,7 +74,7 @@ function PostCard({ post }) {
         <Text size="sm" sx={{ whiteSpace: "nowrap" }}>
           Posted by{" "}
           <Anchor
-            href={`https://www.reddit.com/user/${post.author}`}
+            href={`/user/${post.author}`}
             target="_blank"
             rel="noreferrer"
             color="inherit"
