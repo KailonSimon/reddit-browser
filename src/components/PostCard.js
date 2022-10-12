@@ -10,6 +10,7 @@ import {
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
+import Video from "./Video";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -126,6 +127,8 @@ function PostCard({ post }) {
               },
             }}
           />
+        ) : post.post_hint === "rich:video" ? (
+          <Video content={post.secure_media_embed?.content} />
         ) : (
           <div
             style={{ display: "flex", justifyContent: "center", marginTop: 8 }}

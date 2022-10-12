@@ -64,6 +64,19 @@ function PostTile({ post }) {
             image: { border: "1px solid #474748" },
           }}
         />
+      ) : post.post_hint === "rich:video" ? (
+        <Image
+          withPlaceholder
+          src={post.media?.oembed?.thumbnail_url}
+          alt={post.title}
+          height={75}
+          width={75}
+          radius={4}
+          styles={{
+            placeholder: { background: "#1A1A1B" },
+            image: { border: "1px solid #474748" },
+          }}
+        />
       ) : null}
       <div
         style={{
