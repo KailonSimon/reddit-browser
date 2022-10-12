@@ -17,15 +17,12 @@ const useStyles = createStyles((theme) => ({
     background: "#1A1A1B",
     padding: "0.5rem",
     display: "flex",
-    gap: "0.75rem",
+    gap: "0.5rem",
     justifyContent: "flex-start",
     position: "relative",
     borderRadius: "4px",
     "&:hover": {
       border: "1px solid #D7DADC",
-    },
-    [theme.fn.largerThan("xs")]: {
-      gap: "1rem",
     },
   },
   upArrow: {
@@ -47,6 +44,8 @@ function PostTile({ post }) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          width: 30,
+          minWidth: 30,
         }}
       >
         <ArrowBigTop size={20} className={classes.upArrow} />
@@ -86,9 +85,12 @@ function PostTile({ post }) {
         style={{
           display: "flex",
           flexDirection: "column",
-          maxWidth: "65%",
           gap: 2,
-          flex: 1,
+          flex: "1 1 auto",
+          maxWidth:
+            post.post_hint === "image"
+              ? "calc(100% - 121px)"
+              : "calc(100% - 38px)",
         }}
       >
         <div>
