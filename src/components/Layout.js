@@ -47,21 +47,37 @@ function Layout({ children }) {
         </Link>
         {children}
       </div>
-      <Affix position={{ bottom: 20, right: 20 }}>
+      <Affix
+        position={{ bottom: 20, right: 20 }}
+        sx={{
+          width: "calc(100vw - 32px)",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <Transition
           transition="slide-up"
           mounted={scrollPosition > 0 && !router.query.post}
         >
           {(transitionStyles) => (
-            <Button
-              leftIcon={<ArrowUp size={16} />}
-              style={transitionStyles}
-              onClick={() =>
-                ref.current?.scrollTo({ top: 0, behavior: "smooth" })
-              }
+            <div
+              style={{
+                width: "100%",
+                maxWidth: 1000,
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
             >
-              Scroll to top
-            </Button>
+              <Button
+                leftIcon={<ArrowUp size={16} />}
+                style={transitionStyles}
+                onClick={() =>
+                  ref.current?.scrollTo({ top: 0, behavior: "smooth" })
+                }
+              >
+                Scroll to top
+              </Button>
+            </div>
           )}
         </Transition>
       </Affix>
