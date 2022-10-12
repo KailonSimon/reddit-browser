@@ -1,5 +1,7 @@
+import { useEffect, useRef } from "react";
+import { useInView } from "framer-motion";
 import PostTile from "./PostTile";
-import { Button, createStyles, Modal } from "@mantine/core";
+import { Button, createStyles, Loader, Modal, Text } from "@mantine/core";
 import PostCard from "./PostCard";
 import { useRouter } from "next/router";
 import CommentSection from "./CommentSection";
@@ -21,6 +23,14 @@ const useStyles = createStyles((theme) => ({
 function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
   const { classes } = useStyles();
   const router = useRouter();
+  const ref = useRef();
+  const isInView = useInView(ref);
+
+  useEffect(() => {
+    if (isInView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [isInView]);
 
   return (
     <>
@@ -35,20 +45,22 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
         {posts.map((post) => (
           <PostTile key={post.data.id} post={post.data} />
         ))}
-        <Button
-          my={8}
-          onClick={fetchNextPage}
-          disabled={!hasNextPage}
-          style={{ width: 250, alignSelf: "center" }}
-          size="lg"
-          loading={isFetchingNextPage}
+        <div
+          ref={ref}
+          style={{
+            width: "100%",
+            height: 50,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          {hasNextPage
-            ? isFetchingNextPage
-              ? "Loading More..."
-              : "Load More"
-            : "Nothing more to load"}
-        </Button>
+          {hasNextPage ? (
+            <Loader />
+          ) : (
+            <Text color="dimmed">No more posts to show...</Text>
+          )}
+        </div>
       </div>
       <Modal
         opened={router.query.post}
