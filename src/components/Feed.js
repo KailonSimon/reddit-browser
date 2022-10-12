@@ -49,7 +49,7 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
           ref={ref}
           style={{
             width: "100%",
-            height: 50,
+            height: 100,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
