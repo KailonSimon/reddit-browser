@@ -15,7 +15,7 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
 
     [theme.fn.largerThan("xs")]: {
-      padding: "2rem 1rem",
+      padding: "1rem 1rem",
     },
   },
 }));
@@ -41,6 +41,7 @@ function Layout({ children }) {
             color="brand"
             variant="text"
             size={24}
+            weight={700}
           >
             Reddit<span>B</span>rowser
           </Anchor>

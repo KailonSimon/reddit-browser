@@ -17,6 +17,7 @@ const useStyles = createStyles((theme) => ({
     maxWidth: "100%",
     gap: 8,
     height: "100%",
+    padding: "0 0 2rem",
   },
 }));
 
