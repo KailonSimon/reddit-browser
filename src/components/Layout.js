@@ -1,5 +1,8 @@
-import { Anchor, createStyles, Title } from "@mantine/core";
+import { Anchor, createStyles, Button, Affix, Transition } from "@mantine/core";
+import { ArrowUp } from "tabler-icons-react";
 import Link from "next/link";
+import { useRef, useState } from "react";
+import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -19,22 +22,50 @@ const useStyles = createStyles((theme) => ({
 
 function Layout({ children }) {
   const { classes } = useStyles();
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const ref = useRef();
+  const router = useRouter();
+
   return (
-    <div className={classes.container}>
-      <Link href="/" passHref>
-        <Anchor
-          align="center"
-          mb={8}
-          sx={{ fontFamily: "Chillax" }}
-          color="brand"
-          variant="text"
-          size={24}
+    <>
+      <div
+        className={classes.container}
+        onScroll={() => setScrollPosition(ref.current?.scrollTop)}
+        ref={ref}
+      >
+        <Link href="/" passHref>
+          <Anchor
+            align="center"
+            mb={8}
+            sx={{ fontFamily: "Chillax" }}
+            color="brand"
+            variant="text"
+            size={24}
+          >
+            Reddit<span>B</span>rowser
+          </Anchor>
+        </Link>
+        {children}
+      </div>
+      <Affix position={{ bottom: 20, right: 20 }}>
+        <Transition
+          transition="slide-up"
+          mounted={scrollPosition > 0 && !router.query.post}
         >
-          Reddit<span>B</span>rowser
-        </Anchor>
-      </Link>
-      {children}
-    </div>
+          {(transitionStyles) => (
+            <Button
+              leftIcon={<ArrowUp size={16} />}
+              style={transitionStyles}
+              onClick={() =>
+                ref.current?.scrollTo({ top: 0, behavior: "smooth" })
+              }
+            >
+              Scroll to top
+            </Button>
+          )}
+        </Transition>
+      </Affix>
+    </>
   );
 }
 

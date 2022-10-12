@@ -6,7 +6,7 @@ import PostCard from "./PostCard";
 import { useRouter } from "next/router";
 import CommentSection from "./CommentSection";
 import Link from "next/link";
-import { ArrowLeft } from "tabler-icons-react";
+import { ArrowLeft, ArrowUp } from "tabler-icons-react";
 import Head from "next/head";
 
 const useStyles = createStyles((theme) => ({
