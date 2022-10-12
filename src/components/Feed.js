@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import PostTile from "./PostTile";
 import { Button, createStyles, Modal } from "@mantine/core";
 import PostCard from "./PostCard";
@@ -22,6 +21,7 @@ const useStyles = createStyles((theme) => ({
 function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
   const { classes } = useStyles();
   const router = useRouter();
+
   return (
     <>
       {router.query.post && (
@@ -29,9 +29,8 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
           <Head>
             <title>
               {
-                posts[0].data.children.find(
-                  (post) => post.data.id == router.query.post
-                ).data.title
+                posts.find((post) => post.data.id == router.query.post).data
+                  .title
               }
             </title>
           </Head>
@@ -66,9 +65,7 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
             </Link>
             <PostCard
               post={
-                posts[0].data.children.find(
-                  (post) => post.data.id == router.query.post
-                ).data
+                posts.find((post) => post.data.id == router.query.post).data
               }
             />
             <CommentSection postId={router.query.post} />
@@ -76,12 +73,8 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
         </>
       )}
       <div className={classes.posts}>
-        {posts.map((group, i) => (
-          <Fragment key={i}>
-            {group.data.children.map((post) => (
-              <PostTile key={post.data.id} post={post.data} />
-            ))}
-          </Fragment>
+        {posts.map((post) => (
+          <PostTile key={post.data.id} post={post.data} />
         ))}
         <Button
           my={8}

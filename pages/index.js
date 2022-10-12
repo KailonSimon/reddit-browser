@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { createStyles, Loader, Text, Title } from "@mantine/core";
+import { Loader, Text } from "@mantine/core";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import FeedControls from "../src/components/FeedControls";
 import Feed from "../src/components/Feed";
 import Layout from "../src/components/Layout";
 import Head from "next/head";
+import { mergePages } from "../utils";
 
 export default function Home() {
   const [subreddit, setSubreddit] = useState(null);
@@ -79,7 +80,7 @@ export default function Home() {
         />
 
         <Feed
-          posts={data.pages}
+          posts={mergePages(data.pages)}
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
