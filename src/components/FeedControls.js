@@ -13,7 +13,6 @@ import {
   EggCracked,
   Flame,
   Medal,
-  MoodNeutral,
   TrendingUp,
 } from "tabler-icons-react";
 
@@ -89,7 +88,7 @@ function FeedControls({
         limit={3}
         onChange={setValue}
         onSearchChange={setSearchValue}
-        rightSection={loading ? <Loader size={16} /> : null}
+        rightSection={loading || isRefetching ? <Loader size={16} /> : null}
         label="Search"
         placeholder={"Search subreddits..."}
         itemComponent={AutoCompleteItem}
@@ -105,6 +104,7 @@ function FeedControls({
           searchValue?.trim().length &&
           !loading && <Text>No matching subreddits</Text>
         }
+        disabled={isRefetching}
       />
       <SegmentedControl
         fullWidth
