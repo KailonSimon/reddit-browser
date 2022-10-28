@@ -1,4 +1,4 @@
-import { Button, createStyles } from "@mantine/core";
+import { Button, createStyles, Text } from "@mantine/core";
 import Link from "next/link";
 import { ArrowLeft } from "tabler-icons-react";
 import Layout from "../../src/components/Layout";
@@ -24,35 +24,17 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Post({ post }) {
+function Comment({ comment, post, replies }) {
   const { classes } = useStyles();
-  const [comments, setComments] = useState([]);
-  const [loadingComments, setLoadingComments] = useState(true);
+
   useEffect(() => {
-    if (post.id) {
-      setLoadingComments(true);
-      setComments([]);
-      fetch(
-        `https://www.reddit.com/comments/${post.id}.json?limit=50&depth=5&sort=top`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setComments(data[1].data.children);
-          if (!data[1].data.children.length) {
-            setLoadingComments(false);
-          }
-        });
-    }
-  }, [post.id, setLoadingComments, setComments]);
+    console.log({ replies });
+  }, [comment, post, replies]);
+
   return (
     <>
       <Head>
-        <title>{post.title}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta property="og:title" content={post.title} />
-        {post.post_hint == "image" && (
-          <meta property="og:image" content={post.url} />
-        )}
       </Head>
       <Layout>
         <>
@@ -63,11 +45,12 @@ function Post({ post }) {
               </Button>
             </Link>
             <PostCard post={post} />
+
             <CommentSection
               post={post}
-              comments={comments}
-              isLoading={loadingComments}
-              type="full"
+              comments={replies}
+              isLoading={false}
+              type="single"
             />
           </div>
         </>
@@ -76,12 +59,29 @@ function Post({ post }) {
   );
 }
 
-export default Post;
+export default Comment;
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
-  const res = await fetch(`https://www.reddit.com/api/info.json?id=t3_${id}`);
-  const post = await res.json();
 
-  return { props: { post: post.data.children[0].data } };
+  const commentRes = await fetch(
+    `https://www.reddit.com/api/info.json?id=t1_${id}`
+  );
+  const comment = await commentRes.json();
+  const postRes = await fetch(
+    `https://www.reddit.com/api/info.json?id=${comment.data.children[0].data.link_id}`
+  );
+  const post = await postRes.json();
+  const repliesRes = await fetch(
+    `https://www.reddit.com/comments/${post.data.children[0].data.id}.json?comment=${id}&limit=50&depth=10&sort=top`
+  );
+  const replies = await repliesRes.json();
+
+  return {
+    props: {
+      comment: comment.data.children[0].data,
+      post: post.data.children[0].data,
+      replies: replies[1].data.children,
+    },
+  };
 }

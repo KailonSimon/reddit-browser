@@ -11,6 +11,8 @@ import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import Video from "./Video";
+import { getRelativeTime } from "../../utils";
+import SubmissionMenu from "./SubmissionMenu";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -51,46 +53,56 @@ function PostCard({ post, setSubreddit }) {
 
   return (
     <div className={classes.container}>
-      <div className={classes.details}>
-        <Text
-          size="sm"
-          weight="bold"
-          sx={(theme) => ({
-            whiteSpace: "nowrap",
-            ":hover": {
-              cursor: "pointer",
-              textDecoration: "underline",
-              color: theme.colors.brand,
-            },
-          })}
-          onClick={() => setSubreddit(post.subreddit)}
-        >
-          r/{post.subreddit}
-        </Text>
-        <span style={{ margin: "0 4px", fontSize: 8 }}>•</span>
-        <Text size="sm" sx={{ whiteSpace: "nowrap" }}>
-          Posted by{" "}
-          <Anchor
-            href={`/user/${post.author}`}
-            target="_blank"
-            rel="noreferrer"
-            color="inherit"
-            variant="text"
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <div className={classes.details}>
+          <Text
+            size="sm"
+            weight="bold"
             sx={(theme) => ({
+              whiteSpace: "nowrap",
               ":hover": {
                 cursor: "pointer",
                 textDecoration: "underline",
                 color: theme.colors.brand,
               },
             })}
+            onClick={() => setSubreddit(post.subreddit)}
           >
-            u/{post.author}
-          </Anchor>
-        </Text>
+            r/{post.subreddit}
+          </Text>
+          <span style={{ margin: "0 4px", fontSize: 8 }}>•</span>
+          <Text size="sm" sx={{ whiteSpace: "nowrap" }}>
+            Posted by{" "}
+            <Anchor
+              href={`/user/${post.author}`}
+              target="_blank"
+              rel="noreferrer"
+              color="inherit"
+              variant="text"
+              sx={(theme) => ({
+                ":hover": {
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                  color: theme.colors.brand,
+                },
+              })}
+            >
+              u/{post.author}
+            </Anchor>
+          </Text>
 
-        <Text size="sm" ml={4}>
-          {moment.unix(post.created).fromNow()}
-        </Text>
+          <Text size="sm" ml={4}>
+            {getRelativeTime(post.created)} ago
+          </Text>
+        </div>
+        <div style={{ marginLeft: 8 }}>
+          <SubmissionMenu type="post" submission={post} />
+        </div>
       </div>
       <Title
         order={1}

@@ -66,18 +66,22 @@ a {
   opacity: 1;
 }
 
-.comment-depth-1 {
+.comment-depth-0 {
   background-color: #59ba12ff !important;
 }
 
-.comment-depth-2 {
+.comment-depth-1 {
   background-color: #7312ba !important;
 }
 
-.comment-depth-3 {
+.comment-depth-2 {
   background-color: #1f12ba !important;
 }
 
-.comment-depth-4 {
+.comment-depth-3 {
   background-color: #ba1259 !important;
+}
+
+.comment-depth-4 {
+  background-color: #acba12 !important;
 }

@@ -34,3 +34,7 @@ export const mergePages = (pages) => {
   }
   return mergedPages;
 };
+
+export const getNestedCommentClass = (depth) => {
+  return depth % 5;
+};

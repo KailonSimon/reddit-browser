@@ -1,4 +1,5 @@
-import { createStyles, Divider, Loader, Text } from "@mantine/core";
+import { Button, createStyles, Divider, Loader, Text } from "@mantine/core";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import CommentTile from "./CommentTile";
 
@@ -19,32 +20,35 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function CommentSection({ postId }) {
-  const [comments, setComments] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    fetch(
-      `https://www.reddit.com/comments/${postId}.json?limit=50&depth=4&sort=top`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setComments(data[1].data.children);
-      })
-      .finally(() => setIsLoading(false));
-  }, [postId]);
+function CommentSection({ post, comments, isLoading, type }) {
   const { classes } = useStyles();
+
   return (
     <div className={classes.container}>
       <>
-        <Text
-          align="left"
-          weight="bold"
-          color="#D7DADC"
-          sx={{ width: "100%", marginLeft: 8 }}
-        >
-          Top Comments
-        </Text>
+        {type === "full" ? (
+          <Text
+            align="left"
+            weight="bold"
+            color="#D7DADC"
+            sx={{ width: "100%", marginLeft: 8 }}
+          >
+            Top Comments
+          </Text>
+        ) : (
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+          >
+            <Text color="brand" weight="bold">
+              Viewing single comment thread
+            </Text>
+            <Link href={`/post/${post.id}`} passHref>
+              <Button component="a" variant="outline">
+                View all comments
+              </Button>
+            </Link>
+          </div>
+        )}
         {comments.length ? (
           <>
             {comments.map((comment) => (

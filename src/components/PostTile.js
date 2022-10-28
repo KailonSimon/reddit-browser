@@ -1,15 +1,24 @@
-import { Image, createStyles, Text, Anchor, Badge } from "@mantine/core";
+import {
+  Image,
+  createStyles,
+  Text,
+  Anchor,
+  Badge,
+  ActionIcon,
+} from "@mantine/core";
 import React from "react";
 import {
   ArrowBigDown,
   ArrowBigTop,
   ClockHour3,
+  Dots,
   Messages,
 } from "tabler-icons-react";
 import moment from "moment";
 import numeral from "numeral";
 import Link from "next/link";
 import { getRelativeTime } from "../../utils";
+import SubmissionMenu from "./SubmissionMenu";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -94,7 +103,13 @@ function PostTile({ post, setSubreddit }) {
               : "calc(100% - 38px)",
         }}
       >
-        <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            maxWidth: "100%",
+          }}
+        >
           <div>
             <Link
               href={`/?post=${post.id}`}
@@ -125,6 +140,7 @@ function PostTile({ post, setSubreddit }) {
               </Badge>
             )}
           </div>
+          <SubmissionMenu type="post" submission={post} />
         </div>
         <div
           style={{

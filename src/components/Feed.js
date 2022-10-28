@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 import PostTile from "./PostTile";
 import { Button, createStyles, Loader, Modal, Text } from "@mantine/core";
@@ -32,12 +32,31 @@ function Feed({
   const router = useRouter();
   const ref = useRef();
   const isInView = useInView(ref);
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(true);
 
   useEffect(() => {
     if (isInView && hasNextPage) {
       fetchNextPage();
     }
   }, [isInView, fetchNextPage, hasNextPage]);
+
+  useEffect(() => {
+    if (router.query.post) {
+      setLoadingComments(true);
+      setComments([]);
+      fetch(
+        `https://www.reddit.com/comments/${router.query.post}.json?limit=50&depth=5&sort=top`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setComments(data[1].data.children);
+          if (!data[1].data.children.length) {
+            setLoadingComments(false);
+          }
+        });
+    }
+  }, [router.query.post, setLoadingComments, setComments]);
 
   return (
     <>
@@ -110,7 +129,15 @@ function Feed({
                 posts.find((post) => post.data.id == router.query.post).data
               }
             />
-            <CommentSection postId={router.query.post} />
+
+            <CommentSection
+              post={
+                posts.find((post) => post.data.id == router.query.post).data
+              }
+              comments={comments}
+              isLoading={loadingComments}
+              type="full"
+            />
           </>
         )}
       </Modal>

@@ -1,7 +1,8 @@
 import { ActionIcon, Anchor, Button, Spoiler, Text } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import { ArrowUp, ChevronDown } from "tabler-icons-react";
-import { getRelativeTime } from "../../utils";
+import { getNestedCommentClass, getRelativeTime } from "../../utils";
+import SubmissionMenu from "./SubmissionMenu";
 
 function CommentTile({ comment }) {
   const [replies, setReplies] = useState([]);
@@ -27,13 +28,15 @@ function CommentTile({ comment }) {
       }}
     >
       <div
-        className={`comment-depth-${comment.depth + 1} comment-collapse-button`}
+        className={`comment-depth-${getNestedCommentClass(
+          comment.depth
+        )} comment-collapse-button`}
         style={{ display: isCollapsed ? "none" : "block" }}
         onClick={() => setIsCollapsed(true)}
       />
       <div
         style={{
-          padding: isCollapsed ? 0 : "0.5rem 0.75rem",
+          padding: isCollapsed ? 0 : "0.25rem 0.75rem 0.5rem",
           color: "#D7DADC",
           width: "100%",
         }}
@@ -41,7 +44,7 @@ function CommentTile({ comment }) {
         <div
           style={{
             display: "flex",
-            justifyContent: "flex-start",
+            justifyContent: "space-between",
             alignItems: "center",
             marginBottom: isCollapsed ? 0 : 4,
           }}
@@ -120,6 +123,8 @@ function CommentTile({ comment }) {
               {getRelativeTime(comment.created)}
             </Text>
           </div>
+
+          <SubmissionMenu type="comment" submission={comment} />
         </div>
         {!isCollapsed && (
           <>
@@ -134,7 +139,7 @@ function CommentTile({ comment }) {
           style={{
             display: "flex",
             flexDirection: "column",
-            padding: "0 0.75rem",
+            padding: "0 0 0 0.75rem",
             gap: "0.25rem",
           }}
         >

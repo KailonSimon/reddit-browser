@@ -1,10 +1,7 @@
 import "../styles/globals.css";
-import {
-  useInfiniteQuery,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MantineProvider } from "@mantine/core";
+import { NotificationsProvider } from "@mantine/notifications";
 
 function MyApp({ Component, pageProps }) {
   const queryClient = new QueryClient();
@@ -42,9 +39,11 @@ function MyApp({ Component, pageProps }) {
         primaryColor: "brand",
       }}
     >
-      <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-      </QueryClientProvider>
+      <NotificationsProvider>
+        <QueryClientProvider client={queryClient}>
+          <Component {...pageProps} />
+        </QueryClientProvider>
+      </NotificationsProvider>
     </MantineProvider>
   );
 }
