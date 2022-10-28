@@ -14,7 +14,6 @@ const useStyles = createStyles((theme) => ({
     flexDirection: "column",
     alignItems: "flex-start",
     gap: "0.5rem",
-    padding: "0 0.5rem",
   },
   details: {
     display: "flex",

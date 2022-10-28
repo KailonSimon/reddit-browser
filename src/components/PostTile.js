@@ -33,7 +33,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PostTile({ post }) {
+function PostTile({ post, setSubreddit }) {
   const { classes } = useStyles();
 
   return (

@@ -21,7 +21,13 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
+function Feed({
+  posts,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  setSubreddit,
+}) {
   const { classes } = useStyles();
   const router = useRouter();
   const ref = useRef();
@@ -44,7 +50,11 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
       )}
       <div className={classes.posts}>
         {posts.map((post) => (
-          <PostTile key={post.data.id} post={post.data} />
+          <PostTile
+            key={post.data.id}
+            post={post.data}
+            setSubreddit={setSubreddit}
+          />
         ))}
         <div
           ref={ref}
@@ -95,6 +105,7 @@ function Feed({ posts, fetchNextPage, hasNextPage, isFetchingNextPage }) {
               </Button>
             </Link>
             <PostCard
+              setSubreddit={setSubreddit}
               post={
                 posts.find((post) => post.data.id == router.query.post).data
               }

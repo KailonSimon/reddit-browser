@@ -1,64 +1,148 @@
-import { Anchor, Text } from "@mantine/core";
-import React from "react";
+import { ActionIcon, Anchor, Button, Spoiler, Text } from "@mantine/core";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { ArrowUp } from "tabler-icons-react";
+import { ArrowUp, ChevronDown } from "tabler-icons-react";
 
 function CommentTile({ comment }) {
+  const [replies, setReplies] = useState([]);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  useEffect(() => {
+    if (comment?.replies?.data) {
+      setReplies(
+        comment.replies.data.children.filter((reply) => reply.kind !== "more")
+      );
+    }
+  }, [comment]);
   if (!comment.body || comment.stickied || comment.body == "[removed]") {
     return null;
   }
   return (
     <div
       style={{
-        border: "1px solid #474748",
-        padding: "1rem",
-        borderRadius: 4,
-        color: "#D7DADC",
+        display: "flex",
+        flexDirection: "column",
         width: "100%",
+        position: "relative",
       }}
     >
       <div
+        className={`comment-depth-${comment.depth + 1} comment-collapse-button`}
+        style={{ display: isCollapsed ? "none" : "block" }}
+        onClick={() => setIsCollapsed(true)}
+      />
+      <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 4,
+          padding: isCollapsed ? 0 : "0.5rem 0.75rem",
+          color: "#D7DADC",
+          width: "100%",
         }}
       >
-        <div style={{ display: "flex", gap: 8, flexFlow: "row" }}>
-          <Anchor
-            href={`https://www.reddit.com/user/${comment.author}`}
-            target="_blank"
-            rel="noreferrer"
-            color="inherit"
-            variant="text"
-            weight="bold"
-            sx={(theme) => ({
-              fontSize: 12,
-              whiteSpace: "nowrap",
-              ":hover": {
-                cursor: "pointer",
-                textDecoration: "underline",
-                color: theme.colors.accent,
-              },
-            })}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            marginBottom: isCollapsed ? 0 : 4,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexFlow: "row wrap",
+              alignItems: "center",
+            }}
           >
-            {comment.author}
-          </Anchor>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <ArrowUp size={16} color="#818384" />
-            <Text size="sm" color="#818384">
-              {comment.score}
+            {isCollapsed && (
+              <ActionIcon
+                onClick={() => setIsCollapsed(false)}
+                sx={{ marginRight: 8 }}
+              >
+                <ChevronDown color="#818384" size={20} />
+              </ActionIcon>
+            )}
+            <Anchor
+              href={`/user/${comment.author}`}
+              target="_blank"
+              rel="noreferrer"
+              color="inherit"
+              variant="text"
+              weight="bold"
+              sx={(theme) => ({
+                fontSize: 12,
+                whiteSpace: "nowrap",
+                ":hover": {
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                  color: theme.colors.brand,
+                },
+              })}
+            >
+              {comment.author}
+            </Anchor>
+            {comment.is_submitter && (
+              <span
+                style={{
+                  marginLeft: 4,
+                  fontSize: 12,
+                  fontWeight: "bold",
+                  color: "#59ba12",
+                }}
+              >
+                OP
+              </span>
+            )}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                whiteSpace: "nowrap",
+                marginLeft: 4,
+              }}
+            >
+              <ArrowUp size={16} color="#818384" />
+              <Text size="sm" color="#818384">
+                {comment.score}
+              </Text>
+            </div>
+            <span
+              style={{
+                flex: "0 0 auto",
+                margin: "0 4px 4px",
+                color: "#818384",
+                display: "flex",
+                verticalAlign: "top",
+              }}
+            >
+              &#8226;
+            </span>
+            <Text size="sm" color="#818384" sx={{ whiteSpace: "nowrap" }}>
+              {moment.unix(comment.created).fromNow()}
             </Text>
           </div>
         </div>
-        <Text size="sm" color="#818384" sx={{ whiteSpace: "nowrap" }}>
-          {moment.unix(comment.created).fromNow()}
-        </Text>
+        {!isCollapsed && (
+          <>
+            <Text weight={700} sx={{ fontSize: 14, wordBreak: "break-word" }}>
+              {comment.body}
+            </Text>
+          </>
+        )}
       </div>
-      <Text weight={700} sx={{ fontSize: 14, wordBreak: "break-word" }}>
-        {comment.body}
-      </Text>
+      {replies.length > 0 && !isCollapsed && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "0 0.75rem",
+            gap: "0.25rem",
+          }}
+        >
+          {replies.map((reply) => (
+            <CommentTile comment={reply.data} key={reply.data.id} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

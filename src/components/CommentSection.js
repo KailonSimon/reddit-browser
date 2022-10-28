@@ -20,16 +20,18 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function CommentSection({ postId }) {
-  const [comments, setComments] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch(
-      `https://www.reddit.com/comments/${postId}.json?limit=10&depth=1&sort=top`
+      `https://www.reddit.com/comments/${postId}.json?limit=50&depth=4&sort=top`
     )
       .then((res) => res.json())
       .then((data) => {
         setComments(data[1].data.children);
-      });
+      })
+      .finally(() => setIsLoading(false));
   }, [postId]);
   const { classes } = useStyles();
   return (
@@ -43,14 +45,16 @@ function CommentSection({ postId }) {
         >
           Top Comments
         </Text>
-        {comments ? (
+        {comments.length ? (
           <>
             {comments.map((comment) => (
               <CommentTile comment={comment.data} key={comment.data.id} />
             ))}
           </>
-        ) : (
+        ) : isLoading ? (
           <Loader />
+        ) : (
+          <Text color="dimmed">No Comments</Text>
         )}
       </>
     </div>

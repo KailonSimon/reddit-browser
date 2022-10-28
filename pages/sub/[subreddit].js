@@ -1,29 +1,26 @@
 import { useEffect, useState } from "react";
-import { Text } from "@mantine/core";
 import { useInfiniteQuery } from "@tanstack/react-query";
-
-import FeedControls from "../src/components/FeedControls";
-import Feed from "../src/components/Feed";
-import Layout from "../src/components/Layout";
 import Head from "next/head";
-import { mergePages } from "../utils";
-import LoadingScreen from "../src/components/LoadingScreen";
+import { useRouter } from "next/router";
+import LoadingScreen from "../../src/components/LoadingScreen";
+import { mergePages } from "../../utils";
+import Feed from "../../src/components/Feed";
+import FeedControls from "../../src/components/FeedControls";
+import Layout from "../../src/components/Layout";
 
-export default function Home() {
-  const [subreddit, setSubreddit] = useState(null);
+function Subreddit() {
+  const router = useRouter();
+  const { subreddit } = router.query;
+  const [currentSubreddit, setSubreddit] = useState(subreddit);
   const [sorting, setSorting] = useState("hot");
 
   const fetchPosts = async ({ pageParam = "" }) => {
     let res;
-    if (subreddit) {
-      res = await fetch(
-        `https://www.reddit.com/r/${subreddit}/${sorting}.json?limit=25&after=${pageParam}`
-      );
-    } else {
-      res = await fetch(
-        `https://www.reddit.com/r/all/${sorting}.json?limit=25&after=${pageParam}`
-      );
-    }
+
+    res = await fetch(
+      `https://www.reddit.com/r/${subreddit}/${sorting}.json?limit=25&after=${pageParam}`
+    );
+
     return res.json();
   };
 
@@ -63,7 +60,7 @@ export default function Home() {
       </Head>
       <Layout>
         <FeedControls
-          subreddit={subreddit}
+          subreddit={currentSubreddit}
           setSubreddit={setSubreddit}
           sorting={sorting}
           setSorting={setSorting}
@@ -82,3 +79,5 @@ export default function Home() {
     </>
   );
 }
+
+export default Subreddit;

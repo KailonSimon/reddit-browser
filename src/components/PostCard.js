@@ -31,7 +31,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PostCard({ post }) {
+function PostCard({ post, setSubreddit }) {
   const { classes } = useStyles();
   const [externalData, setExternalData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,10 +55,6 @@ function PostCard({ post }) {
         <Text
           size="sm"
           weight="bold"
-          component="a"
-          href={`https://www.reddit.com/r/${post.subreddit}/`}
-          target="_blank"
-          rel="noreferrer"
           sx={(theme) => ({
             whiteSpace: "nowrap",
             ":hover": {
@@ -67,6 +63,7 @@ function PostCard({ post }) {
               color: theme.colors.brand,
             },
           })}
+          onClick={() => setSubreddit(post.subreddit)}
         >
           r/{post.subreddit}
         </Text>
