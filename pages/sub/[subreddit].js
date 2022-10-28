@@ -7,6 +7,7 @@ import { mergePages } from "../../utils";
 import Feed from "../../src/components/Feed";
 import FeedControls from "../../src/components/FeedControls";
 import Layout from "../../src/components/Layout";
+import { Text } from "@mantine/core";
 
 function Subreddit() {
   const router = useRouter();

@@ -37,7 +37,7 @@ function Feed({
     if (isInView && hasNextPage) {
       fetchNextPage();
     }
-  }, [isInView]);
+  }, [isInView, fetchNextPage, hasNextPage]);
 
   return (
     <>
