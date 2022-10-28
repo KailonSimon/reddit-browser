@@ -36,7 +36,7 @@ function CommentTile({ comment }) {
       />
       <div
         style={{
-          padding: isCollapsed ? 0 : "0.25rem 0.75rem 0.5rem",
+          padding: isCollapsed ? "0 0.75rem 0 0" : "0.25rem 0.75rem 0.5rem",
           color: "#D7DADC",
           width: "100%",
         }}

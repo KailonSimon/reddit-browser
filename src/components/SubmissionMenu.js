@@ -21,7 +21,7 @@ export default function SubmissionMenu({ type, submission }) {
     <Menu shadow="md" width={200}>
       <Menu.Target>
         <ActionIcon>
-          <Dots />
+          <Dots color="#818384" />
         </ActionIcon>
       </Menu.Target>
 
