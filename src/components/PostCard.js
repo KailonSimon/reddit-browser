@@ -80,7 +80,7 @@ function PostCard({ post, setSubreddit }) {
               ":hover": {
                 cursor: "pointer",
                 textDecoration: "underline",
-                color: theme.colors.accent,
+                color: theme.colors.brand,
               },
             })}
           >

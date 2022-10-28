@@ -1,7 +1,7 @@
 import { ActionIcon, Anchor, Button, Spoiler, Text } from "@mantine/core";
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 import { ArrowUp, ChevronDown } from "tabler-icons-react";
+import { getRelativeTime } from "../../utils";
 
 function CommentTile({ comment }) {
   const [replies, setReplies] = useState([]);
@@ -117,7 +117,7 @@ function CommentTile({ comment }) {
               &#8226;
             </span>
             <Text size="sm" color="#818384" sx={{ whiteSpace: "nowrap" }}>
-              {moment.unix(comment.created).fromNow()}
+              {getRelativeTime(comment.created)}
             </Text>
           </div>
         </div>

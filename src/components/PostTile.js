@@ -9,6 +9,7 @@ import {
 import moment from "moment";
 import numeral from "numeral";
 import Link from "next/link";
+import { getRelativeTime } from "../../utils";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -166,7 +167,7 @@ function PostTile({ post, setSubreddit }) {
                 ":hover": {
                   cursor: "pointer",
                   textDecoration: "underline",
-                  color: theme.colors.accent,
+                  color: theme.colors.brand,
                 },
               })}
             >
@@ -184,7 +185,7 @@ function PostTile({ post, setSubreddit }) {
             }}
           >
             <ClockHour3 size={10} />
-            <Text>{moment.unix(post.created).fromNow()}</Text>
+            <Text>{getRelativeTime(post.created)}</Text>
           </span>
         </div>
         <div
