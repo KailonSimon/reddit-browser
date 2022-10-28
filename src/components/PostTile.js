@@ -107,10 +107,14 @@ function PostTile({ post, setSubreddit }) {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            maxWidth: "100%",
           }}
         >
-          <div>
+          <div
+            style={{
+              flex: 1,
+              paddingRight: "0.5rem",
+            }}
+          >
             <Link
               href={`/?post=${post.id}`}
               as={`/post/${post.id}`}
@@ -126,7 +130,7 @@ function PostTile({ post, setSubreddit }) {
                 sx={{
                   wordWrap: "break-word",
                   wordBreak: "break-word",
-                  whiteSpace: "pre-wrap",
+                  whiteSpace: "pre-line",
                   textOverflow: "ellipsis",
                   overflowWrap: "break-word",
                 }}
@@ -136,7 +140,9 @@ function PostTile({ post, setSubreddit }) {
             </Link>
             {post.link_flair_text && (
               <Badge ml={4} variant="dot" sx={{ maxWidth: "85%" }}>
-                {post.link_flair_text}
+                {post.link_flair_text.length > 15
+                  ? post.link_flair_text.substr(0, 15) + "..."
+                  : post.link_flair_text}
               </Badge>
             )}
           </div>
