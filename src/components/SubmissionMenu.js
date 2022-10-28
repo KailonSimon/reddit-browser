@@ -47,7 +47,7 @@ export default function SubmissionMenu({ type, submission }) {
           <Menu.Item
             icon={<Link />}
             onClick={() =>
-              handleCopy(`${window.location.host}/${type}/${submission.id}`)
+              handleCopy(`${window.location.origin}/${type}/${submission.id}`)
             }
           >
             Copy Link
