@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import {
   Box,
   Center,
@@ -15,56 +15,64 @@ import {
   Medal,
   TrendingUp,
 } from "tabler-icons-react";
-
 import AutoCompleteItem from "./AutoCompleteItem";
 
-function FeedControls({
-  subreddit,
-  setSubreddit,
-  sorting,
-  setSorting,
-  isRefetching,
-}) {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
-  const [value, setValue] = useState("");
+const initialState = { loading: false, data: [], searchValue: "", value: "" };
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_LOADING":
+      return { ...state, loading: action.payload };
+    case "SET_DATA":
+      return { ...state, data: action.payload };
+    case "SET_SEARCH_VALUE":
+      return { ...state, searchValue: action.payload };
+    case "SET_VALUE":
+      return { ...state, value: action.payload };
+    default:
+      return initialState;
+  }
+}
+
+function FeedControls({ setSubreddit, sorting, setSorting, isRefetching }) {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    setSubreddit(value);
-  }, [value, setSubreddit]);
+    setSubreddit(state.value);
+  }, [state.value]);
 
   useEffect(() => {
-    setData([]);
-    if (!searchValue) {
+    dispatch({ type: "SET_DATA", payload: [] });
+    if (!state.searchValue) {
       return;
     }
-    if (searchValue.trim().length === 0) {
-      setLoading(false);
+    if (state.searchValue.trim().length === 0) {
+      dispatch({ type: "SET_LOADING", payload: false });
     } else {
-      setLoading(true);
+      dispatch({ type: "SET_LOADING", payload: true });
       fetch(
-        `https://www.reddit.com/api/subreddit_autocomplete_v2.json?query=${searchValue}&include_profiles=false&limit=3`
+        `https://www.reddit.com/api/subreddit_autocomplete_v2.json?query=${state.searchValue}&include_profiles=false&limit=3`
       )
         .then((res) => res.json())
         .then((data) => {
           if (!data.data.children.length) {
-            setLoading(false);
+            dispatch({ type: "SET_LOADING", payload: false });
           }
-          setData(
-            data.data.children.map((subreddit) => {
+          dispatch({
+            type: "SET_DATA",
+            payload: data.data.children.map((subreddit) => {
               return {
                 label: `/r/${subreddit.data.display_name}`,
                 value: subreddit.data.display_name,
                 title: subreddit.data.title,
                 image: subreddit.data.icon_img,
               };
-            })
-          );
+            }),
+          });
         })
-        .finally(() => setLoading(false));
+        .finally(() => dispatch({ type: "SET_LOADING", payload: false }));
     }
-  }, [searchValue, setData, setLoading]);
+  }, [state.searchValue]);
   return (
     <div
       style={{
@@ -82,13 +90,17 @@ function FeedControls({
     >
       <Select
         searchable
-        searchValue={searchValue}
+        searchValue={state.searchValue}
         clearable
-        data={data}
+        data={state.data}
         limit={3}
-        onChange={setValue}
-        onSearchChange={setSearchValue}
-        rightSection={loading || isRefetching ? <Loader size={16} /> : null}
+        onChange={(e) => dispatch({ type: "SET_VALUE", payload: e })}
+        onSearchChange={(e) =>
+          dispatch({ type: "SET_SEARCH_VALUE", payload: e })
+        }
+        rightSection={
+          state.loading || isRefetching ? <Loader size={16} /> : null
+        }
         label="Search"
         placeholder={"Search subreddits..."}
         itemComponent={AutoCompleteItem}
@@ -101,8 +113,8 @@ function FeedControls({
           );
         }}
         nothingFound={
-          searchValue?.trim().length &&
-          !loading && <Text>No matching subreddits</Text>
+          state.searchValue?.trim().length &&
+          !state.loading && <Text>No matching subreddits</Text>
         }
         disabled={isRefetching}
       />

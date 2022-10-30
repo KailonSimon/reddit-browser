@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { Text } from "@mantine/core";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
@@ -9,19 +9,34 @@ import Head from "next/head";
 import { mergePages } from "../utils";
 import LoadingScreen from "../src/components/LoadingScreen";
 
+const initialState = { subreddit: null, sorting: "hot" };
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_SUBREDDIT":
+      return { ...state, subreddit: action.payload };
+    case "SET_SORTING":
+      return { ...state, sorting: action.payload };
+    default:
+      return initialState;
+  }
+}
+
 export default function Home() {
-  const [subreddit, setSubreddit] = useState(null);
-  const [sorting, setSorting] = useState("hot");
+  //const [subreddit, setSubreddit] = useState(null);
+  //const [sorting, setSorting] = useState("hot");
+
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const fetchPosts = async ({ pageParam = "" }) => {
     let res;
-    if (subreddit) {
+    if (state.subreddit) {
       res = await fetch(
-        `https://www.reddit.com/r/${subreddit}/${sorting}.json?limit=25&after=${pageParam}`
+        `https://www.reddit.com/r/${state.subreddit}/${state.sorting}.json?limit=25&after=${pageParam}`
       );
     } else {
       res = await fetch(
-        `https://www.reddit.com/r/all/${sorting}.json?limit=25&after=${pageParam}`
+        `https://www.reddit.com/r/all/${state.sorting}.json?limit=25&after=${pageParam}`
       );
     }
     return res.json();
@@ -48,7 +63,7 @@ export default function Home() {
 
   useEffect(() => {
     refetch();
-  }, [subreddit, sorting, refetch]);
+  }, [state.subreddit, state.sorting, refetch]);
 
   return status === "loading" ? (
     <LoadingScreen />
@@ -63,16 +78,22 @@ export default function Home() {
       </Head>
       <Layout>
         <FeedControls
-          subreddit={subreddit}
-          setSubreddit={setSubreddit}
-          sorting={sorting}
-          setSorting={setSorting}
+          subreddit={state.subreddit}
+          setSubreddit={(value) =>
+            dispatch({ type: "SET_SUBREDDIT", payload: value })
+          }
+          sorting={state.sorting}
+          setSorting={(value) =>
+            dispatch({ type: "SET_SORTING", payload: value })
+          }
           isRefetching={isRefetching}
         />
 
         <Feed
           key={mergePages(data.pages)}
-          setSubreddit={setSubreddit}
+          setSubreddit={(value) =>
+            dispatch({ type: "SET_SUBREDDIT", payload: value })
+          }
           posts={mergePages(data.pages)}
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
