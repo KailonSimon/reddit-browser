@@ -34,7 +34,13 @@ function reducer(state, action) {
   }
 }
 
-function FeedControls({ setSubreddit, sorting, setSorting, isRefetching }) {
+function FeedControls({
+  subreddit,
+  setSubreddit,
+  sorting,
+  setSorting,
+  isRefetching,
+}) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {

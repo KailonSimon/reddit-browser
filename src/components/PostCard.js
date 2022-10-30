@@ -49,6 +49,7 @@ function PostCard({ post, setSubreddit }) {
         })
         .finally(setIsLoading(false));
     }
+    console.log(post);
   }, [post]);
 
   return (
@@ -104,24 +105,41 @@ function PostCard({ post, setSubreddit }) {
           <SubmissionMenu type="post" submission={post} />
         </div>
       </div>
-      <Title
-        order={1}
-        style={{ fontSize: 20, fontFamily: "Chillax" }}
-        variant="text"
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "row wrap",
+          alignItems: "center",
+        }}
       >
-        {post.title}
-      </Title>
-      {post.link_flair_text && (
-        <Badge
-          variant="dot"
-          size="md"
-          mt={8}
-          radius={4}
-          sx={{ alignSelf: "flex-start" }}
+        <Title
+          order={1}
+          mr={8}
+          style={{
+            fontSize: 20,
+            fontFamily: "Chillax",
+          }}
+          variant="text"
         >
-          {post.link_flair_text}
-        </Badge>
-      )}
+          {post.title}
+        </Title>
+        {post.over_18 && (
+          <Badge
+            variant="filled"
+            color="red"
+            mr={8}
+            radius={4}
+            sx={{ width: "min-content" }}
+          >
+            NSFW
+          </Badge>
+        )}
+        {post.link_flair_text && (
+          <Badge variant="dot" size="md" radius={4}>
+            {post.link_flair_text}
+          </Badge>
+        )}
+      </div>
 
       {!post.is_self &&
         (post.post_hint == "image" ? (

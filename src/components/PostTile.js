@@ -1,20 +1,11 @@
-import {
-  Image,
-  createStyles,
-  Text,
-  Anchor,
-  Badge,
-  ActionIcon,
-} from "@mantine/core";
+import { Image, createStyles, Text, Anchor, Badge } from "@mantine/core";
 import React from "react";
 import {
   ArrowBigDown,
   ArrowBigTop,
   ClockHour3,
-  Dots,
   Messages,
 } from "tabler-icons-react";
-import moment from "moment";
 import numeral from "numeral";
 import Link from "next/link";
 import { getRelativeTime } from "../../utils";
@@ -138,8 +129,13 @@ function PostTile({ post, setSubreddit }) {
                 {post.title}
               </Anchor>
             </Link>
+            {post.over_18 && (
+              <Badge ml={8} variant="filled" radius={4} color="red">
+                NSFW
+              </Badge>
+            )}
             {post.link_flair_text && (
-              <Badge ml={4} variant="dot" sx={{ maxWidth: "85%" }}>
+              <Badge ml={8} variant="dot" radius={4}>
                 {post.link_flair_text.length > 15
                   ? post.link_flair_text.substr(0, 15) + "..."
                   : post.link_flair_text}
@@ -157,23 +153,19 @@ function PostTile({ post, setSubreddit }) {
           }}
         >
           <Text
-            size="xs"
+            size="sm"
             weight="bold"
             sx={(theme) => ({
+              whiteSpace: "nowrap",
               ":hover": {
                 cursor: "pointer",
                 textDecoration: "underline",
                 color: theme.colors.brand,
               },
             })}
+            onClick={() => setSubreddit(post.subreddit)}
           >
-            <a
-              href={`https://www.reddit.com/r/${post.subreddit}/`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              r/{post.subreddit}
-            </a>
+            r/{post.subreddit}
           </Text>
           <span style={{ margin: "0 4px", fontSize: "6px", color: "#818384" }}>
             •

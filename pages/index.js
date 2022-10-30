@@ -23,9 +23,6 @@ function reducer(state, action) {
 }
 
 export default function Home() {
-  //const [subreddit, setSubreddit] = useState(null);
-  //const [sorting, setSorting] = useState("hot");
-
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const fetchPosts = async ({ pageParam = "" }) => {
