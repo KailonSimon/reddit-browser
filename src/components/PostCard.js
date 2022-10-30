@@ -49,7 +49,6 @@ function PostCard({ post, setSubreddit }) {
         })
         .finally(setIsLoading(false));
     }
-    console.log(post);
   }, [post]);
 
   return (
