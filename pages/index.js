@@ -29,11 +29,11 @@ export default function Home() {
     let res;
     if (state.subreddit) {
       res = await fetch(
-        `https://www.reddit.com/r/${state.subreddit}/${state.sorting}.json?limit=25&after=${pageParam}`
+        `https://www.reddit.com/r/${state.subreddit}/${state.sorting}.json?limit=25&after=${pageParam}&raw_json=1`
       );
     } else {
       res = await fetch(
-        `https://www.reddit.com/r/all/${state.sorting}.json?limit=25&after=${pageParam}`
+        `https://www.reddit.com/r/all/${state.sorting}.json?limit=25&after=${pageParam}&raw_json=1`
       );
     }
     return res.json();

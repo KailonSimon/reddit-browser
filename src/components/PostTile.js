@@ -1,5 +1,5 @@
 import { Image, createStyles, Text, Anchor, Badge } from "@mantine/core";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ArrowBigDown,
   ArrowBigTop,
@@ -55,10 +55,10 @@ function PostTile({ post, setSubreddit }) {
         </Text>
         <ArrowBigDown size={20} className={classes.downArrow} />
       </div>
-      {post.post_hint && post.post_hint === "image" ? (
+      {post.preview?.images[0]?.source.url && (
         <Image
           withPlaceholder
-          src={post.url}
+          src={post.preview.images[0]?.source.url}
           alt={post.title}
           height={75}
           width={75}
@@ -68,20 +68,7 @@ function PostTile({ post, setSubreddit }) {
             image: { border: "1px solid #474748" },
           }}
         />
-      ) : post.post_hint === "rich:video" ? (
-        <Image
-          withPlaceholder
-          src={post.media?.oembed?.thumbnail_url}
-          alt={post.title}
-          height={75}
-          width={75}
-          radius={4}
-          styles={{
-            placeholder: { background: "#1A1A1B" },
-            image: { border: "1px solid #474748" },
-          }}
-        />
-      ) : null}
+      )}
       <div
         style={{
           display: "flex",
