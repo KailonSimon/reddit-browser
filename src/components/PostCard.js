@@ -155,7 +155,9 @@ function PostCard({ post, setSubreddit }) {
             }}
           />
         ) : post.post_hint === "rich:video" ? (
-          <Video content={post.secure_media_embed?.content} />
+          <Video type="external" content={post.secure_media_embed?.content} />
+        ) : post.post_hint === "hosted:video" ? (
+          <Video type="hosted" content={post.media.reddit_video.fallback_url} />
         ) : (
           <div
             style={{ display: "flex", justifyContent: "center", marginTop: 8 }}
