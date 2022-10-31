@@ -1,5 +1,12 @@
-import { Image, createStyles, Text, Anchor, Badge } from "@mantine/core";
-import React, { useEffect } from "react";
+import {
+  Image,
+  createStyles,
+  Text,
+  Anchor,
+  Badge,
+  Tooltip,
+} from "@mantine/core";
+import React from "react";
 import {
   ArrowBigDown,
   ArrowBigTop,
@@ -122,11 +129,22 @@ function PostTile({ post, setSubreddit }) {
               </Badge>
             )}
             {post.link_flair_text && (
-              <Badge ml={8} variant="dot" radius={4}>
-                {post.link_flair_text.length > 15
-                  ? post.link_flair_text.substr(0, 15) + "..."
-                  : post.link_flair_text}
-              </Badge>
+              <Tooltip
+                label={post.link_flair_text}
+                transition="skew-down"
+                styles={{
+                  tooltip: {
+                    border: "1px solid #474748",
+                    background: "#1A1A1B",
+                  },
+                }}
+              >
+                <Badge ml={8} variant="dot" radius={4}>
+                  {post.link_flair_text.length > 15
+                    ? post.link_flair_text.substr(0, 15) + "..."
+                    : post.link_flair_text}
+                </Badge>
+              </Tooltip>
             )}
           </div>
           <SubmissionMenu type="post" submission={post} />
