@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useReducer } from "react";
+import { useEffect, useRef, useState, useReducer, useCallback } from "react";
 import { useInView } from "framer-motion";
 import PostTile from "./PostTile";
 import { Button, createStyles, Loader, Modal, Text } from "@mantine/core";
