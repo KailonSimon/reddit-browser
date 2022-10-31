@@ -1,11 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import parse from "html-react-parser";
 import { Loader } from "@mantine/core";
 
 function Video({ type, content }) {
-  useEffect(() => {
-    console.log(content);
-  }, [content]);
   const videoRef = useRef(null);
   if (!content) {
     return <Loader />;

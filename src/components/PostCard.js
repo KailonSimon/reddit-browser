@@ -35,9 +35,6 @@ const useStyles = createStyles((theme) => ({
 function PostCard({ post, setSubreddit }) {
   const { classes } = useStyles();
 
-  useEffect(() => {
-    console.log(post);
-  }, [post]);
   return (
     <div className={classes.container}>
       <div
