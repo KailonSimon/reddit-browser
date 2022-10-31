@@ -1,7 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { Text } from "@mantine/core";
 import { useInfiniteQuery } from "@tanstack/react-query";
-
 import FeedControls from "../src/components/FeedControls";
 import Feed from "../src/components/Feed";
 import Layout from "../src/components/Layout";
@@ -45,13 +44,9 @@ export default function Home() {
     error,
     refetch,
     isRefetching,
-    isFetching,
     isFetchingNextPage,
-    isFetchingPreviousPage,
     fetchNextPage,
-    fetchPreviousPage,
     hasNextPage,
-    hasPreviousPage,
   } = useInfiniteQuery(["posts"], fetchPosts, {
     getNextPageParam: (lastPage, pages) => {
       return lastPage.data.after;
