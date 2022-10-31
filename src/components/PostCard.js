@@ -8,7 +8,7 @@ import {
   Loader,
 } from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Video from "./Video";
 import { getRelativeTime } from "../../utils";
 import SubmissionMenu from "./SubmissionMenu";
@@ -34,22 +34,10 @@ const useStyles = createStyles((theme) => ({
 
 function PostCard({ post, setSubreddit }) {
   const { classes } = useStyles();
-  const [externalData, setExternalData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!post.is_self && !post.post_hint == "image") {
-      setIsLoading(true);
-      encodeURIComponent();
-      fetch(`/api/get-open-graph/${encodeURIComponent(post.url)}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setExternalData(data.result);
-        })
-        .finally(setIsLoading(false));
-    }
+    console.log(post);
   }, [post]);
-
   return (
     <div className={classes.container}>
       <div
@@ -139,64 +127,56 @@ function PostCard({ post, setSubreddit }) {
         )}
       </div>
 
-      {!post.is_self &&
-        (post.post_hint == "image" ? (
-          <Image
-            src={post.url}
-            alt={post.title}
-            styles={{
-              root: {
-                marginTop: 8,
-                marginLeft: "auto",
-                marginRight: "auto",
-              },
+      {post.post_hint === "self" && post?.preview?.images[0]?.source?.url ? (
+        <Image
+          src={post?.preview?.images[0]?.source?.url}
+          alt={post.title}
+          styles={{
+            root: {
+              marginTop: 8,
+              marginLeft: "auto",
+              marginRight: "auto",
+            },
+          }}
+        />
+      ) : post.post_hint == "image" ? (
+        <Image
+          src={post.url}
+          alt={post.title}
+          styles={{
+            root: {
+              marginTop: 8,
+              marginLeft: "auto",
+              marginRight: "auto",
+            },
+          }}
+        />
+      ) : post.domain === "streamable.com" ? (
+        <Video type="external" content={post.media.oembed.html} />
+      ) : post.post_hint === "rich:video" ? (
+        <Video type="external" content={post.secure_media_embed?.content} />
+      ) : post.post_hint === "hosted:video" ? (
+        <Video type="hosted" content={post.media.reddit_video.fallback_url} />
+      ) : (
+        <div
+          style={{ display: "flex", justifyContent: "center", marginTop: 8 }}
+        >
+          <Anchor
+            href={post.url}
+            mt={4}
+            size="sm"
+            target="_blank"
+            rel="noreferrer"
+            component="a"
+            sx={{
+              width: "100%",
+              textAlign: "center",
             }}
-          />
-        ) : post.post_hint === "rich:video" ? (
-          <Video type="external" content={post.secure_media_embed?.content} />
-        ) : post.post_hint === "hosted:video" ? (
-          <Video type="hosted" content={post.media.reddit_video.fallback_url} />
-        ) : (
-          <div
-            style={{ display: "flex", justifyContent: "center", marginTop: 8 }}
           >
-            {isLoading ? (
-              <Loader />
-            ) : externalData?.ogImage?.url ? (
-              <Image
-                src={externalData.ogImage.url}
-                alt={externalData.ogTitle}
-                caption={
-                  <Anchor
-                    href={post.url}
-                    mt={4}
-                    size="sm"
-                    target="_blank"
-                    rel="noreferrer"
-                    component="a"
-                  >
-                    {parseUrl(post.url).hostname}
-                  </Anchor>
-                }
-              />
-            ) : (
-              <Anchor
-                href={post.url}
-                mt={4}
-                size="sm"
-                target="_blank"
-                rel="noreferrer"
-                component="a"
-                sx={{
-                  width: "100%",
-                  textAlign: "center",
-                }}
-              >
-                {parseUrl(post.url).hostname}
-              </Anchor>
-            )}
-          </div>
-        ))}
+            {parseUrl(post.url).hostname}
+          </Anchor>
+        </div>
+      )}
       {post.is_self && <Text mt={4}>{post.selftext}</Text>}
     </div>
   );
