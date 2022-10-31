@@ -128,7 +128,7 @@ function CommentTile({ comment }) {
         </div>
         {!isCollapsed && (
           <>
-            <Text weight={700} sx={{ fontSize: 14, wordBreak: "break-word" }}>
+            <Text sx={{ fontSize: 14, wordBreak: "break-word" }}>
               {comment.body}
             </Text>
           </>

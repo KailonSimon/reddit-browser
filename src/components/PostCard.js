@@ -9,7 +9,6 @@ import {
 } from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 import Video from "./Video";
 import { getRelativeTime } from "../../utils";
 import SubmissionMenu from "./SubmissionMenu";
@@ -198,7 +197,7 @@ function PostCard({ post, setSubreddit }) {
             )}
           </div>
         ))}
-      {post.selftext && <Text mt={4}>{post.selftext}</Text>}
+      {post.is_self && <Text mt={4}>{post.selftext}</Text>}
     </div>
   );
 }
