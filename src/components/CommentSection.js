@@ -1,6 +1,12 @@
-import { Button, createStyles, Divider, Loader, Text } from "@mantine/core";
+import {
+  Button,
+  createStyles,
+  Loader,
+  SegmentedControl,
+  Text,
+} from "@mantine/core";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import CommentTile from "./CommentTile";
 
 const useStyles = createStyles((theme) => ({
@@ -20,21 +26,53 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function CommentSection({ post, comments, isLoading, type }) {
+function CommentSection({
+  post,
+  comments,
+  setCommentSorting,
+  isLoading,
+  isFetching,
+  isRefetching,
+  type,
+}) {
   const { classes } = useStyles();
+
+  useEffect(() => {
+    setCommentSorting("confidence");
+  }, [post]);
 
   return (
     <div className={classes.container}>
       <>
         {type === "full" ? (
-          <Text
-            align="left"
-            weight="bold"
-            color="#D7DADC"
-            sx={{ width: "100%", marginLeft: 8 }}
+          <div
+            style={{
+              width: "100%",
+              padding: "0.5rem 0",
+            }}
           >
-            Top Comments
-          </Text>
+            <SegmentedControl
+              fullWidth
+              color="brand"
+              radius={4}
+              label={
+                <Text color="#D7DADC" mb={4}>
+                  Sort By
+                </Text>
+              }
+              data={[
+                { value: "confidence", label: "Best" },
+                { value: "top", label: "Top" },
+                { value: "new", label: "New" },
+                { value: "random", label: "Random" },
+              ]}
+              onChange={(value) => setCommentSorting(value)}
+              styles={(theme) => ({
+                root: { border: "1px solid #474748" },
+              })}
+              disabled={isLoading || isFetching || isRefetching}
+            />
+          </div>
         ) : (
           <div
             style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
@@ -49,13 +87,13 @@ function CommentSection({ post, comments, isLoading, type }) {
             </Link>
           </div>
         )}
-        {comments.length ? (
+        {comments?.length ? (
           <>
             {comments.map((comment) => (
               <CommentTile comment={comment.data} key={comment.data.id} />
             ))}
           </>
-        ) : isLoading ? (
+        ) : isLoading || isFetching || isRefetching ? (
           <Loader />
         ) : (
           <Text color="dimmed">No Comments</Text>

@@ -38,3 +38,13 @@ export const mergePages = (pages) => {
 export const getNestedCommentClass = (depth) => {
   return depth % 5;
 };
+export const fetchComments = async (postId, sorting) => {
+  let res;
+  if (postId) {
+    res = await fetch(
+      `https://www.reddit.com/comments/${postId}.json?limit=50&depth=5&sort=${sorting}`
+    );
+  }
+
+  return res.json();
+};

@@ -5,7 +5,9 @@ import Layout from "../../src/components/Layout";
 import CommentSection from "../../src/components/CommentSection";
 import Head from "next/head";
 import PostCard from "../../src/components/PostCard";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchComments } from "../../utils";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -23,27 +25,47 @@ const useStyles = createStyles((theme) => ({
     margin: "0 0 4px",
   },
 }));
+const initialState = {
+  comments: [],
+  loadingComments: true,
+  commentSorting: "confidence",
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_COMMENTS":
+      return { ...state, comments: action.payload };
+    case "SET_LOADING_COMMENTS":
+      return { ...state, loadingComments: action.payload };
+    case "SET_COMMENT_SORTING":
+      return { ...state, commentSorting: action.payload };
+    default:
+      return initialState;
+  }
+}
 
 function Post({ post }) {
   const { classes } = useStyles();
-  const [comments, setComments] = useState([]);
-  const [loadingComments, setLoadingComments] = useState(true);
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const {
+    isLoading,
+    isFetching,
+    isRefetching,
+
+    data: comments,
+
+    refetch,
+  } = useQuery(
+    ["comments"],
+    () => fetchComments(post.id, state.commentSorting),
+    { enabled: !!post, initialData: [] }
+  );
+
   useEffect(() => {
-    if (post.id) {
-      setLoadingComments(true);
-      setComments([]);
-      fetch(
-        `https://www.reddit.com/comments/${post.id}.json?limit=50&depth=5&sort=top`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setComments(data[1].data.children);
-          if (!data[1].data.children.length) {
-            setLoadingComments(false);
-          }
-        });
-    }
-  }, [post.id, setLoadingComments, setComments]);
+    refetch();
+  }, [post, state.commentSorting]);
   return (
     <>
       <Head>
@@ -65,9 +87,14 @@ function Post({ post }) {
             <PostCard post={post} />
             <CommentSection
               post={post}
-              comments={comments}
-              isLoading={loadingComments}
+              comments={comments[1]?.data?.children}
+              isLoading={isLoading}
+              isFetching={isFetching}
+              isRefetching={isRefetching}
               type="full"
+              setCommentSorting={(value) =>
+                dispatch({ type: "SET_COMMENT_SORTING", payload: value })
+              }
             />
           </div>
         </>

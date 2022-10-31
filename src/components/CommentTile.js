@@ -15,7 +15,7 @@ function CommentTile({ comment }) {
       );
     }
   }, [comment]);
-  if (!comment.body || comment.stickied || comment.body == "[removed]") {
+  if (!comment.body || comment.stickied) {
     return null;
   }
   return (

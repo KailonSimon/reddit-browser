@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useReducer } from "react";
 import { useInView } from "framer-motion";
 import PostTile from "./PostTile";
 import { Button, createStyles, Loader, Modal, Text } from "@mantine/core";
@@ -8,6 +8,8 @@ import CommentSection from "./CommentSection";
 import Link from "next/link";
 import { ArrowLeft } from "tabler-icons-react";
 import Head from "next/head";
+import { useQuery } from "@tanstack/react-query";
+import { fetchComments } from "../../utils";
 
 const useStyles = createStyles((theme) => ({
   posts: {
@@ -21,19 +23,31 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Feed({
-  posts,
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
-  setSubreddit,
-}) {
+const initialState = {
+  comments: [],
+  loadingComments: true,
+  commentSorting: "confidence",
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_COMMENTS":
+      return { ...state, comments: action.payload };
+    case "SET_LOADING_COMMENTS":
+      return { ...state, loadingComments: action.payload };
+    case "SET_COMMENT_SORTING":
+      return { ...state, commentSorting: action.payload };
+    default:
+      return initialState;
+  }
+}
+
+function Feed({ posts, fetchNextPage, hasNextPage, setSubreddit }) {
   const { classes } = useStyles();
   const router = useRouter();
   const ref = useRef();
   const isInView = useInView(ref);
-  const [comments, setComments] = useState([]);
-  const [loadingComments, setLoadingComments] = useState(true);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     if (isInView && hasNextPage) {
@@ -41,22 +55,23 @@ function Feed({
     }
   }, [isInView, fetchNextPage, hasNextPage]);
 
+  const {
+    isLoading,
+    isFetching,
+    isRefetching,
+    data: comments,
+    refetch,
+  } = useQuery(
+    ["comments"],
+    () => fetchComments(router.query.post, state.commentSorting),
+    { enabled: !!router.query.post, initialData: [] }
+  );
+
   useEffect(() => {
     if (router.query.post) {
-      setLoadingComments(true);
-      setComments([]);
-      fetch(
-        `https://www.reddit.com/comments/${router.query.post}.json?limit=50&depth=5&sort=top`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setComments(data[1].data.children);
-          if (!data[1].data.children.length) {
-            setLoadingComments(false);
-          }
-        });
+      refetch();
     }
-  }, [router.query.post, setLoadingComments, setComments]);
+  }, [router.query.post, state.commentSorting]);
 
   return (
     <>
@@ -134,9 +149,14 @@ function Feed({
               post={
                 posts.find((post) => post.data.id == router.query.post).data
               }
-              comments={comments}
-              isLoading={loadingComments}
+              comments={comments[1]?.data?.children}
+              isLoading={isLoading}
+              isFetching={isFetching}
+              isRefetching={isRefetching}
               type="full"
+              setCommentSorting={(value) =>
+                dispatch({ type: "SET_COMMENT_SORTING", payload: value })
+              }
             />
           </>
         )}

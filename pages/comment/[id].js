@@ -1,11 +1,10 @@
-import { Button, createStyles, Text } from "@mantine/core";
+import { Button, createStyles } from "@mantine/core";
 import Link from "next/link";
 import { ArrowLeft } from "tabler-icons-react";
 import Layout from "../../src/components/Layout";
 import CommentSection from "../../src/components/CommentSection";
 import Head from "next/head";
 import PostCard from "../../src/components/PostCard";
-import { useEffect, useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -26,10 +25,6 @@ const useStyles = createStyles((theme) => ({
 
 function Comment({ comment, post, replies }) {
   const { classes } = useStyles();
-
-  useEffect(() => {
-    console.log({ replies });
-  }, [comment, post, replies]);
 
   return (
     <>
