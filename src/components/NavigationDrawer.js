@@ -20,7 +20,6 @@ function NavigationDrawer() {
         styles={{
           drawer: {
             marginTop: "4rem",
-            border: "1px solid red",
           },
         }}
       >
