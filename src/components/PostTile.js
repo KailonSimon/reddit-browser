@@ -17,6 +17,7 @@ import numeral from "numeral";
 import Link from "next/link";
 import { getRelativeTime } from "../../utils";
 import SubmissionMenu from "./SubmissionMenu";
+import { useRouter } from "next/router";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -41,8 +42,9 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PostTile({ post, setSubreddit }) {
+function PostTile({ post, handlePostTileClick }) {
   const { classes } = useStyles();
+  const router = useRouter();
 
   return (
     <div className={classes.container}>
@@ -100,29 +102,24 @@ function PostTile({ post, setSubreddit }) {
               paddingRight: "0.5rem",
             }}
           >
-            <Link
-              href={`/?post=${post.id}`}
-              as={`/post/${post.id}`}
-              scroll={false}
-              passHref
+            <Anchor
+              weight={700}
+              component="a"
+              underline={false}
+              variant="text"
+              color="#D7DADC"
+              sx={{
+                wordWrap: "break-word",
+                wordBreak: "break-word",
+                whiteSpace: "pre-line",
+                textOverflow: "ellipsis",
+                overflowWrap: "break-word",
+              }}
+              onClick={() => handlePostTileClick(post)}
             >
-              <Anchor
-                weight={700}
-                component="a"
-                underline={false}
-                variant="text"
-                color="#D7DADC"
-                sx={{
-                  wordWrap: "break-word",
-                  wordBreak: "break-word",
-                  whiteSpace: "pre-line",
-                  textOverflow: "ellipsis",
-                  overflowWrap: "break-word",
-                }}
-              >
-                {post.title}
-              </Anchor>
-            </Link>
+              {post.title}
+            </Anchor>
+
             {post.over_18 && (
               <Badge ml={8} variant="filled" radius={4} color="red">
                 NSFW
@@ -157,24 +154,33 @@ function PostTile({ post, setSubreddit }) {
             flexFlow: "row wrap",
           }}
         >
-          <Text
-            size="sm"
-            weight="bold"
-            sx={(theme) => ({
-              whiteSpace: "nowrap",
-              ":hover": {
-                cursor: "pointer",
-                textDecoration: "underline",
-                color: theme.colors.brand,
-              },
-            })}
-            onClick={() => setSubreddit(post.subreddit)}
-          >
-            r/{post.subreddit}
-          </Text>
-          <span style={{ margin: "0 4px", fontSize: "6px", color: "#818384" }}>
-            •
-          </span>
+          {router.pathname === "/" && (
+            <>
+              <Link href={`/sub/${post.subreddit}`} passHref>
+                <Anchor
+                  size="sm"
+                  variant="text"
+                  weight="bold"
+                  color="#D7DADC"
+                  sx={(theme) => ({
+                    whiteSpace: "nowrap",
+                    ":hover": {
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                      color: theme.colors.brand,
+                    },
+                  })}
+                >
+                  r/{post.subreddit}
+                </Anchor>
+              </Link>
+              <span
+                style={{ margin: "0 4px", fontSize: "6px", color: "#818384" }}
+              >
+                •
+              </span>
+            </>
+          )}
           <Text color="dimmed" size="xs">
             Posted by{" "}
             <Anchor

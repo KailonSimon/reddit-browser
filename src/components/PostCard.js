@@ -12,6 +12,8 @@ import React, { useEffect } from "react";
 import Video from "./Video";
 import { getRelativeTime } from "../../utils";
 import SubmissionMenu from "./SubmissionMenu";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -32,8 +34,9 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function PostCard({ post, setSubreddit }) {
+function PostCard({ post }) {
   const { classes } = useStyles();
+  const router = useRouter();
 
   return (
     <div className={classes.container}>
@@ -44,22 +47,29 @@ function PostCard({ post, setSubreddit }) {
         }}
       >
         <div className={classes.details}>
-          <Text
-            size="sm"
-            weight="bold"
-            sx={(theme) => ({
-              whiteSpace: "nowrap",
-              ":hover": {
-                cursor: "pointer",
-                textDecoration: "underline",
-                color: theme.colors.brand,
-              },
-            })}
-            onClick={() => setSubreddit(post.subreddit)}
-          >
-            r/{post.subreddit}
-          </Text>
-          <span style={{ margin: "0 4px", fontSize: 8 }}>•</span>
+          {router.pathname === "/" && (
+            <>
+              <Link href={`/sub/${post.subreddit}`} passHref>
+                <Anchor
+                  size="sm"
+                  variant="text"
+                  weight="bold"
+                  color="#D7DADC"
+                  sx={(theme) => ({
+                    whiteSpace: "nowrap",
+                    ":hover": {
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                      color: theme.colors.brand,
+                    },
+                  })}
+                >
+                  r/{post.subreddit}
+                </Anchor>
+              </Link>
+              <span style={{ margin: "0 4px", fontSize: 8 }}>•</span>
+            </>
+          )}
           <Text size="sm" sx={{ whiteSpace: "nowrap" }}>
             Posted by{" "}
             <Anchor

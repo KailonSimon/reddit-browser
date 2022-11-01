@@ -5,9 +5,6 @@ import Layout from "../../src/components/Layout";
 import CommentSection from "../../src/components/CommentSection";
 import Head from "next/head";
 import PostCard from "../../src/components/PostCard";
-import { useEffect, useReducer } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchComments } from "../../utils";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -25,47 +22,10 @@ const useStyles = createStyles((theme) => ({
     margin: "0 0 4px",
   },
 }));
-const initialState = {
-  comments: [],
-  loadingComments: true,
-  commentSorting: "confidence",
-};
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "SET_COMMENTS":
-      return { ...state, comments: action.payload };
-    case "SET_LOADING_COMMENTS":
-      return { ...state, loadingComments: action.payload };
-    case "SET_COMMENT_SORTING":
-      return { ...state, commentSorting: action.payload };
-    default:
-      return initialState;
-  }
-}
 
 function Post({ post }) {
   const { classes } = useStyles();
 
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  const {
-    isLoading,
-    isFetching,
-    isRefetching,
-
-    data: comments,
-
-    refetch,
-  } = useQuery(
-    ["comments"],
-    () => fetchComments(post.id, state.commentSorting),
-    { enabled: !!post, initialData: [] }
-  );
-
-  useEffect(() => {
-    refetch();
-  }, [post, state.commentSorting]);
   return (
     <>
       <Head>
@@ -81,21 +41,11 @@ function Post({ post }) {
           <div className={classes.container}>
             <Link href={"/"} passHref>
               <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
-                Go to feed
+                Go back
               </Button>
             </Link>
             <PostCard post={post} />
-            <CommentSection
-              post={post}
-              comments={comments[1]?.data?.children}
-              isLoading={isLoading}
-              isFetching={isFetching}
-              isRefetching={isRefetching}
-              type="full"
-              setCommentSorting={(value) =>
-                dispatch({ type: "SET_COMMENT_SORTING", payload: value })
-              }
-            />
+            <CommentSection post={post} />
           </div>
         </>
       </Layout>

@@ -3,20 +3,17 @@ import { ArrowUp } from "tabler-icons-react";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
+import Navbar from "./Navbar";
 
 const useStyles = createStyles((theme) => ({
   container: {
     position: "relative",
-    maxHeight: "100vh",
+    height: "100%",
+    width: "100%",
     overflow: "auto",
-    padding: "1rem 0.5rem",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-
-    [theme.fn.largerThan("xs")]: {
-      padding: "1rem 1rem",
-    },
   },
 }));
 
@@ -28,25 +25,22 @@ function Layout({ children }) {
 
   return (
     <>
+      <Navbar />
       <div
         className={classes.container}
         onScroll={() => setScrollPosition(ref.current?.scrollTop)}
         ref={ref}
       >
-        <Link href="/" passHref>
-          <Anchor
-            align="center"
-            mb={8}
-            sx={{ fontFamily: "Chillax" }}
-            color="brand"
-            variant="text"
-            size={24}
-            weight={700}
-          >
-            Reddit<span>B</span>rowser
-          </Anchor>
-        </Link>
-        {children}
+        <main
+          className={classes.contentWrapper}
+          style={{
+            maxWidth: "100vw",
+            padding: "1rem 0.5rem",
+            marginTop: "4rem",
+          }}
+        >
+          {children}
+        </main>
       </div>
       <Affix
         position={{ bottom: 20, right: 20 }}

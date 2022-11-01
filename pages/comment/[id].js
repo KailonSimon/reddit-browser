@@ -23,7 +23,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Comment({ comment, post, replies }) {
+function Comment({ commentId, post }) {
   const { classes } = useStyles();
 
   return (
@@ -40,13 +40,7 @@ function Comment({ comment, post, replies }) {
               </Button>
             </Link>
             <PostCard post={post} />
-
-            <CommentSection
-              post={post}
-              comments={replies}
-              isLoading={false}
-              type="single"
-            />
+            <CommentSection post={post} commentId={commentId} />
           </div>
         </>
       </Layout>
@@ -74,7 +68,7 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      comment: comment.data.children[0].data,
+      commentId: id,
       post: post.data.children[0].data,
       replies: replies[1].data.children,
     },

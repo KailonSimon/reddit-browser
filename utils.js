@@ -38,13 +38,31 @@ export const mergePages = (pages) => {
 export const getNestedCommentClass = (depth) => {
   return depth % 5;
 };
-export const fetchComments = async (postId, sorting) => {
-  let res;
-  if (postId) {
-    res = await fetch(
+
+export const fetchPosts = async (sorting, subreddit, pageParam = "") => {
+  const res = await fetch(
+    `https://www.reddit.com/r/${subreddit}/${sorting}.json?limit=10&after=${pageParam}&raw_json=1`
+  );
+  return await res.json();
+};
+
+export const fetchComments = async (postId, sorting, commentId) => {
+  if (!!commentId) {
+    const res = await fetch(
+      `https://www.reddit.com/comments/${postId}.json?comment=${commentId}&limit=50&depth=10&sort=${sorting}`
+    );
+    return await res.json();
+  } else {
+    const res = await fetch(
       `https://www.reddit.com/comments/${postId}.json?limit=50&depth=5&sort=${sorting}`
     );
+    return await res.json();
   }
+};
 
-  return res.json();
+export const fetchSubreddits = async (searchValue) => {
+  const res = await fetch(
+    `https://www.reddit.com/api/subreddit_autocomplete_v2.json?query=${searchValue}&include_profiles=false&limit=3`
+  );
+  return await res.json();
 };

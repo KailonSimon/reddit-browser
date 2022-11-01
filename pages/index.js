@@ -5,15 +5,13 @@ import FeedControls from "../src/components/FeedControls";
 import Feed from "../src/components/Feed";
 import Layout from "../src/components/Layout";
 import Head from "next/head";
-import { mergePages } from "../utils";
+import { fetchPosts, mergePages } from "../utils";
 import LoadingScreen from "../src/components/LoadingScreen";
 
-const initialState = { subreddit: null, sorting: "hot" };
+const initialState = { sorting: "hot" };
 
 function reducer(state, action) {
   switch (action.type) {
-    case "SET_SUBREDDIT":
-      return { ...state, subreddit: action.payload };
     case "SET_SORTING":
       return { ...state, sorting: action.payload };
     default:
@@ -24,20 +22,6 @@ function reducer(state, action) {
 export default function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const fetchPosts = async ({ pageParam = "" }) => {
-    let res;
-    if (state.subreddit) {
-      res = await fetch(
-        `https://www.reddit.com/r/${state.subreddit}/${state.sorting}.json?limit=10&after=${pageParam}&raw_json=1`
-      );
-    } else {
-      res = await fetch(
-        `https://www.reddit.com/r/all/${state.sorting}.json?limit=10&after=${pageParam}&raw_json=1`
-      );
-    }
-    return res.json();
-  };
-
   const {
     status,
     data,
@@ -47,11 +31,15 @@ export default function Home() {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery(["posts"], fetchPosts, {
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.data.after;
-    },
-  });
+  } = useInfiniteQuery(
+    ["posts"],
+    ({ pageParam = "" }) => fetchPosts(state.sorting, "all", pageParam),
+    {
+      getNextPageParam: (lastPage, pages) => {
+        return lastPage.data.after;
+      },
+    }
+  );
 
   useEffect(() => {
     refetch();
@@ -70,10 +58,6 @@ export default function Home() {
       </Head>
       <Layout>
         <FeedControls
-          subreddit={state.subreddit}
-          setSubreddit={(value) =>
-            dispatch({ type: "SET_SUBREDDIT", payload: value })
-          }
           sorting={state.sorting}
           setSorting={(value) =>
             dispatch({ type: "SET_SORTING", payload: value })
@@ -83,9 +67,6 @@ export default function Home() {
 
         <Feed
           key={mergePages(data.pages)}
-          setSubreddit={(value) =>
-            dispatch({ type: "SET_SUBREDDIT", payload: value })
-          }
           posts={mergePages(data.pages)}
           fetchNextPage={fetchNextPage}
           hasNextPage={hasNextPage}
