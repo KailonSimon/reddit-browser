@@ -40,7 +40,7 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
         gap: "0.25rem",
       }}
     >
-      <Avatar src={user.image} radius="xl" />
+      <Avatar src={user.snoovatar_img} radius="xl" />
 
       <div
         style={{
@@ -54,7 +54,7 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
         </Text>
 
         <Text color="dimmed" size="xs">
-          {user.karma} karma
+          {user.total_karma} karma
         </Text>
       </div>
       <div
@@ -69,6 +69,8 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
     </div>
   </UnstyledButton>
 ));
+
+UserButton.displayName = "UserButton";
 
 function UserMenu({ user }) {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();

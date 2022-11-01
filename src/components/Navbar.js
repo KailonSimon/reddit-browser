@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createStyles, Anchor } from "@mantine/core";
 import Link from "next/link";
 import SubredditSearch from "./SubredditSearch";
@@ -6,6 +6,7 @@ import NavigationDrawer from "./NavigationDrawer";
 import SignInButton from "./SignInButton";
 import UserMenu from "./UserMenu";
 import { useSession } from "next-auth/react";
+import { fetchAuthenticatedUserData } from "../../utils";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -61,6 +62,14 @@ const useStyles = createStyles((theme) => ({
 function Navbar() {
   const { classes } = useStyles();
   const { data: session } = useSession();
+  const [userData, setUserData] = useState(null);
+  useEffect(() => {
+    if (session) {
+      fetchAuthenticatedUserData(session.accessToken).then((data) =>
+        setUserData(data)
+      );
+    }
+  }, [session]);
   return (
     <header className={classes.header}>
       <nav className={classes.nav}>
@@ -82,11 +91,7 @@ function Navbar() {
           <NavigationDrawer />
         </div>
         <div className={classes.userControls}>
-          {session ? (
-            <UserMenu user={{ name: "tehehi", karma: "4.5" }} />
-          ) : (
-            <SignInButton />
-          )}
+          {session && data ? <UserMenu user={user} /> : <SignInButton />}
         </div>
       </nav>
     </header>
