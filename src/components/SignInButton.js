@@ -1,17 +1,8 @@
 import { Button } from "@mantine/core";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { BrandReddit } from "tabler-icons-react";
 
 function SignInButton() {
-  const { data: session } = useSession();
-
-  if (session) {
-    return (
-      <Button size="sm" onClick={() => signOut()} color="red">
-        Sign out
-      </Button>
-    );
-  }
   return (
     <Button
       variant="outline"

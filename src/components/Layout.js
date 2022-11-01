@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { createStyles, Button, Affix, Transition } from "@mantine/core";
 import { ArrowUp } from "tabler-icons-react";
 import { useRouter } from "next/router";
@@ -8,11 +8,13 @@ const useStyles = createStyles((theme) => ({
   container: {
     position: "relative",
     height: "100%",
+    minHeight: "100vh",
     width: "100%",
     overflow: "auto",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    backgroundColor: theme.colorScheme === "dark" ? "#000" : "#fff",
   },
 }));
 

@@ -1,4 +1,4 @@
-import { ActionIcon, Anchor, Button, Spoiler, Text } from "@mantine/core";
+import { ActionIcon, Anchor, Box, Button, Spoiler, Text } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import { ArrowUp, ChevronDown } from "tabler-icons-react";
 import { getNestedCommentClass, getRelativeTime } from "../../utils";
@@ -34,12 +34,12 @@ function CommentTile({ comment }) {
         style={{ display: isCollapsed ? "none" : "block" }}
         onClick={() => setIsCollapsed(true)}
       />
-      <div
-        style={{
+      <Box
+        sx={(theme) => ({
           padding: isCollapsed ? "0 0.75rem 0 0" : "0.25rem 0.75rem 0.5rem",
-          color: "#D7DADC",
+          color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
           width: "100%",
-        }}
+        })}
       >
         <div
           style={{
@@ -133,7 +133,7 @@ function CommentTile({ comment }) {
             </Text>
           </>
         )}
-      </div>
+      </Box>
       {replies.length > 0 && !isCollapsed && (
         <div
           style={{

@@ -5,6 +5,7 @@ import {
   Anchor,
   Badge,
   Tooltip,
+  Box,
 } from "@mantine/core";
 import React from "react";
 import {
@@ -22,17 +23,16 @@ import { useRouter } from "next/router";
 const useStyles = createStyles((theme) => ({
   container: {
     minHeight: 100,
-    border: "1px solid #474748",
-    background: "#1A1A1B",
+    border: `1px solid ${
+      theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+    }`,
+    background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
     padding: "0.5rem",
     display: "flex",
     gap: "0.5rem",
     justifyContent: "flex-start",
     position: "relative",
     borderRadius: "4px",
-    "&:hover": {
-      border: "1px solid #D7DADC",
-    },
   },
   upArrow: {
     "&:hover": { color: theme.colors.brand, cursor: "pointer" },
@@ -59,7 +59,12 @@ function PostTile({ post, handlePostTileClick }) {
         }}
       >
         <ArrowBigTop size={20} className={classes.upArrow} />
-        <Text color="rgb(215, 218, 220)">
+        <Text
+          sx={(theme) => ({
+            color:
+              theme.colorScheme === "dark" ? "rgb(215, 218, 220)" : theme.black,
+          })}
+        >
           {numeral(post.score).format("0a")}
         </Text>
         <ArrowBigDown size={20} className={classes.downArrow} />
@@ -74,7 +79,6 @@ function PostTile({ post, handlePostTileClick }) {
           radius={4}
           styles={{
             placeholder: { background: "#1A1A1B" },
-            image: { border: "1px solid #474748" },
           }}
         />
       )}
@@ -107,14 +111,14 @@ function PostTile({ post, handlePostTileClick }) {
               component="a"
               underline={false}
               variant="text"
-              color="#D7DADC"
-              sx={{
+              sx={(theme) => ({
                 wordWrap: "break-word",
                 wordBreak: "break-word",
                 whiteSpace: "pre-line",
                 textOverflow: "ellipsis",
                 overflowWrap: "break-word",
-              }}
+                color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+              })}
               onClick={() => handlePostTileClick(post)}
             >
               {post.title}
@@ -129,12 +133,17 @@ function PostTile({ post, handlePostTileClick }) {
               <Tooltip
                 label={post.link_flair_text}
                 transition="skew-down"
-                styles={{
+                styles={(theme) => ({
                   tooltip: {
-                    border: "1px solid #474748",
-                    background: "#1A1A1B",
+                    color:
+                      theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+                    border: `1px solid ${
+                      theme.colorScheme === "dark" ? "#474748" : "#1A1A1B"
+                    }`,
+                    backgroundColor:
+                      theme.colorScheme === "dark" ? "#121212" : theme.white,
                   },
-                }}
+                })}
               >
                 <Badge ml={8} variant="dot" radius={4}>
                   {post.link_flair_text.length > 15
@@ -146,13 +155,14 @@ function PostTile({ post, handlePostTileClick }) {
           </div>
           <SubmissionMenu type="post" submission={post} />
         </div>
-        <div
-          style={{
+        <Box
+          sx={(theme) => ({
             display: "flex",
             alignItems: "center",
             marginTop: 2,
             flexFlow: "row wrap",
-          }}
+            color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+          })}
         >
           {router.pathname === "/" && (
             <>
@@ -161,9 +171,10 @@ function PostTile({ post, handlePostTileClick }) {
                   size="sm"
                   variant="text"
                   weight="bold"
-                  color="#D7DADC"
                   sx={(theme) => ({
                     whiteSpace: "nowrap",
+                    color:
+                      theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
                     ":hover": {
                       cursor: "pointer",
                       textDecoration: "underline",
@@ -181,14 +192,19 @@ function PostTile({ post, handlePostTileClick }) {
               </span>
             </>
           )}
-          <Text color="dimmed" size="xs">
+          <Text
+            size="xs"
+            sx={(theme) => ({
+              color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+            })}
+          >
             Posted by{" "}
             <Anchor
               href={`/user/${post.author}`}
               target="_blank"
               rel="noreferrer"
-              color="dimmed"
               sx={(theme) => ({
+                color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
                 ":hover": {
                   cursor: "pointer",
                   textDecoration: "underline",
@@ -206,22 +222,27 @@ function PostTile({ post, handlePostTileClick }) {
               marginLeft: 4,
               fontSize: "12px",
               gap: 2,
-              color: "#868e96",
+              color: "inherit",
             }}
           >
             <ClockHour3 size={10} />
             <Text>{getRelativeTime(post.created)}</Text>
           </span>
-        </div>
-        <div
-          style={{ marginTop: "4px", display: "flex", alignItems: "center" }}
+        </Box>
+        <Box
+          sx={(theme) => ({
+            marginTop: "4px",
+            display: "flex",
+            alignItems: "center",
+            color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+          })}
         >
-          <Messages size={16} color="#868e96" />
-          <Text color="dimmed" size="xs" ml={2}>
+          <Messages size={16} />
+          <Text size="xs" ml={2}>
             {numeral(post.num_comments).format("0a")} comment
             {post.num_comments === 1 ? "" : "s"}
           </Text>
-        </div>
+        </Box>
       </div>
     </div>
   );

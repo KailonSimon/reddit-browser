@@ -5,14 +5,6 @@
   font-style: normal;
 }
 
-html {
-  color-scheme: dark;
-}
-body {
-  color: white;
-  background: black;
-}
-
 html,
 body {
   padding: 0;

@@ -66,3 +66,13 @@ export const fetchSubreddits = async (searchValue) => {
   );
   return await res.json();
 };
+
+export const fetchAuthenticatedUserData = async (accessToken) => {
+  const res = await fetch(`https://oauth.reddit.com/api/v1/me.json`, {
+    credentials: "include",
+    headers: {
+      Authorization: `bearer ${accessToken}`,
+    },
+  });
+  return await res.json();
+};

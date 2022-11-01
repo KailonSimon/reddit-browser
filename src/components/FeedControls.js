@@ -4,19 +4,21 @@ import { EggCracked, Flame, Medal, TrendingUp } from "tabler-icons-react";
 
 function FeedControls({ sorting, setSorting, isRefetching }) {
   return (
-    <div
-      style={{
+    <Box
+      sx={(theme) => ({
         marginBottom: "16px",
-        background: "#1A1A1B",
+        background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
         width: 600,
         maxWidth: "100%",
-        border: "1px solid #474748",
+        border: `1px solid ${
+          theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+        }`,
         borderRadius: 4,
         padding: "1rem",
         display: "flex",
         flexDirection: "column",
         gap: "0.5rem",
-      }}
+      })}
     >
       <SegmentedControl
         fullWidth
@@ -67,10 +69,16 @@ function FeedControls({ sorting, setSorting, isRefetching }) {
             ),
           },
         ]}
+        styles={(theme) => ({
+          root: {
+            backgroundColor:
+              theme.colorScheme === "dark" ? "#121212" : theme.colors.gray[1],
+          },
+        })}
         variant="default"
         disabled={isRefetching}
       />
-    </div>
+    </Box>
   );
 }
 

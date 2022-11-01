@@ -66,6 +66,14 @@ function SubredditSearch() {
           item.value.toLowerCase().includes(value.toLowerCase().trim())
         );
       }}
+      styles={(theme) => ({
+        input: {
+          border: `1px solid ${
+            theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+          }`,
+          background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
+        },
+      })}
     />
   );
 }

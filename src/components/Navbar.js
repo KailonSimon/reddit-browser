@@ -4,6 +4,8 @@ import Link from "next/link";
 import SubredditSearch from "./SubredditSearch";
 import NavigationDrawer from "./NavigationDrawer";
 import SignInButton from "./SignInButton";
+import UserMenu from "./UserMenu";
+import { useSession } from "next-auth/react";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -12,9 +14,11 @@ const useStyles = createStyles((theme) => ({
     top: 0,
     left: 0,
     zIndex: 999,
-    backgroundColor: "#121212",
+    backgroundColor: theme.colorScheme === "dark" ? "#121212" : "#fff",
     letterSpacing: 1.5,
     padding: "0 1rem",
+    borderBottom:
+      theme.colorScheme === "dark" ? "" : `1px solid ${theme.colors.gray[4]}`,
   },
   nav: {
     height: "3rem",
@@ -45,7 +49,7 @@ const useStyles = createStyles((theme) => ({
       display: "none",
     },
   },
-  signInButton: {
+  userControls: {
     position: "absolute",
     right: 16,
     [theme.fn.smallerThan("sm")]: {
@@ -56,6 +60,7 @@ const useStyles = createStyles((theme) => ({
 
 function Navbar() {
   const { classes } = useStyles();
+  const { data: session } = useSession();
   return (
     <header className={classes.header}>
       <nav className={classes.nav}>
@@ -76,8 +81,12 @@ function Navbar() {
         <div className={classes.drawer}>
           <NavigationDrawer />
         </div>
-        <div className={classes.signInButton}>
-          <SignInButton />
+        <div className={classes.userControls}>
+          {session ? (
+            <UserMenu user={{ name: "tehehi", karma: "4.5" }} />
+          ) : (
+            <SignInButton />
+          )}
         </div>
       </nav>
     </header>

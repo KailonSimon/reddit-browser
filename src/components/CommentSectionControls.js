@@ -53,8 +53,13 @@ function CommentSectionControls({
             { value: "random", label: "Random" },
           ]}
           onChange={(value) => handleChangeCommentSort(value)}
-          styles={() => ({
-            root: { border: "1px solid #474748" },
+          styles={(theme) => ({
+            root: {
+              border: `1px solid ${
+                theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+              }`,
+              background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
+            },
           })}
           disabled={isLoading || isFetching || isRefetching}
         />

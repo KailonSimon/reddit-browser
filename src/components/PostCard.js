@@ -5,10 +5,10 @@ import {
   Anchor,
   Image,
   Badge,
-  Loader,
+  Box,
 } from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
-import React, { useEffect } from "react";
+import React from "react";
 import Video from "./Video";
 import { getRelativeTime } from "../../utils";
 import SubmissionMenu from "./SubmissionMenu";
@@ -20,8 +20,10 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     color: "#D7DADC",
-    border: "1px solid #474748",
-    background: "#1A1A1B",
+    border: `1px solid ${
+      theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+    }`,
+    background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
     borderRadius: 4,
     padding: "1rem",
     width: "100%",
@@ -57,6 +59,8 @@ function PostCard({ post }) {
                   color="#D7DADC"
                   sx={(theme) => ({
                     whiteSpace: "nowrap",
+                    color:
+                      theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
                     ":hover": {
                       cursor: "pointer",
                       textDecoration: "underline",
@@ -70,7 +74,13 @@ function PostCard({ post }) {
               <span style={{ margin: "0 4px", fontSize: 8 }}>•</span>
             </>
           )}
-          <Text size="sm" sx={{ whiteSpace: "nowrap" }}>
+          <Text
+            size="sm"
+            sx={(theme) => ({
+              color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+              whiteSpace: "nowrap",
+            })}
+          >
             Posted by{" "}
             <Anchor
               href={`/user/${post.author}`}
@@ -90,7 +100,13 @@ function PostCard({ post }) {
             </Anchor>
           </Text>
 
-          <Text size="sm" ml={4}>
+          <Text
+            size="sm"
+            ml={4}
+            sx={(theme) => ({
+              color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+            })}
+          >
             {getRelativeTime(post.created)} ago
           </Text>
         </div>
@@ -98,12 +114,13 @@ function PostCard({ post }) {
           <SubmissionMenu type="post" submission={post} />
         </div>
       </div>
-      <div
-        style={{
+      <Box
+        sx={(theme) => ({
           display: "flex",
           flexFlow: "row wrap",
           alignItems: "center",
-        }}
+          color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+        })}
       >
         <Title
           order={1}
@@ -132,7 +149,7 @@ function PostCard({ post }) {
             {post.link_flair_text}
           </Badge>
         )}
-      </div>
+      </Box>
 
       {post.post_hint === "self" && post?.preview?.images[0]?.source?.url ? (
         <Image
@@ -184,7 +201,16 @@ function PostCard({ post }) {
           </Anchor>
         </div>
       )}
-      {post.is_self && <Text mt={4}>{post.selftext}</Text>}
+      {post.is_self && (
+        <Text
+          mt={4}
+          sx={(theme) => ({
+            color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+          })}
+        >
+          {post.selftext}
+        </Text>
+      )}
     </div>
   );
 }

@@ -1,11 +1,11 @@
-import { Menu, ActionIcon } from "@mantine/core";
+import { Menu, ActionIcon, useMantineColorScheme } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
 import { ClipboardCopy, Dots, Link } from "tabler-icons-react";
 import { showNotification } from "@mantine/notifications";
 
 export default function SubmissionMenu({ type, submission }) {
   const clipboard = useClipboard({ timeout: 500 });
-
+  const { colorScheme } = useMantineColorScheme();
   const handleCopy = (text) => {
     const maxLength = 20;
     clipboard.copy(text);
@@ -21,7 +21,7 @@ export default function SubmissionMenu({ type, submission }) {
     <Menu shadow="md" width={200}>
       <Menu.Target>
         <ActionIcon>
-          <Dots color="#818384" />
+          <Dots color={colorScheme == "dark" ? "#818384" : "#000"} />
         </ActionIcon>
       </Menu.Target>
 

@@ -1,18 +1,19 @@
-import { Loader } from "@mantine/core";
+import { Box, Loader } from "@mantine/core";
 
 function LoadingScreen() {
   return (
-    <div
-      style={{
+    <Box
+      sx={(theme) => ({
         height: "100vh",
         width: "100vw",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-      }}
+        background: theme.colorScheme === "dark" ? theme.black : theme.white,
+      })}
     >
       <Loader />
-    </div>
+    </Box>
   );
 }
 

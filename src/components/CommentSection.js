@@ -22,9 +22,10 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
     gap: "0.5rem",
     padding: "1rem 0.5rem",
-    color: "#C1C2C5",
-    border: "1px solid #474748",
-    background: "#1A1A1B",
+    border: `1px solid ${
+      theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+    }`,
+    background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
     borderRadius: 4,
   },
 }));

@@ -1,15 +1,20 @@
 import { useState } from "react";
 import { Burger, Drawer } from "@mantine/core";
 import SubredditSearch from "./SubredditSearch";
+import SignInButton from "./SignInButton";
+import { useSession } from "next-auth/react";
+import SignOutButton from "./SignOutButton";
 
 function NavigationDrawer() {
   const [opened, setOpened] = useState(false);
+  const { data: session } = useSession();
   return (
     <>
       <Burger
         opened={opened}
         onClick={() => setOpened((o) => !o)}
         color="#59ba12"
+        size="sm"
       />
       <Drawer
         opened={opened}
@@ -18,13 +23,18 @@ function NavigationDrawer() {
         size="md"
         position="right"
         withCloseButton={false}
-        styles={{
+        styles={(theme) => ({
           drawer: {
-            marginTop: "4rem",
+            marginTop: "3rem",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
           },
-        }}
+        })}
       >
         <SubredditSearch />
+        {session ? <SignOutButton /> : <SignInButton />}
       </Drawer>
     </>
   );
