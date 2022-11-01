@@ -1,50 +1,22 @@
 import "../styles/globals.css";
+import { SessionProvider } from "next-auth/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MantineProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
+import { theme } from "../theme";
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const queryClient = new QueryClient();
   return (
-    <MantineProvider
-      theme={{
-        colorScheme: "dark",
-        fontFamily: "Chillax, sans-serif",
-        colors: {
-          brand: [
-            "#59ba12ff",
-            "#59ba12ff",
-            "#59ba12ff",
-            "#59ba12ff",
-            "#59ba12ff",
-            "#59ba12ff",
-            "#59ba12ff",
-            "#59ba12ff",
-            "#59ba12ff",
-            "#59ba12ff",
-          ],
-          accent: [
-            "#7312ba",
-            "#7312ba",
-            "#7312ba",
-            "#7312ba",
-            "#7312ba",
-            "#7312ba",
-            "#7312ba",
-            "#7312ba",
-            "#7312ba",
-            "#7312ba",
-          ],
-        },
-        primaryColor: "brand",
-      }}
-    >
-      <NotificationsProvider>
-        <QueryClientProvider client={queryClient}>
-          <Component {...pageProps} />
-        </QueryClientProvider>
-      </NotificationsProvider>
-    </MantineProvider>
+    <SessionProvider session={session}>
+      <MantineProvider theme={theme}>
+        <NotificationsProvider>
+          <QueryClientProvider client={queryClient}>
+            <Component {...pageProps} />
+          </QueryClientProvider>
+        </NotificationsProvider>
+      </MantineProvider>
+    </SessionProvider>
   );
 }
 

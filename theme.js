@@ -1,0 +1,31 @@
+export const theme = {
+  colorScheme: "dark",
+  fontFamily: "Chillax, sans-serif",
+  colors: {
+    brand: [
+      "#59ba12ff",
+      "#59ba12ff",
+      "#59ba12ff",
+      "#59ba12ff",
+      "#59ba12ff",
+      "#59ba12ff",
+      "#59ba12ff",
+      "#59ba12ff",
+      "#59ba12ff",
+      "#59ba12ff",
+    ],
+    accent: [
+      "#7312ba",
+      "#7312ba",
+      "#7312ba",
+      "#7312ba",
+      "#7312ba",
+      "#7312ba",
+      "#7312ba",
+      "#7312ba",
+      "#7312ba",
+      "#7312ba",
+    ],
+  },
+  primaryColor: "brand",
+};

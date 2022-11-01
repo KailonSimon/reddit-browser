@@ -3,6 +3,7 @@ import { createStyles, Anchor } from "@mantine/core";
 import Link from "next/link";
 import SubredditSearch from "./SubredditSearch";
 import NavigationDrawer from "./NavigationDrawer";
+import SignInButton from "./SignInButton";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -44,6 +45,13 @@ const useStyles = createStyles((theme) => ({
       display: "none",
     },
   },
+  signInButton: {
+    position: "absolute",
+    right: 16,
+    [theme.fn.smallerThan("sm")]: {
+      display: "none",
+    },
+  },
 }));
 
 function Navbar() {
@@ -67,6 +75,9 @@ function Navbar() {
         </div>
         <div className={classes.drawer}>
           <NavigationDrawer />
+        </div>
+        <div className={classes.signInButton}>
+          <SignInButton />
         </div>
       </nav>
     </header>
