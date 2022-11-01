@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createStyles, Anchor } from "@mantine/core";
 import Link from "next/link";
 import SubredditSearch from "./SubredditSearch";
@@ -91,7 +91,11 @@ function Navbar() {
           <NavigationDrawer />
         </div>
         <div className={classes.userControls}>
-          {session && data ? <UserMenu user={user} /> : <SignInButton />}
+          {session && userData ? (
+            <UserMenu user={userData} />
+          ) : (
+            <SignInButton />
+          )}
         </div>
       </nav>
     </header>
