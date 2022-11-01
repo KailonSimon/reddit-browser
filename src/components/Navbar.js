@@ -1,5 +1,5 @@
-import { createStyles, Anchor } from "@mantine/core";
 import React from "react";
+import { createStyles, Anchor } from "@mantine/core";
 import Link from "next/link";
 import SubredditSearch from "./SubredditSearch";
 import NavigationDrawer from "./NavigationDrawer";
@@ -16,8 +16,7 @@ const useStyles = createStyles((theme) => ({
     padding: "0 1rem",
   },
   nav: {
-    height: "4rem",
-    maxWidth: 1280,
+    height: "3rem",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

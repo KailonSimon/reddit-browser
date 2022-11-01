@@ -1,6 +1,7 @@
-import { Burger, Drawer } from "@mantine/core";
 import { useState } from "react";
+import { Burger, Drawer } from "@mantine/core";
 import SubredditSearch from "./SubredditSearch";
+
 function NavigationDrawer() {
   const [opened, setOpened] = useState(false);
   return (

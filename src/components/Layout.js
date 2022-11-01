@@ -1,7 +1,6 @@
-import { Anchor, createStyles, Button, Affix, Transition } from "@mantine/core";
+import { useRef, useState, useEffect } from "react";
+import { createStyles, Button, Affix, Transition } from "@mantine/core";
 import { ArrowUp } from "tabler-icons-react";
-import Link from "next/link";
-import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Navbar from "./Navbar";
 
@@ -20,23 +19,31 @@ const useStyles = createStyles((theme) => ({
 function Layout({ children }) {
   const { classes } = useStyles();
   const [scrollPosition, setScrollPosition] = useState(0);
-  const ref = useRef();
   const router = useRouter();
+
+  const handleScroll = () => {
+    const position = window.pageYOffset;
+    setScrollPosition(position);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <>
       <Navbar />
-      <div
-        className={classes.container}
-        onScroll={() => setScrollPosition(ref.current?.scrollTop)}
-        ref={ref}
-      >
+      <div className={classes.container}>
         <main
           className={classes.contentWrapper}
           style={{
             maxWidth: "100vw",
             padding: "1rem 0.5rem",
-            marginTop: "4rem",
+            marginTop: "3rem",
           }}
         >
           {children}
@@ -48,6 +55,7 @@ function Layout({ children }) {
           width: "calc(100vw - 32px)",
           display: "flex",
           justifyContent: "center",
+          zIndex: 50,
         }}
       >
         <Transition
@@ -66,9 +74,7 @@ function Layout({ children }) {
               <Button
                 leftIcon={<ArrowUp size={16} />}
                 style={transitionStyles}
-                onClick={() =>
-                  ref.current?.scrollTo({ top: 0, behavior: "smooth" })
-                }
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               >
                 Scroll to top
               </Button>

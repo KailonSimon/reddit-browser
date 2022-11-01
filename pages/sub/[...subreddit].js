@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Head from "next/head";
+import { Text, Title } from "@mantine/core";
+import { mergePages, fetchPosts } from "../../utils";
 import LoadingScreen from "../../src/components/LoadingScreen";
-import { mergePages } from "../../utils";
 import Feed from "../../src/components/Feed";
 import FeedControls from "../../src/components/FeedControls";
 import Layout from "../../src/components/Layout";
-import { Text } from "@mantine/core";
-import { fetchPosts } from "../../utils";
 
 function Subreddit({ subreddit }) {
   const [sorting, setSorting] = useState("hot");
@@ -16,13 +15,12 @@ function Subreddit({ subreddit }) {
     status,
     data,
     error,
-    refetch,
     isRefetching,
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
-    ["posts"],
+    ["posts", subreddit, sorting],
     ({ pageParam = "" }) => fetchPosts(sorting, subreddit, pageParam),
     {
       getNextPageParam: (lastPage, pages) => {
@@ -31,11 +29,6 @@ function Subreddit({ subreddit }) {
     }
   );
 
-  useEffect(() => {
-    console.log(subreddit);
-    refetch();
-  }, [subreddit, sorting, refetch]);
-
   return status === "loading" ? (
     <LoadingScreen />
   ) : status === "error" ? (
@@ -43,11 +36,14 @@ function Subreddit({ subreddit }) {
   ) : (
     <>
       <Head>
-        <title>Reddit Browser | Home</title>
+        <title>Reddit Browser | {subreddit}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta property="og:title" content="Reddit Browser | Home" />
       </Head>
       <Layout>
+        <Title mb={16} color="brand" order={1} align="center">
+          r/{subreddit}
+        </Title>
         <FeedControls
           sorting={sorting}
           setSorting={setSorting}
