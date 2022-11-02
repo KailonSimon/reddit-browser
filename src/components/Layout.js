@@ -14,7 +14,10 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: theme.colorScheme === "dark" ? "#000" : "#fff",
+    backgroundColor:
+      theme.colorScheme === "dark"
+        ? theme.colors.dark[9]
+        : theme.colors.gray[2],
   },
 }));
 

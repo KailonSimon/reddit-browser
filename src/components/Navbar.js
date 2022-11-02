@@ -15,11 +15,13 @@ const useStyles = createStyles((theme) => ({
     top: 0,
     left: 0,
     zIndex: 999,
-    backgroundColor: theme.colorScheme === "dark" ? "#121212" : "#fff",
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[9] : "#fff",
     letterSpacing: 1.5,
     padding: "0 1rem",
-    borderBottom:
-      theme.colorScheme === "dark" ? "" : `1px solid ${theme.colors.gray[4]}`,
+    borderBottom: `1px solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[4]
+    }`,
   },
   nav: {
     height: "4rem",
