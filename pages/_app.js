@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SessionProvider } from "next-auth/react";
 import {
   Hydrate,
@@ -21,6 +21,8 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   });
   const toggleColorScheme = (value) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
@@ -29,10 +31,12 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
             colorScheme={colorScheme}
             toggleColorScheme={toggleColorScheme}
           >
-            <MantineProvider theme={{ ...theme, colorScheme }}>
+            <MantineProvider theme={{ ...theme }}>
               <ModalsProvider modals={{ post: PostModal }}>
                 <NotificationsProvider>
-                  <Component {...pageProps} />
+                  <div style={{ visibility: !mounted ? "hidden" : "" }}>
+                    <Component {...pageProps} />
+                  </div>
                 </NotificationsProvider>
               </ModalsProvider>
             </MantineProvider>
