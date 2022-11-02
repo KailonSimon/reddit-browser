@@ -25,7 +25,7 @@ function NavigationDrawer() {
         withCloseButton={false}
         styles={(theme) => ({
           drawer: {
-            marginTop: "3rem",
+            marginTop: "4rem",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
