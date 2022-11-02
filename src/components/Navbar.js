@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import { createStyles, Anchor } from "@mantine/core";
+import { createStyles, Anchor, Loader } from "@mantine/core";
 import Link from "next/link";
 import SubredditSearch from "./SubredditSearch";
 import NavigationDrawer from "./NavigationDrawer";
 import SignInButton from "./SignInButton";
 import UserMenu from "./UserMenu";
+import { getUserData } from "../../utils";
+import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { fetchAuthenticatedUserData } from "../../utils";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -22,7 +22,7 @@ const useStyles = createStyles((theme) => ({
       theme.colorScheme === "dark" ? "" : `1px solid ${theme.colors.gray[4]}`,
   },
   nav: {
-    height: "3rem",
+    height: "4rem",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -62,14 +62,11 @@ const useStyles = createStyles((theme) => ({
 function Navbar() {
   const { classes } = useStyles();
   const { data: session } = useSession();
-  const [userData, setUserData] = useState(null);
-  useEffect(() => {
-    if (session) {
-      fetchAuthenticatedUserData(session.accessToken).then((data) =>
-        setUserData(data)
-      );
-    }
-  }, [session]);
+  const { data: userData, isLoading } = useQuery({
+    queryKey: ["currentUserData", session],
+    queryFn: () => getUserData(session.user.name),
+    enabled: !!session,
+  });
   return (
     <header className={classes.header}>
       <nav className={classes.nav}>
@@ -91,8 +88,10 @@ function Navbar() {
           <NavigationDrawer />
         </div>
         <div className={classes.userControls}>
-          {session && userData ? (
-            <UserMenu user={userData} />
+          {isLoading && session ? (
+            <Loader size="xs" />
+          ) : !!userData ? (
+            <UserMenu user={userData.data} />
           ) : (
             <SignInButton />
           )}

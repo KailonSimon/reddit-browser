@@ -1,12 +1,13 @@
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 import { Text } from "@mantine/core";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import FeedControls from "../src/components/FeedControls";
 import Feed from "../src/components/Feed";
 import Layout from "../src/components/Layout";
 import Head from "next/head";
-import { fetchPosts, mergePages } from "../utils";
+import { fetchAuthenticatedUserData, fetchPosts, mergePages } from "../utils";
 import LoadingScreen from "../src/components/LoadingScreen";
+import { getToken } from "next-auth/jwt";
 
 const initialState = { sorting: "hot" };
 
@@ -19,20 +20,19 @@ function reducer(state, action) {
   }
 }
 
-export default function Home() {
+export default function Home({ userData }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const {
     status,
     data,
     error,
-    refetch,
     isRefetching,
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
-    ["posts"],
+    ["posts", state.sorting],
     ({ pageParam = "" }) => fetchPosts(state.sorting, "all", pageParam),
     {
       getNextPageParam: (lastPage, pages) => {
@@ -40,10 +40,6 @@ export default function Home() {
       },
     }
   );
-
-  useEffect(() => {
-    refetch();
-  }, [state.subreddit, state.sorting, refetch]);
 
   return status === "loading" ? (
     <LoadingScreen />

@@ -1,8 +1,9 @@
-import { createStyles, Image, Text, Title } from "@mantine/core";
+import { createStyles, Image, Loader, Text, Title } from "@mantine/core";
 import moment from "moment";
 import React from "react";
 import Layout from "../../src/components/Layout";
 import { useSession } from "next-auth/react";
+import { getUserData } from "../../utils";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -29,47 +30,48 @@ function User({ user }) {
 
   return (
     <Layout>
-      <div className={classes.container}>
-        <Image
-          src={
-            user.snoovatar_img ||
-            "https://logodownload.org/wp-content/uploads/2018/02/reddit-logo-16.png"
-          }
-          height={100}
-          width={100}
-          alt={`${user.name}'s snoovatar`}
-          classNames={{ image: classes.image }}
-          radius={8}
-          fit="contain"
-          mr={16}
-        />
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <Title order={2} variant="text" sx={{ fontFamily: "Chillax" }}>
-            {user.name} {session && session.user.name == user.name && "(you)"}
-          </Title>
-          <Text size="xs" color="dimmed">
-            Member since {moment.unix(user.created).format("MMMM Do, YYYY")} (
-            {moment.unix(user.created).fromNow()})
-          </Text>
-          <Text>Post Karma: {user.link_karma}</Text>
-          <Text>Comment Karma: {user.comment_karma}</Text>
+      {!user ? (
+        <div>Error: user not found</div>
+      ) : (
+        <div className={classes.container}>
+          <Image
+            src={
+              user.data.snoovatar_img ||
+              "https://logodownload.org/wp-content/uploads/2018/02/reddit-logo-16.png"
+            }
+            height={100}
+            width={100}
+            alt={`${user.data.name}'s snoovatar`}
+            classNames={{ image: classes.image }}
+            radius={8}
+            fit="contain"
+            mr={16}
+          />
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <Title order={2} variant="text" sx={{ fontFamily: "Chillax" }}>
+              {user.data.name}
+              {session && session.user.name == user.data.name && " (you)"}
+            </Title>
+            <Text size="xs" color="dimmed">
+              Member since{" "}
+              {moment.unix(user.data.created).format("MMMM Do, YYYY")} (
+              {moment.unix(user.data.created).fromNow()})
+            </Text>
+            <Text>Post Karma: {user.data.link_karma}</Text>
+            <Text>Comment Karma: {user.data.comment_karma}</Text>
+          </div>
         </div>
-      </div>
+      )}
     </Layout>
   );
 }
 
 export default User;
-
 export async function getServerSideProps(context) {
   const { username } = context.query;
-
-  const res = await fetch(`https://www.reddit.com/user/${username}/about.json`);
-  const data = await res.json();
-  if (data.error === 404) {
-    return {
-      notFound: true,
-    };
-  }
-  return { props: { user: data.data } };
+  const user = await getUserData(username);
+  console.log(user);
+  return {
+    props: { user },
+  };
 }

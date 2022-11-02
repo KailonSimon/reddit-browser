@@ -45,7 +45,7 @@ function Layout({ children }) {
           style={{
             maxWidth: "100vw",
             padding: "1rem 0.5rem",
-            marginTop: "3rem",
+            marginTop: "4rem",
           }}
         >
           {children}

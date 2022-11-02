@@ -69,10 +69,19 @@ export const fetchSubreddits = async (searchValue) => {
 
 export const fetchAuthenticatedUserData = async (accessToken) => {
   const res = await fetch(`https://oauth.reddit.com/api/v1/me.json`, {
-    credentials: "include",
     headers: {
-      Authorization: `bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
+  return await res.json();
+};
+
+export const getUserData = async (username) => {
+  const res = await fetch(`https://www.reddit.com/user/${username}/about.json`);
+  return await res.json();
+};
+
+export const getCurrentUserData = async () => {
+  const res = await fetch("/api/user");
   return await res.json();
 };

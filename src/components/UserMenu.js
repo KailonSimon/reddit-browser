@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import { signOut } from "next-auth/react";
 import { openConfirmModal } from "@mantine/modals";
+import numeral from "numeral";
 
 const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
   <UnstyledButton
@@ -54,7 +55,7 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
         </Text>
 
         <Text color="dimmed" size="xs">
-          {user.total_karma} karma
+          {numeral(user.total_karma).format("0a")} karma
         </Text>
       </div>
       <div
@@ -82,6 +83,7 @@ function UserMenu({ user }) {
       confirmProps: { color: "red" },
       onConfirm: () => signOut(),
     });
+
   return (
     <Menu
       width={200}

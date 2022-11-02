@@ -31,7 +31,6 @@ function SubredditSearch() {
             setLoading(false);
             return;
           } else {
-            console.log(data.data.children);
             setSubreddits(
               data.data.children.map((subreddit) => {
                 return {
