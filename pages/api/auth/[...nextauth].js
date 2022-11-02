@@ -8,6 +8,7 @@ export const authOptions = {
       clientSecret: process.env.REDDIT_CLIENT_SECRET,
       authorization: {
         params: {
+          scope: "identity vote",
           duration: "permanent",
         },
       },
@@ -19,10 +20,6 @@ export const authOptions = {
         token.accessToken = account.access_token;
       }
       return token;
-    },
-    async session({ session, token }) {
-      session.accessToken = token.accessToken;
-      return session;
     },
   },
 };

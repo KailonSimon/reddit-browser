@@ -8,17 +8,14 @@ Deployed using Vercel.
 
 ## Features
 
-- Infinite scroll on submissions
+- Authentication using Reddit OAuth
+- Infinite scroll on submissions and comments
+- Nested comment sections on each post
 - Subreddit search with autocomplete
 - Fast submission sorting and filtering
 
 ## Roadmap
 
-- Multi-subreddit search
-- [Framer motion](https://www.framer.com/motion/) implementation
+- Ability to comment, submit, and vote
 - Submission search
 - Reddit markdown support
-- Infinite scroll on comments
-- Nested comments
-- Authentication using Reddit OAuth
-- Ability to comment, submit, and vote

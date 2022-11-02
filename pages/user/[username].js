@@ -70,7 +70,7 @@ export default User;
 export async function getServerSideProps(context) {
   const { username } = context.query;
   const user = await getUserData(username);
-  console.log(user);
+
   return {
     props: { user },
   };

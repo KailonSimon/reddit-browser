@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  dehydrate,
+  QueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import Head from "next/head";
 import { Text, Title } from "@mantine/core";
 import { mergePages, fetchPosts } from "../../utils";
@@ -20,9 +24,10 @@ function Subreddit({ subreddit }) {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
-    ["posts", subreddit, sorting],
+    ["posts", { subreddit, sorting }],
     ({ pageParam = "" }) => fetchPosts(sorting, subreddit, pageParam),
     {
+      refetchOnMount: false,
       getNextPageParam: (lastPage, pages) => {
         return lastPage.data.after;
       },
@@ -67,5 +72,21 @@ export default Subreddit;
 export async function getServerSideProps(context) {
   const { subreddit } = context.query;
 
-  return { props: { subreddit: subreddit[0] } };
+  const queryClient = new QueryClient();
+
+  try {
+    await queryClient.fetchInfiniteQuery(
+      ["posts", { sorting: "hot" }],
+      ({ pageParam = "" }) => fetchPosts("hot", subreddit[0], 5, pageParam)
+    );
+  } catch (error) {
+    console.log(error);
+  }
+
+  return {
+    props: {
+      subreddit: subreddit[0],
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+    },
+  };
 }

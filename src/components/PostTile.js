@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import {
   Image,
   createStyles,
@@ -8,17 +9,12 @@ import {
   Box,
 } from "@mantine/core";
 import React from "react";
-import {
-  ArrowBigDown,
-  ArrowBigTop,
-  ClockHour3,
-  Messages,
-} from "tabler-icons-react";
+import { ClockHour3, Messages } from "tabler-icons-react";
 import numeral from "numeral";
 import Link from "next/link";
 import { getRelativeTime } from "../../utils";
 import SubmissionMenu from "./SubmissionMenu";
-import { useRouter } from "next/router";
+import PostVotingControls from "./PostVotingControls";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -34,12 +30,6 @@ const useStyles = createStyles((theme) => ({
     position: "relative",
     borderRadius: "4px",
   },
-  upArrow: {
-    "&:hover": { color: theme.colors.brand, cursor: "pointer" },
-  },
-  downArrow: {
-    "&:hover": { color: theme.colors.accent, cursor: "pointer" },
-  },
 }));
 
 function PostTile({ post, handlePostTileClick }) {
@@ -48,27 +38,7 @@ function PostTile({ post, handlePostTileClick }) {
 
   return (
     <div className={classes.container}>
-      <div
-        style={{
-          color: "#818384",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: 30,
-          minWidth: 30,
-        }}
-      >
-        <ArrowBigTop size={20} className={classes.upArrow} />
-        <Text
-          sx={(theme) => ({
-            color:
-              theme.colorScheme === "dark" ? "rgb(215, 218, 220)" : theme.black,
-          })}
-        >
-          {numeral(post.score).format("0a")}
-        </Text>
-        <ArrowBigDown size={20} className={classes.downArrow} />
-      </div>
+      <PostVotingControls post={post} key={post.id} />
       {post.preview?.images[0]?.source.url && (
         <Image
           withPlaceholder

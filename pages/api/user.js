@@ -9,7 +9,6 @@ export default async function handler(req, res) {
     res.status(401).json({ error: "Unauthorized" });
   } else {
     const userData = await fetchAuthenticatedUserData(token.accessToken);
-    console.log(userData);
     res.status(200).json({ currentUser: userData });
   }
   res.end();

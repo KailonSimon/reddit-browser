@@ -1,13 +1,16 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { Text } from "@mantine/core";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {
+  dehydrate,
+  QueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import FeedControls from "../src/components/FeedControls";
 import Feed from "../src/components/Feed";
 import Layout from "../src/components/Layout";
 import Head from "next/head";
-import { fetchAuthenticatedUserData, fetchPosts, mergePages } from "../utils";
+import { fetchPosts, mergePages } from "../utils";
 import LoadingScreen from "../src/components/LoadingScreen";
-import { getToken } from "next-auth/jwt";
 
 const initialState = { sorting: "hot" };
 
@@ -20,7 +23,7 @@ function reducer(state, action) {
   }
 }
 
-export default function Home({ userData }) {
+export default function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const {
@@ -32,9 +35,10 @@ export default function Home({ userData }) {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
-    ["posts", state.sorting],
-    ({ pageParam = "" }) => fetchPosts(state.sorting, "all", pageParam),
+    ["posts", { sorting: state.sorting }],
+    ({ pageParam = "" }) => fetchPosts(state.sorting, "all", 10, pageParam),
     {
+      refetchOnMount: false,
       getNextPageParam: (lastPage, pages) => {
         return lastPage.data.after;
       },
@@ -71,4 +75,22 @@ export default function Home({ userData }) {
       </Layout>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  const queryClient = new QueryClient();
+  try {
+    await queryClient.fetchInfiniteQuery(
+      ["posts", { sorting: "hot" }],
+      ({ pageParam = "" }) => fetchPosts("hot", "all", 5, pageParam)
+    );
+  } catch (error) {
+    console.log(error);
+  }
+
+  return {
+    props: {
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+    },
+  };
 }

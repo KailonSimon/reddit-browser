@@ -39,9 +39,14 @@ export const getNestedCommentClass = (depth) => {
   return depth % 5;
 };
 
-export const fetchPosts = async (sorting, subreddit, pageParam = "") => {
+export const fetchPosts = async (
+  sorting = "hot",
+  subreddit = "all",
+  limit = 5,
+  pageParam = ""
+) => {
   const res = await fetch(
-    `https://www.reddit.com/r/${subreddit}/${sorting}.json?limit=10&after=${pageParam}&raw_json=1`
+    `https://www.reddit.com/r/${subreddit}/${sorting}.json?limit=${limit}&after=${pageParam}&raw_json=1`
   );
   return await res.json();
 };
@@ -84,4 +89,26 @@ export const getUserData = async (username) => {
 export const getCurrentUserData = async () => {
   const res = await fetch("/api/user");
   return await res.json();
+};
+
+export const voteOnSubmission = async (id, direction) => {
+  let directionNumber;
+  switch (direction) {
+    case "up":
+      directionNumber = 1;
+      break;
+    case "down":
+      directionNumber = -1;
+      break;
+    default:
+      directionNumber = 0;
+  }
+  fetch("/api/vote", {
+    method: "POST",
+    body: JSON.stringify({ id, direction: directionNumber }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    });
 };
