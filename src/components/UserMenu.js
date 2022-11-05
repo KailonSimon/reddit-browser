@@ -105,7 +105,7 @@ function UserMenu({ user }) {
           Profile
         </Menu.Item>
 
-        <Menu.Divider />
+        {/*<Menu.Divider />
         <Menu.Label>Theme options</Menu.Label>
         <Switch
           styles={{
@@ -114,7 +114,7 @@ function UserMenu({ user }) {
           label="Dark theme"
           checked={colorScheme === "dark"}
           onChange={() => toggleColorScheme()}
-        />
+        />*/}
         <Menu.Divider />
         <Menu.Item
           color="red"

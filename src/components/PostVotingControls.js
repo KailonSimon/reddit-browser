@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { createStyles, Text, Button, ActionIcon } from "@mantine/core";
-import { ArrowBigDown, ArrowBigTop } from "tabler-icons-react";
 import numeral from "numeral";
 import { useSession } from "next-auth/react";
 import { closeModal, openModal } from "@mantine/modals";
@@ -13,6 +12,7 @@ import {
   TiArrowDownOutline,
   TiArrowDownThick,
 } from "react-icons/ti";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -39,7 +39,18 @@ function PostVotingControls({ post }) {
   const { classes } = useStyles();
   const { data: session } = useSession();
   const modalId = useId();
-  const [voteState, setVoteState] = useState(0);
+  const queryClient = useQueryClient();
+  const [liked, setLiked] = useState(post.likes);
+
+  const { mutate } = useMutation(
+    ({ id, direction }) => voteOnSubmission(id, direction),
+    {
+      onSuccess: async (updatedPost) => {
+        setLiked(updatedPost.likes);
+        queryClient.invalidateQueries();
+      },
+    }
+  );
 
   const handleVoteClick = async (direction) => {
     if (!session) {
@@ -58,36 +69,20 @@ function PostVotingControls({ post }) {
         withCloseButton: false,
       });
     } else {
-      //voteOnSubmission(post.name, direction);
-      switch (direction) {
-        case "up":
-          if (voteState === 1) {
-            setVoteState(0);
-          } else {
-            setVoteState(1);
-          }
-          break;
-        case "down":
-          if (voteState === -1) {
-            setVoteState(0);
-          } else {
-            setVoteState(-1);
-          }
-          break;
-      }
+      mutate({ id: post.name, direction });
     }
   };
   return (
     <div className={classes.container}>
       <ActionIcon
         variant="transparent"
-        onClick={() => handleVoteClick("up")}
+        onClick={() => handleVoteClick(liked ? "unvote" : "up")}
         className={classes.upArrow}
       >
-        {voteState === 1 ? (
-          <TiArrowUpThick size={28} />
+        {liked === true ? (
+          <TiArrowUpThick size={28} color="#59ba12" />
         ) : (
-          <TiArrowUpOutline size={24} />
+          <TiArrowUpOutline size={24} color="#ADB5BD" />
         )}
       </ActionIcon>
       <Text
@@ -101,13 +96,13 @@ function PostVotingControls({ post }) {
       </Text>
       <ActionIcon
         variant="transparent"
-        onClick={() => handleVoteClick("down")}
+        onClick={() => handleVoteClick(liked === false ? "unvote" : "down")}
         className={classes.downArrow}
       >
-        {voteState === -1 ? (
-          <TiArrowDownThick size={28} />
+        {liked === false ? (
+          <TiArrowDownThick size={28} color="#7312ba" />
         ) : (
-          <TiArrowDownOutline size={24} />
+          <TiArrowDownOutline size={24} color="#ADB5BD" />
         )}
       </ActionIcon>
     </div>

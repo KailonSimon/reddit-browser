@@ -15,10 +15,7 @@ import PostModal from "../src/components/PostModal";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const [queryClient] = useState(() => new QueryClient());
-  const [colorScheme, setColorScheme] = useLocalStorage({
-    key: "color-scheme",
-    defaultValue: "dark",
-  });
+  const [colorScheme, setColorScheme] = useState("dark");
   const toggleColorScheme = (value) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
   const [mounted, setMounted] = useState(false);

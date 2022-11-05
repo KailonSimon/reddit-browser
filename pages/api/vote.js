@@ -1,6 +1,6 @@
 import { getToken } from "next-auth/jwt";
 
-export default async (req, res) => {
+export default async function handler(req, res) {
   const { id, direction } = JSON.parse(req.body);
   const token = await getToken({ req });
   if (!token) {
@@ -17,18 +17,17 @@ export default async (req, res) => {
     }
   );
   if (response.status === 200) {
-    res
-      .status(response.status)
-      .json(
-        `Successfully ${
-          direction === 1
-            ? "upvoted"
-            : direction === -1
-            ? "downvoted"
-            : "unvoted"
-        } post ${id}`
-      );
+    const redditRes = await fetch(
+      `https://oauth.reddit.com/api/info/?id=${id}`,
+      {
+        method: "GET",
+        headers: { Authorization: "Bearer " + token.accessToken },
+      }
+    );
+    const updatedPost = await redditRes.json();
+
+    res.status(response.status).json(updatedPost.data.children[0].data);
   } else {
     res.status(response.status).end();
   }
-};
+}

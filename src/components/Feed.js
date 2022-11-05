@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState, useReducer } from "react";
 import { useInView } from "framer-motion";
 import PostTile from "./PostTile";
-import PostCard from "./PostCard";
-import { Button, createStyles, Loader, Modal, Text } from "@mantine/core";
+import { createStyles, Loader, Text } from "@mantine/core";
 import { useRouter } from "next/router";
-import CommentSection from "./CommentSection";
-import { ArrowLeft } from "tabler-icons-react";
+
 import Head from "next/head";
-import { closeModal, openContextModal } from "@mantine/modals";
+import { openContextModal } from "@mantine/modals";
+import { useSession } from "next-auth/react";
 
 const useStyles = createStyles((theme) => ({
   posts: {
@@ -23,10 +22,16 @@ const useStyles = createStyles((theme) => ({
 
 function Feed({ posts, fetchNextPage, hasNextPage }) {
   const { classes } = useStyles();
-  const router = useRouter();
   const ref = useRef();
   const isInView = useInView(ref);
   const [openPost, setOpenPost] = useState(null);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    /*fetch("/api/posts/nba")
+      .then((res) => res.json())
+      .then((data) => console.log(data));*/
+  }, [session]);
 
   useEffect(() => {
     if (isInView && hasNextPage) {

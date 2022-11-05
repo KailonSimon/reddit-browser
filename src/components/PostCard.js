@@ -41,6 +41,7 @@ const useStyles = createStyles((theme) => ({
 function PostCard({ post }) {
   const { classes } = useStyles();
   const router = useRouter();
+
   return (
     <div className={classes.container}>
       <div>

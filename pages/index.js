@@ -35,7 +35,7 @@ export default function Home() {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
-    ["posts", { sorting: state.sorting }],
+    ["posts", state.sorting],
     ({ pageParam = "" }) => fetchPosts(state.sorting, "all", 10, pageParam),
     {
       refetchOnMount: false,
@@ -80,9 +80,8 @@ export default function Home() {
 export async function getServerSideProps() {
   const queryClient = new QueryClient();
   try {
-    await queryClient.fetchInfiniteQuery(
-      ["posts", { sorting: "hot" }],
-      ({ pageParam = "" }) => fetchPosts("hot", "all", 5, pageParam)
+    await queryClient.fetchInfiniteQuery(["posts"], ({ pageParam = "" }) =>
+      fetchPosts("hot", "all", 5, pageParam)
     );
   } catch (error) {
     console.log(error);
