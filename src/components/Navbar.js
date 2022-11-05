@@ -30,32 +30,32 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
     margin: "0 auto",
     position: "relative",
-    [theme.fn.smallerThan("sm")]: {
+    [theme.fn.smallerThan("md")]: {
       justifyContent: "center",
     },
   },
   title: {
-    [theme.fn.largerThan("sm")]: {
+    [theme.fn.largerThan("md")]: {
       position: "absolute",
       left: 16,
     },
   },
   searchBar: {
-    [theme.fn.smallerThan("sm")]: {
+    [theme.fn.smallerThan("md")]: {
       display: "none",
     },
   },
   drawer: {
     position: "absolute",
     right: 16,
-    [theme.fn.largerThan("sm")]: {
+    [theme.fn.largerThan("md")]: {
       display: "none",
     },
   },
   userControls: {
     position: "absolute",
     right: 16,
-    [theme.fn.smallerThan("sm")]: {
+    [theme.fn.smallerThan("md")]: {
       display: "none",
     },
   },
