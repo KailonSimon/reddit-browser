@@ -8,7 +8,7 @@ function FeedControls({ sorting, setSorting, isRefetching }) {
       sx={(theme) => ({
         marginBottom: "16px",
         background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
-        width: 600,
+        width: "100%",
         maxWidth: "100%",
         border: `1px solid ${
           theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]

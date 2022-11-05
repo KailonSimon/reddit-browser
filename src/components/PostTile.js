@@ -44,8 +44,8 @@ function PostTile({ post, handlePostTileClick }) {
           withPlaceholder
           src={post.preview.images[0]?.source.url}
           alt={post.title}
-          height={75}
-          width={75}
+          height={72}
+          width={96}
           radius={4}
           styles={{
             placeholder: { background: "#1A1A1B" },

@@ -1,18 +1,15 @@
-import { useEffect, useRef, useState, useReducer } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 import PostTile from "./PostTile";
 import { createStyles, Loader, Text } from "@mantine/core";
-import { useRouter } from "next/router";
-
 import Head from "next/head";
 import { openContextModal } from "@mantine/modals";
-import { useSession } from "next-auth/react";
 
 const useStyles = createStyles((theme) => ({
   posts: {
     display: "flex",
     flexDirection: "column",
-    width: 600,
+    width: "100%",
     maxWidth: "100%",
     gap: 8,
     height: "100%",
@@ -25,13 +22,6 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
   const ref = useRef();
   const isInView = useInView(ref);
   const [openPost, setOpenPost] = useState(null);
-  const { data: session } = useSession();
-
-  useEffect(() => {
-    /*fetch("/api/posts/nba")
-      .then((res) => res.json())
-      .then((data) => console.log(data));*/
-  }, [session]);
 
   useEffect(() => {
     if (isInView && hasNextPage) {

@@ -66,6 +66,9 @@ function SubredditSearch() {
         );
       }}
       styles={(theme) => ({
+        root: {
+          minWidth: 400,
+        },
         input: {
           border: `1px solid ${
             theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
