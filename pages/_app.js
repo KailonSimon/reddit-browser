@@ -10,7 +10,6 @@ import { ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
 import { theme } from "../theme";
-import { useLocalStorage } from "@mantine/hooks";
 import PostModal from "../src/components/PostModal";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {

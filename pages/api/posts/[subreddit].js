@@ -7,7 +7,9 @@ export default async function handler(req, res) {
   try {
     if (token) {
       redditRes = await fetch(
-        `https://oauth.reddit.com/r/${subreddit}/${sorting}.json?limit=${limit}&after=${pageParam}&raw_json=1`,
+        `https://oauth.reddit.com/r/${subreddit}/${sorting}.json?limit=${limit}${
+          pageParam ? `&after=${pageParam}` : null
+        }&raw_json=1`,
         {
           headers: {
             Authorization: `Bearer ${token.accessToken}`,

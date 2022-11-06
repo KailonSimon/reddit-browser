@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 import { Text } from "@mantine/core";
 import {
   dehydrate,
@@ -35,10 +35,9 @@ export default function Home() {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
-    ["posts", state.sorting],
+    ["posts"],
     ({ pageParam = "" }) => fetchPosts(state.sorting, "all", 10, pageParam),
     {
-      refetchOnMount: false,
       getNextPageParam: (lastPage, pages) => {
         return lastPage.data.after;
       },
@@ -81,7 +80,7 @@ export async function getServerSideProps() {
   const queryClient = new QueryClient();
   try {
     await queryClient.fetchInfiniteQuery(["posts"], ({ pageParam = "" }) =>
-      fetchPosts("hot", "all", 5, pageParam)
+      fetchPosts("hot", "all", 10, pageParam)
     );
   } catch (error) {
     console.log(error);

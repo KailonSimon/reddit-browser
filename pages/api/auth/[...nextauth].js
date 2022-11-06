@@ -8,7 +8,7 @@ export const authOptions = {
       clientSecret: process.env.REDDIT_CLIENT_SECRET,
       authorization: {
         params: {
-          scope: "identity vote read",
+          scope: "identity vote read edit save submit subscribe history",
           duration: "permanent",
         },
       },
@@ -19,7 +19,6 @@ export const authOptions = {
     async jwt({ token, account }) {
       if (account) {
         token.accessToken = account.access_token;
-        console.log(token);
       }
       return token;
     },
