@@ -79,8 +79,14 @@ export default function Home() {
 export async function getServerSideProps() {
   const queryClient = new QueryClient();
   try {
-    await queryClient.fetchInfiniteQuery(["posts"], ({ pageParam = "" }) =>
-      fetchPosts("hot", "all", 10, pageParam)
+    await queryClient.prefetchInfiniteQuery(
+      ["posts"],
+      ({ pageParam = "" }) => fetchPosts("hot", "all", 10, pageParam),
+      {
+        getNextPageParam: (lastPage, pages) => {
+          return lastPage.data.after;
+        },
+      }
     );
   } catch (error) {
     console.log(error);

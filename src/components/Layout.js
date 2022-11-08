@@ -14,6 +14,7 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+
     backgroundColor:
       theme.colorScheme === "dark"
         ? theme.colors.dark[9]
@@ -46,6 +47,7 @@ function Layout({ children }) {
         <main
           className={classes.contentWrapper}
           style={{
+            width: 1000,
             maxWidth: "100vw",
             padding: "1rem 0.5rem",
             marginTop: "4rem",

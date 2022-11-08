@@ -1,21 +1,22 @@
 import {
-  Button,
   createStyles,
   Loader,
-  SegmentedControl,
   Text,
+  Textarea,
+  Anchor,
+  Button,
 } from "@mantine/core";
-import Link from "next/link";
 import { useReducer } from "react";
 import CommentTile from "./CommentTile";
 import { useQuery } from "@tanstack/react-query";
 import { fetchComments } from "../../utils";
 import CommentSectionControls from "./CommentSectionControls";
+import { useSession } from "next-auth/react";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    border: "1px solid red",
-    width: "100%",
+    width: "fit-content",
+    minWidth: 600,
     maxWidth: 800,
     display: "flex",
     flexDirection: "column",
@@ -27,21 +28,24 @@ const useStyles = createStyles((theme) => ({
     }`,
     background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
     borderRadius: 4,
+    [theme.fn.smallerThan(800)]: {
+      minWidth: 300,
+      maxWidth: "calc(100vw - 2rem)",
+    },
   },
 }));
 
 const initialState = {
   commentSorting: "confidence",
+  commentInput: "",
 };
 
 function reducer(state, action) {
   switch (action.type) {
-    case "SET_COMMENTS":
-      return { ...state, comments: action.payload };
-    case "SET_LOADING_COMMENTS":
-      return { ...state, loadingComments: action.payload };
     case "SET_COMMENT_SORTING":
       return { ...state, commentSorting: action.payload };
+    case "SET_COMMENT_INPUT":
+      return { ...state, commentInput: action.payload };
     default:
       return initialState;
   }
@@ -50,6 +54,7 @@ function reducer(state, action) {
 function CommentSection({ post, commentId }) {
   const { classes } = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { data: session } = useSession();
 
   const { isLoading, isFetching, isRefetching, data, refetch } = useQuery(
     ["comments", state.commentSorting],
@@ -61,9 +66,50 @@ function CommentSection({ post, commentId }) {
     dispatch({ type: "SET_COMMENT_SORTING", payload: value });
   };
 
+  const handleSubmitComment = () => {
+    dispatch({ type: "SET_COMMENT_INPUT", payload: "" });
+  };
+
   return (
     <div className={classes.container}>
       <>
+        {session && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              padding: "0 8px 8px",
+              gap: "0.5rem",
+            }}
+          >
+            <Textarea
+              label={
+                <Text>
+                  Comment as{" "}
+                  <Anchor href={`/user/${session.user.name}`}>
+                    {session.user.name}
+                  </Anchor>
+                </Text>
+              }
+              value={state.commentInput}
+              onChange={(e) =>
+                dispatch({
+                  type: "SET_COMMENT_INPUT",
+                  payload: e.currentTarget.value,
+                })
+              }
+            />
+            <Button
+              size="xs"
+              sx={{ alignSelf: "end" }}
+              disabled={!state.commentInput || !session}
+              onClick={handleSubmitComment}
+            >
+              Comment
+            </Button>
+          </div>
+        )}
         <CommentSectionControls
           post={post}
           isLoading={isLoading}

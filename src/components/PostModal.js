@@ -1,4 +1,4 @@
-import { Text, Button } from "@mantine/core";
+import { Button } from "@mantine/core";
 import PostCard from "./PostCard";
 import CommentSection from "./CommentSection";
 import { ArrowLeft } from "tabler-icons-react";

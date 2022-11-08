@@ -8,7 +8,7 @@ import {
   Box,
 } from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
-import React, { useEffect } from "react";
+import React from "react";
 import Video from "./Video";
 import { getRelativeTime } from "../../utils";
 import SubmissionMenu from "./SubmissionMenu";
@@ -26,9 +26,15 @@ const useStyles = createStyles((theme) => ({
     }`,
     background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
     borderRadius: 4,
-    padding: "0.75rem",
-    width: "100%",
+    padding: "12px 42px 12px 12px",
     gap: "0.5rem",
+    width: "100%",
+    minWidth: 600,
+    maxWidth: 800,
+    [theme.fn.smallerThan(800)]: {
+      minWidth: 300,
+      maxWidth: "calc(100vw - 2rem)",
+    },
   },
   details: {
     display: "flex",
@@ -47,7 +53,7 @@ function PostCard({ post }) {
       <div>
         <PostVotingControls post={post} />
       </div>
-      <div>
+      <div style={{ width: "100%" }}>
         <div
           style={{
             display: "flex",

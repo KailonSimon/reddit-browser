@@ -15,6 +15,20 @@ const useStyles = createStyles((theme) => ({
     height: "100%",
     padding: "0 0 2rem",
   },
+  modal: {
+    background: "transparent",
+    display: "flex",
+    flexDirection: "column",
+    width: "fit-content",
+  },
+  modalBody: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.5rem",
+    alignItems: "flex-start",
+    paddingTop: "0.5rem",
+    width: "fit-content",
+  },
 }));
 
 function Feed({ posts, fetchNextPage, hasNextPage }) {
@@ -37,21 +51,9 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
         post,
         closeModal: handleCloseModal,
       },
-      styles: {
-        modal: {
-          background: "transparent",
-          maxWidth: 600,
-          display: "flex",
-          flexDirection: "column",
-        },
-        body: {
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.5rem",
-          alignItems: "flex-start",
-
-          paddingTop: "0.5rem",
-        },
+      classNames: {
+        modal: classes.modal,
+        body: classes.modalBody,
       },
       withCloseButton: false,
       transition: "slide-right",
