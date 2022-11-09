@@ -8,7 +8,7 @@ import {
   Box,
 } from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
-import React from "react";
+import React, { useEffect } from "react";
 import Video from "./Video";
 import { getRelativeTime } from "../../utils";
 import SubmissionMenu from "./SubmissionMenu";

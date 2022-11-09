@@ -81,7 +81,7 @@ export async function getServerSideProps() {
   try {
     await queryClient.prefetchInfiniteQuery(
       ["posts"],
-      ({ pageParam = "" }) => fetchPosts("hot", "all", 10, pageParam),
+      ({ pageParam = "" }) => fetchPosts("hot", "all", 5, pageParam),
       {
         getNextPageParam: (lastPage, pages) => {
           return lastPage.data.after;

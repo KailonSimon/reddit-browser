@@ -24,7 +24,7 @@ function Subreddit({ subreddit }) {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
-    ["posts", { subreddit, sorting }],
+    ["posts", { subreddit }],
     ({ pageParam = "" }) => fetchPosts(sorting, subreddit, 10, pageParam),
     {
       refetchOnMount: false,
@@ -41,7 +41,7 @@ function Subreddit({ subreddit }) {
   ) : (
     <>
       <Head>
-        <title>{subreddit}</title>
+        <title>r/{subreddit}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta property="og:title" content="Reddit Browser | Home" />
       </Head>
@@ -75,13 +75,18 @@ export async function getServerSideProps(context) {
   const queryClient = new QueryClient();
 
   try {
-    await queryClient.fetchInfiniteQuery(["posts", {}], ({ pageParam = "" }) =>
-      fetchPosts("hot", subreddit[0], 5, pageParam)
+    await queryClient.prefetchInfiniteQuery(
+      ["posts", { subreddit: subreddit[0] }],
+      ({ pageParam = "" }) => fetchPosts("hot", subreddit[0], 5, pageParam),
+      {
+        getNextPageParam: (lastPage, pages) => {
+          return lastPage.data.after;
+        },
+      }
     );
   } catch (error) {
     console.log(error);
   }
-
   return {
     props: {
       subreddit: subreddit[0],
