@@ -14,7 +14,7 @@ import numeral from "numeral";
 import Link from "next/link";
 import { getRelativeTime } from "../../utils";
 import SubmissionMenu from "./SubmissionMenu";
-import PostVotingControls from "./PostVotingControls";
+import SubmissionVotingControls from "./SubmissionVotingControls";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -38,7 +38,7 @@ function PostTile({ post, handlePostTileClick }) {
 
   return (
     <div className={classes.container}>
-      <PostVotingControls post={post} key={post.id} />
+      <SubmissionVotingControls type="post" submission={post} />
       {post.preview?.images[0]?.source.url && (
         <Image
           withPlaceholder

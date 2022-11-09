@@ -1,12 +1,15 @@
-import { ActionIcon, Anchor, Box, Button, Spoiler, Text } from "@mantine/core";
+import { ActionIcon, Anchor, Box, Text } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import { ArrowUp, ChevronDown } from "tabler-icons-react";
 import { getNestedCommentClass, getRelativeTime } from "../../utils";
+import CommentReplyArea from "./CommentReplyArea";
+import CommentTitleControls from "./CommentTitleControls";
 import SubmissionMenu from "./SubmissionMenu";
 
 function CommentTile({ comment }) {
   const [replies, setReplies] = useState([]);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [replyAreaOpen, setReplyAreaOpen] = useState(false);
 
   useEffect(() => {
     if (comment?.replies?.data) {
@@ -123,15 +126,22 @@ function CommentTile({ comment }) {
               {getRelativeTime(comment.created)}
             </Text>
           </div>
-
-          <SubmissionMenu type="comment" submission={comment} />
         </div>
         {!isCollapsed && (
-          <>
+          <div>
             <Text sx={{ fontSize: 14, wordBreak: "break-word" }}>
               {comment.body}
             </Text>
-          </>
+            <CommentTitleControls
+              comment={comment}
+              setReplyAreaOpen={setReplyAreaOpen}
+            />
+            <CommentReplyArea
+              comment={comment}
+              replyAreaOpen={replyAreaOpen}
+              setReplyAreaOpen={setReplyAreaOpen}
+            />
+          </div>
         )}
       </Box>
       {replies.length > 0 && !isCollapsed && (

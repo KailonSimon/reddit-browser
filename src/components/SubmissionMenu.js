@@ -1,4 +1,4 @@
-import { Menu, ActionIcon, useMantineColorScheme } from "@mantine/core";
+import { Menu, ActionIcon, useMantineColorScheme, Button } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
 import { ClipboardCopy, Dots, Link } from "tabler-icons-react";
 import { showNotification } from "@mantine/notifications";
@@ -20,9 +20,21 @@ export default function SubmissionMenu({ type, submission }) {
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
-        <ActionIcon>
-          <Dots color={colorScheme == "dark" ? "#818384" : "#000"} />
-        </ActionIcon>
+        {type === "post" ? (
+          <ActionIcon>
+            <Dots color={colorScheme == "dark" ? "#818384" : "#000"} />
+          </ActionIcon>
+        ) : (
+          <Button
+            size="xs"
+            variant="subtle"
+            radius={0}
+            color="dark"
+            styles={{ root: { padding: 8 } }}
+          >
+            Share
+          </Button>
+        )}
       </Menu.Target>
 
       <Menu.Dropdown>

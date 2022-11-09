@@ -67,7 +67,9 @@ function SubredditSearch() {
       }}
       styles={(theme) => ({
         root: {
-          minWidth: 400,
+          [theme.fn.largerThan("md")]: {
+            minWidth: 400,
+          },
         },
         input: {
           border: `1px solid ${

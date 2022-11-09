@@ -14,7 +14,7 @@ import { getRelativeTime } from "../../utils";
 import SubmissionMenu from "./SubmissionMenu";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import PostVotingControls from "./PostVotingControls";
+import SubmissionVotingControls from "./SubmissionVotingControls";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -51,7 +51,7 @@ function PostCard({ post }) {
   return (
     <div className={classes.container}>
       <div>
-        <PostVotingControls post={post} />
+        <SubmissionVotingControls type="post" submission={post} />
       </div>
       <div style={{ width: "100%" }}>
         <div

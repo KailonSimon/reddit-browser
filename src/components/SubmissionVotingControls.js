@@ -15,12 +15,18 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useStyles = createStyles((theme) => ({
-  container: {
+  postContainer: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     width: 30,
     minWidth: 30,
+  },
+  commentContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    height: 30,
   },
   modalContainer: {
     display: "flex",
@@ -34,19 +40,18 @@ const useStyles = createStyles((theme) => ({
     "&:hover": { color: theme.colors.accent, cursor: "pointer" },
   },
 }));
-
-function PostVotingControls({ post }) {
+function SubmissionVotingControls({ type, submission }) {
   const { classes } = useStyles();
   const { data: session } = useSession();
   const modalId = useId();
   const queryClient = useQueryClient();
-  const [liked, setLiked] = useState(post.likes);
+  const [liked, setLiked] = useState(submission.likes);
 
   const { mutate } = useMutation(
     ({ id, direction }) => voteOnSubmission(id, direction),
     {
-      onSuccess: async (updatedPost) => {
-        setLiked(updatedPost.likes);
+      onSuccess: async (updatedSubmission) => {
+        setLiked(updatedSubmission.likes);
         queryClient.invalidateQueries();
       },
     }
@@ -69,11 +74,15 @@ function PostVotingControls({ post }) {
         withCloseButton: false,
       });
     } else {
-      mutate({ id: post.name, direction });
+      mutate({ id: submission.name, direction });
     }
   };
   return (
-    <div className={classes.container}>
+    <div
+      className={
+        type == "post" ? classes.postContainer : classes.commentContainer
+      }
+    >
       <ActionIcon
         variant="transparent"
         onClick={() => handleVoteClick(liked ? "unvote" : "up")}
@@ -90,9 +99,10 @@ function PostVotingControls({ post }) {
           color:
             theme.colorScheme === "dark" ? "rgb(215, 218, 220)" : theme.black,
           fontSize: 12,
+          fontWeight: 700,
         })}
       >
-        {numeral(post.score).format("0a")}
+        {numeral(submission.score).format("0a")}
       </Text>
       <ActionIcon
         variant="transparent"
@@ -109,4 +119,4 @@ function PostVotingControls({ post }) {
   );
 }
 
-export default PostVotingControls;
+export default SubmissionVotingControls;
