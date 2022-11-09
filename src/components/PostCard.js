@@ -192,24 +192,43 @@ function PostCard({ post }) {
         ) : post.post_hint === "hosted:video" ? (
           <Video type="hosted" content={post.media.reddit_video.fallback_url} />
         ) : (
-          <div
-            style={{ display: "flex", justifyContent: "center", marginTop: 8 }}
-          >
-            <Anchor
-              href={post.url}
-              mt={4}
-              size="sm"
-              target="_blank"
-              rel="noreferrer"
-              component="a"
-              sx={{
-                width: "100%",
-                textAlign: "center",
+          <>
+            {post?.preview?.images[0]?.source?.url && (
+              <Image
+                src={post?.preview?.images[0]?.source?.url}
+                alt={post.title}
+                styles={{
+                  root: {
+                    marginTop: 8,
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  },
+                }}
+              />
+            )}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: 8,
               }}
             >
-              {parseUrl(post.url).hostname}
-            </Anchor>
-          </div>
+              <Anchor
+                href={post.url}
+                mt={4}
+                size="sm"
+                target="_blank"
+                rel="noreferrer"
+                component="a"
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                {parseUrl(post.url).hostname}
+              </Anchor>
+            </div>
+          </>
         )}
         {post.is_self && (
           <Text
