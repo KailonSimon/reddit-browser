@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 import PostTile from "./PostTile";
-import { createStyles, Loader, Text } from "@mantine/core";
+import { createStyles, Skeleton, Text } from "@mantine/core";
 import Head from "next/head";
 import { openContextModal } from "@mantine/modals";
 
@@ -85,14 +85,29 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
           ref={ref}
           style={{
             width: "100%",
-            height: 100,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
           {hasNextPage ? (
-            <Loader />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                gap: "0.5rem",
+              }}
+            >
+              {[...Array(10)].map((x, i) => (
+                <Skeleton
+                  height={100}
+                  width="100%"
+                  radius={4}
+                  className={classes.skeleton}
+                />
+              ))}
+            </div>
           ) : (
             <Text color="dimmed">No more posts to show...</Text>
           )}

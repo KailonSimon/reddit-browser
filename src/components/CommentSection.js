@@ -127,7 +127,7 @@ function CommentSection({ post, commentId }) {
               width: "100%",
             }}
           >
-            {[...Array(8)].map((i) => (
+            {[...Array(8)].map((x, i) => (
               <Skeleton height={50} width="100%" mb="xs" />
             ))}
           </div>
