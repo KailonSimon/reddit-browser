@@ -5,6 +5,7 @@ import {
   Textarea,
   Anchor,
   Button,
+  Skeleton,
 } from "@mantine/core";
 import { useReducer } from "react";
 import CommentTile from "./CommentTile";
@@ -15,7 +16,7 @@ import { useSession } from "next-auth/react";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    width: "fit-content",
+    width: "100%",
     minWidth: 600,
     maxWidth: 800,
     display: "flex",
@@ -118,14 +119,24 @@ function CommentSection({ post, commentId }) {
           handleChangeCommentSort={handleChangeCommentSort}
           commentId={commentId}
         />
-        {data[1]?.data.children?.length ? (
+        {isLoading || isFetching || isRefetching ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+            }}
+          >
+            {[...Array(8)].map((i) => (
+              <Skeleton height={50} width="100%" mb="xs" />
+            ))}
+          </div>
+        ) : data[1]?.data.children?.length ? (
           <>
             {data[1].data.children.map((comment) => (
               <CommentTile comment={comment.data} key={comment.data.id} />
             ))}
           </>
-        ) : isLoading || isFetching || isRefetching ? (
-          <Loader />
         ) : (
           <Text color="dimmed">No Comments</Text>
         )}

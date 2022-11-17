@@ -1,23 +1,17 @@
 import { ActionIcon, Anchor, Box, Text } from "@mantine/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ArrowUp, ChevronDown } from "tabler-icons-react";
 import { getNestedCommentClass, getRelativeTime } from "../../utils";
 import CommentReplyArea from "./CommentReplyArea";
 import CommentTitleControls from "./CommentTitleControls";
-import SubmissionMenu from "./SubmissionMenu";
 
 function CommentTile({ comment }) {
-  const [replies, setReplies] = useState([]);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [replyAreaOpen, setReplyAreaOpen] = useState(false);
+  const replies = comment?.replies?.data?.children?.filter(
+    (reply) => reply.kind !== "more"
+  );
 
-  useEffect(() => {
-    if (comment?.replies?.data) {
-      setReplies(
-        comment.replies.data.children.filter((reply) => reply.kind !== "more")
-      );
-    }
-  }, [comment]);
   if (!comment.body || comment.stickied) {
     return null;
   }
@@ -39,7 +33,7 @@ function CommentTile({ comment }) {
       />
       <Box
         sx={(theme) => ({
-          padding: isCollapsed ? "0 0.75rem 0 0" : "0.25rem 0.75rem 0.5rem",
+          padding: isCollapsed ? "0 0.75rem 0 0" : "0.25rem 0.75rem",
           color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
           width: "100%",
         })}
@@ -144,7 +138,7 @@ function CommentTile({ comment }) {
           </div>
         )}
       </Box>
-      {replies.length > 0 && !isCollapsed && (
+      {replies?.length > 0 && !isCollapsed && (
         <div
           style={{
             display: "flex",
