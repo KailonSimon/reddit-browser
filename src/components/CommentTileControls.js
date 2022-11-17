@@ -4,13 +4,13 @@ import { Message } from "tabler-icons-react";
 import SubmissionMenu from "./SubmissionMenu";
 import SubmissionVotingControls from "./SubmissionVotingControls";
 
-function CommentTitleControls({ comment, setReplyAreaOpen }) {
+function CommentTileControls({ comment, setReplyAreaOpen }) {
   return (
     <div
       style={{
         display: "flex",
         height: 40,
-        padding: "4px 0",
+        padding: "4px 0 0",
       }}
     >
       <SubmissionVotingControls type="comment" submission={comment} />
@@ -30,4 +30,4 @@ function CommentTitleControls({ comment, setReplyAreaOpen }) {
   );
 }
 
-export default CommentTitleControls;
+export default CommentTileControls;

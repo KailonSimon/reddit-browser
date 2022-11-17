@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { ArrowUp, ChevronDown, Lock, Pinned } from "tabler-icons-react";
 import { getNestedCommentClass, getRelativeTime } from "../../utils";
 import CommentReplyArea from "./CommentReplyArea";
-import CommentTitleControls from "./CommentTitleControls";
+import CommentTileControls from "./CommentTileControls";
 import { markdown } from "snudown-js";
 
 function CommentTile({ comment }) {
@@ -39,7 +39,7 @@ function CommentTile({ comment }) {
       />
       <Box
         sx={(theme) => ({
-          padding: isCollapsed ? "0 0.75rem 0 0" : "0.25rem 0.75rem",
+          padding: isCollapsed ? "0 0.75rem 0 0" : "0.25rem 0.75rem 0 0.75rem",
           color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
           width: "100%",
         })}
@@ -151,7 +151,7 @@ function CommentTile({ comment }) {
             <Text sx={{ fontSize: 14, wordBreak: "break-word" }}>
               {<div dangerouslySetInnerHTML={createMarkup()} />}
             </Text>
-            <CommentTitleControls
+            <CommentTileControls
               comment={comment}
               setReplyAreaOpen={setReplyAreaOpen}
             />
