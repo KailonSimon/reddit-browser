@@ -100,6 +100,7 @@ function PostTile({ post, handlePostTileClick }) {
                 whiteSpace: "pre-line",
                 textOverflow: "ellipsis",
                 overflowWrap: "break-word",
+                marginRight: 8,
                 color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
               })}
               onClick={() => handlePostTileClick(post)}
@@ -108,7 +109,7 @@ function PostTile({ post, handlePostTileClick }) {
             </Anchor>
 
             {post.over_18 && (
-              <Badge ml={8} variant="filled" radius={4} color="red">
+              <Badge mr={8} variant="filled" radius={4} color="red">
                 NSFW
               </Badge>
             )}
@@ -128,7 +129,7 @@ function PostTile({ post, handlePostTileClick }) {
                   },
                 })}
               >
-                <Badge ml={8} variant="dot" radius={4}>
+                <Badge variant="dot" radius={4}>
                   {post.link_flair_text.length > 15
                     ? post.link_flair_text.substr(0, 15) + "..."
                     : post.link_flair_text}
