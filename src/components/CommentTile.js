@@ -1,6 +1,6 @@
 import { ActionIcon, Anchor, Box, Text } from "@mantine/core";
 import React, { useState } from "react";
-import { ArrowUp, ChevronDown } from "tabler-icons-react";
+import { ArrowUp, ChevronDown, Lock, Pinned } from "tabler-icons-react";
 import { getNestedCommentClass, getRelativeTime } from "../../utils";
 import CommentReplyArea from "./CommentReplyArea";
 import CommentTitleControls from "./CommentTitleControls";
@@ -12,7 +12,7 @@ function CommentTile({ comment }) {
     (reply) => reply.kind !== "more"
   );
 
-  if (!comment.body || comment.stickied) {
+  if (!comment.body) {
     return null;
   }
   return (
@@ -51,6 +51,7 @@ function CommentTile({ comment }) {
               display: "flex",
               flexFlow: "row wrap",
               alignItems: "center",
+              width: "100%",
             }}
           >
             {isCollapsed && (
@@ -71,6 +72,12 @@ function CommentTile({ comment }) {
               sx={(theme) => ({
                 fontSize: 12,
                 whiteSpace: "nowrap",
+                color:
+                  comment.distinguished === "moderator"
+                    ? theme.colors.brand
+                    : theme.colorScheme === "dark"
+                    ? "#D7DADC"
+                    : theme.black,
                 ":hover": {
                   cursor: "pointer",
                   textDecoration: "underline",
@@ -78,6 +85,13 @@ function CommentTile({ comment }) {
                 },
               })}
             >
+              {comment.stickied && (
+                <Pinned
+                  color="#59ba12ff"
+                  size={16}
+                  style={{ position: "relative", top: 4, marginRight: 2 }}
+                />
+              )}
               {comment.author}
             </Anchor>
             {comment.is_submitter && (
@@ -102,7 +116,7 @@ function CommentTile({ comment }) {
             >
               <ArrowUp size={16} color="#818384" />
               <Text size="sm" color="#818384">
-                {comment.score}
+                {comment.score_hidden ? "—" : comment.score}
               </Text>
             </div>
             <span
@@ -119,6 +133,9 @@ function CommentTile({ comment }) {
             <Text size="sm" color="#818384" sx={{ whiteSpace: "nowrap" }}>
               {getRelativeTime(comment.created)}
             </Text>
+            {comment.locked && (
+              <Lock color="#59ba12ff" size={16} style={{ marginLeft: 4 }} />
+            )}
           </div>
         </div>
         {!isCollapsed && (

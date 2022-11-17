@@ -9,7 +9,7 @@ import {
   Box,
 } from "@mantine/core";
 import React from "react";
-import { ClockHour3, Messages } from "tabler-icons-react";
+import { ClockHour3, Messages, Pinned, Speakerphone } from "tabler-icons-react";
 import numeral from "numeral";
 import Link from "next/link";
 import { getRelativeTime } from "../../utils";
@@ -19,9 +19,6 @@ import SubmissionVotingControls from "./SubmissionVotingControls";
 const useStyles = createStyles((theme) => ({
   container: {
     minHeight: 100,
-    border: `1px solid ${
-      theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
-    }`,
     background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
     padding: "0.5rem",
     display: "flex",
@@ -37,7 +34,16 @@ function PostTile({ post, handlePostTileClick }) {
   const router = useRouter();
 
   return (
-    <div className={classes.container}>
+    <Box
+      className={classes.container}
+      sx={(theme) => ({
+        border: post.stickied
+          ? `2px solid ${theme.colors.brand[6]}`
+          : `1px solid ${
+              theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+            }`,
+      })}
+    >
       <SubmissionVotingControls type="post" submission={post} />
       {post.preview?.images[0]?.source.url && (
         <Image
@@ -76,6 +82,13 @@ function PostTile({ post, handlePostTileClick }) {
               paddingRight: "0.5rem",
             }}
           >
+            {post.stickied && (
+              <Pinned
+                color="#59ba12ff"
+                size={20}
+                style={{ position: "relative", top: 4, marginRight: 4 }}
+              />
+            )}
             <Anchor
               weight={700}
               component="a"
@@ -174,7 +187,12 @@ function PostTile({ post, handlePostTileClick }) {
               target="_blank"
               rel="noreferrer"
               sx={(theme) => ({
-                color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+                color:
+                  post.distinguished === "moderator"
+                    ? theme.colors.brand
+                    : theme.colorScheme === "dark"
+                    ? "#D7DADC"
+                    : theme.black,
                 ":hover": {
                   cursor: "pointer",
                   textDecoration: "underline",
@@ -182,6 +200,13 @@ function PostTile({ post, handlePostTileClick }) {
                 },
               })}
             >
+              {post.stickied && (
+                <Speakerphone
+                  size={16}
+                  color="#59ba12ff"
+                  style={{ position: "relative", top: 4, marginRight: 2 }}
+                />
+              )}
               {post.author}
             </Anchor>
           </Text>
@@ -214,7 +239,7 @@ function PostTile({ post, handlePostTileClick }) {
           </Text>
         </Box>
       </div>
-    </div>
+    </Box>
   );
 }
 

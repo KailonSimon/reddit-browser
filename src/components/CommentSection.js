@@ -1,6 +1,5 @@
 import {
   createStyles,
-  Loader,
   Text,
   Textarea,
   Anchor,

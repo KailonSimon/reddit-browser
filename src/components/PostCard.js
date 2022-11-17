@@ -15,15 +15,13 @@ import SubmissionMenu from "./SubmissionMenu";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import SubmissionVotingControls from "./SubmissionVotingControls";
+import { Speakerphone } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   container: {
     display: "flex",
     flexDirection: "row",
     color: "#D7DADC",
-    border: `1px solid ${
-      theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
-    }`,
     background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
     borderRadius: 4,
     padding: "12px 42px 12px 12px",
@@ -56,7 +54,16 @@ function PostCard({ post }) {
   const router = useRouter();
 
   return (
-    <div className={classes.container}>
+    <Box
+      className={classes.container}
+      sx={(theme) => ({
+        border: post.stickied
+          ? `2px solid ${theme.colors.brand[6]}`
+          : `1px solid ${
+              theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+            }`,
+      })}
+    >
       <div>
         <SubmissionVotingControls type="post" submission={post} />
       </div>
@@ -108,6 +115,12 @@ function PostCard({ post }) {
                 color="inherit"
                 variant="text"
                 sx={(theme) => ({
+                  color:
+                    post.distinguished === "moderator"
+                      ? theme.colors.brand
+                      : theme.colorScheme === "dark"
+                      ? "#D7DADC"
+                      : theme.black,
                   ":hover": {
                     cursor: "pointer",
                     textDecoration: "underline",
@@ -115,7 +128,14 @@ function PostCard({ post }) {
                   },
                 })}
               >
-                u/{post.author}
+                {post.stickied && (
+                  <Speakerphone
+                    size={16}
+                    color="#59ba12ff"
+                    style={{ position: "relative", top: 4, marginRight: 2 }}
+                  />
+                )}
+                {post.author}
               </Anchor>
             </Text>
 
@@ -129,7 +149,7 @@ function PostCard({ post }) {
               {getRelativeTime(post.created)} ago
             </Text>
           </div>
-          <div style={{ marginLeft: 8 }}>
+          <div style={{ position: "absolute", right: 16, marginLeft: 8 }}>
             <SubmissionMenu type="post" submission={post} />
           </div>
         </div>
@@ -137,7 +157,6 @@ function PostCard({ post }) {
           sx={(theme) => ({
             display: "flex",
             flexFlow: "row wrap",
-            alignItems: "center",
             color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
           })}
         >
@@ -152,6 +171,7 @@ function PostCard({ post }) {
           >
             {post.title}
           </Title>
+
           {post.over_18 && (
             <Badge
               variant="filled"
@@ -223,7 +243,7 @@ function PostCard({ post }) {
           </Text>
         )}
       </div>
-    </div>
+    </Box>
   );
 }
 
