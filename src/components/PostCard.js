@@ -8,7 +8,7 @@ import {
   Box,
 } from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
-import React, { useEffect } from "react";
+import React from "react";
 import Video from "./Video";
 import { getRelativeTime } from "../../utils";
 import SubmissionMenu from "./SubmissionMenu";
@@ -41,6 +41,13 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
     flexFlow: "row wrap",
     margin: "0 0 4px",
+  },
+  imageRoot: { marginTop: 8, marginLeft: "auto", marginRight: "auto" },
+  image: {
+    maxHeight: "calc(100vh - 20rem)",
+    [theme.fn.smallerThan("xs")]: {
+      maxHeight: "calc(100vh - 14rem)",
+    },
   },
 }));
 
@@ -167,68 +174,43 @@ function PostCard({ post }) {
           <Image
             src={post?.preview?.images[0]?.source?.url}
             alt={post.title}
-            styles={{
-              root: {
-                marginTop: 8,
-                marginLeft: "auto",
-                marginRight: "auto",
-              },
-            }}
+            classNames={{ root: classes.imageRoot, image: classes.image }}
+            fit="contain"
           />
         ) : post.post_hint == "image" ? (
           <Image
             src={post.url}
             alt={post.title}
-            styles={{
-              root: {
-                marginTop: 8,
-                marginLeft: "auto",
-                marginRight: "auto",
-              },
-            }}
+            classNames={{ root: classes.imageRoot, image: classes.image }}
+            fit="contain"
           />
         ) : post.post_hint === "rich:video" ? (
           <Video type="external" content={post.secure_media_embed?.content} />
         ) : post.post_hint === "hosted:video" ? (
           <Video type="hosted" content={post.media.reddit_video.fallback_url} />
         ) : (
-          <>
-            {post?.preview?.images[0]?.source?.url && (
-              <Image
-                src={post?.preview?.images[0]?.source?.url}
-                alt={post.title}
-                styles={{
-                  root: {
-                    marginTop: 8,
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  },
-                }}
-              />
-            )}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: 8,
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: 8,
+            }}
+          >
+            <Anchor
+              href={post.url}
+              mt={4}
+              size="sm"
+              target="_blank"
+              rel="noreferrer"
+              component="a"
+              sx={{
+                width: "100%",
+                textAlign: "center",
               }}
             >
-              <Anchor
-                href={post.url}
-                mt={4}
-                size="sm"
-                target="_blank"
-                rel="noreferrer"
-                component="a"
-                sx={{
-                  width: "100%",
-                  textAlign: "center",
-                }}
-              >
-                {parseUrl(post.url).hostname}
-              </Anchor>
-            </div>
-          </>
+              {parseUrl(post.url).hostname}
+            </Anchor>
+          </div>
         )}
         {post.is_self && (
           <Text

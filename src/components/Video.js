@@ -16,14 +16,17 @@ function Video({ type, content }) {
         controls
         autoPlay
         muted
-        style={{ marginTop: 8 }}
+        style={{ marginTop: 8, maxHeight: "calc(100vh - 16rem)" }}
       >
         <source src={content} type="video/mp4" />
       </video>
     );
   }
   return (
-    <div className="videoWrapper" style={{ marginTop: 8 }}>
+    <div
+      className="videoWrapper"
+      style={{ marginTop: 8, maxHeight: "calc(100vh - 16rem)" }}
+    >
       <div
         dangerouslySetInnerHTML={{
           __html: parse(content),
