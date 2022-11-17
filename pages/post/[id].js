@@ -8,18 +8,20 @@ import PostCard from "../../src/components/PostCard";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    maxWidth: 600,
-    width: "100%",
+    minWidth: 600,
+    maxWidth: 800,
     display: "flex",
     flexDirection: "column",
-    alignItems: "flex-start",
-    gap: "0.5rem",
-  },
-  details: {
-    display: "flex",
     alignItems: "center",
-    flexFlow: "row wrap",
-    margin: "0 0 4px",
+    gap: "0.5rem",
+    position: "relative",
+    [theme.fn.smallerThan(800)]: {
+      minWidth: 300,
+    },
+  },
+  controlsWrapper: {
+    width: "100%",
+    display: "flex",
   },
 }));
 
@@ -37,17 +39,17 @@ function Post({ post }) {
         )}
       </Head>
       <Layout>
-        <>
-          <div className={classes.container}>
+        <div className={classes.container}>
+          <div className={classes.controlsWrapper}>
             <Link href={"/"} passHref>
               <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
                 Go back
               </Button>
             </Link>
-            <PostCard post={post} />
-            <CommentSection post={post} />
           </div>
-        </>
+          <PostCard post={post} />
+          <CommentSection post={post} />
+        </div>
       </Layout>
     </>
   );
