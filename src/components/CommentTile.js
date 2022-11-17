@@ -1,4 +1,5 @@
 import { ActionIcon, Anchor, Box, Text } from "@mantine/core";
+import numeral from "numeral";
 import React, { useState } from "react";
 import { ArrowUp, ChevronDown, Lock, Pinned } from "tabler-icons-react";
 import { getNestedCommentClass, getRelativeTime } from "../../utils";
@@ -116,7 +117,9 @@ function CommentTile({ comment }) {
             >
               <ArrowUp size={16} color="#818384" />
               <Text size="sm" color="#818384">
-                {comment.score_hidden ? "—" : comment.score}
+                {comment.score_hidden
+                  ? "—"
+                  : numeral(comment.score).format("0.[0]a")}
               </Text>
             </div>
             <span

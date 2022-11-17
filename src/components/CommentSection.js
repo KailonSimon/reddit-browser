@@ -127,7 +127,7 @@ function CommentSection({ post, commentId }) {
             }}
           >
             {[...Array(8)].map((x, i) => (
-              <Skeleton height={50} width="100%" mb="xs" key={i} />
+              <Skeleton height={100} width="100%" mb="xs" key={i} />
             ))}
           </div>
         ) : data[1]?.data.children?.length ? (
