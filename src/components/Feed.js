@@ -104,6 +104,7 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
                   height={100}
                   width="100%"
                   radius={4}
+                  key={i}
                   className={classes.skeleton}
                 />
               ))}
