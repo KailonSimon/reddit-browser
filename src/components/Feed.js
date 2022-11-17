@@ -29,6 +29,11 @@ const useStyles = createStyles((theme) => ({
     paddingTop: "0.5rem",
     width: "fit-content",
   },
+  modalInner: {
+    [theme.fn.smallerThan("xs")]: {
+      padding: "3rem 0.5rem",
+    },
+  },
 }));
 
 function Feed({ posts, fetchNextPage, hasNextPage }) {
@@ -54,6 +59,7 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
       classNames: {
         modal: classes.modal,
         body: classes.modalBody,
+        inner: classes.modalInner,
       },
       withCloseButton: false,
       transition: "slide-right",

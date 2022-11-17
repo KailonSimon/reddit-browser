@@ -89,11 +89,8 @@ function PostTile({ post, handlePostTileClick }) {
                 style={{ position: "relative", top: 4, marginRight: 4 }}
               />
             )}
-            <Anchor
+            <Text
               weight={700}
-              component="a"
-              underline={false}
-              variant="text"
               sx={(theme) => ({
                 wordWrap: "break-word",
                 wordBreak: "break-word",
@@ -101,12 +98,14 @@ function PostTile({ post, handlePostTileClick }) {
                 textOverflow: "ellipsis",
                 overflowWrap: "break-word",
                 marginRight: 8,
+                cursor: "pointer",
+                display: "inline",
                 color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
               })}
               onClick={() => handlePostTileClick(post)}
             >
               {post.title}
-            </Anchor>
+            </Text>
 
             {post.over_18 && (
               <Badge mr={8} variant="filled" radius={4} color="red">

@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import SubmissionVotingControls from "./SubmissionVotingControls";
 import { Speakerphone } from "tabler-icons-react";
+import { markdown } from "snudown-js";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -30,6 +31,7 @@ const useStyles = createStyles((theme) => ({
     minWidth: 600,
     maxWidth: 800,
     [theme.fn.smallerThan(800)]: {
+      padding: "8px 21px 8px 8px",
       minWidth: 300,
       maxWidth: "calc(100vw - 2rem)",
     },
@@ -52,6 +54,10 @@ const useStyles = createStyles((theme) => ({
 function PostCard({ post }) {
   const { classes } = useStyles();
   const router = useRouter();
+
+  function createMarkup() {
+    return { __html: markdown(post.selftext, { target: "_blank" }) };
+  }
 
   return (
     <Box
@@ -171,7 +177,6 @@ function PostCard({ post }) {
           >
             {post.title}
           </Title>
-
           {post.over_18 && (
             <Badge
               variant="filled"
@@ -239,7 +244,7 @@ function PostCard({ post }) {
               color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
             })}
           >
-            {post.selftext}
+            {<div dangerouslySetInnerHTML={createMarkup()} />}
           </Text>
         )}
       </div>

@@ -5,6 +5,7 @@ import { ArrowUp, ChevronDown, Lock, Pinned } from "tabler-icons-react";
 import { getNestedCommentClass, getRelativeTime } from "../../utils";
 import CommentReplyArea from "./CommentReplyArea";
 import CommentTitleControls from "./CommentTitleControls";
+import { markdown } from "snudown-js";
 
 function CommentTile({ comment }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -12,6 +13,10 @@ function CommentTile({ comment }) {
   const replies = comment?.replies?.data?.children?.filter(
     (reply) => reply.kind !== "more"
   );
+
+  function createMarkup() {
+    return { __html: markdown(comment.body, { target: "_blank" }) };
+  }
 
   if (!comment.body) {
     return null;
@@ -144,7 +149,7 @@ function CommentTile({ comment }) {
         {!isCollapsed && (
           <div>
             <Text sx={{ fontSize: 14, wordBreak: "break-word" }}>
-              {comment.body}
+              {<div dangerouslySetInnerHTML={createMarkup()} />}
             </Text>
             <CommentTitleControls
               comment={comment}

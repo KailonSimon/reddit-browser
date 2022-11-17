@@ -13,9 +13,10 @@ Deployed using Vercel.
 - Nested comment sections on each post
 - Subreddit search with autocomplete
 - Fast submission sorting and filtering
+- Reddit markdown parsing using [snudown-js](https://github.com/erikdesjardins/snudown-js)
 
 ## Roadmap
 
 - Ability to comment, submit, and vote
 - Submission search
-- Reddit markdown support
+- Ability to use reddit markdown in submissions and comments
