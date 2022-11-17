@@ -13,7 +13,16 @@ import { theme } from "../theme";
 import PostModal from "../src/components/PostModal";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
   const [colorScheme, setColorScheme] = useState("dark");
   const toggleColorScheme = (value) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
