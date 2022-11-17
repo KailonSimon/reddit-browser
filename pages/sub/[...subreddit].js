@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   dehydrate,
   QueryClient,
@@ -19,6 +19,7 @@ function Subreddit({ subreddit }) {
     status,
     data,
     error,
+    refetch,
     isRefetching,
     isFetchingNextPage,
     fetchNextPage,
@@ -33,6 +34,10 @@ function Subreddit({ subreddit }) {
       },
     }
   );
+
+  useEffect(() => {
+    refetch();
+  }, [sorting]);
 
   return status === "loading" ? (
     <LoadingScreen />

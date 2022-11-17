@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { Text } from "@mantine/core";
 import {
   dehydrate,
@@ -30,6 +30,7 @@ export default function Home() {
     status,
     data,
     error,
+    refetch,
     isRefetching,
     isFetchingNextPage,
     fetchNextPage,
@@ -43,6 +44,10 @@ export default function Home() {
       },
     }
   );
+
+  useEffect(() => {
+    refetch();
+  }, [state.sorting]);
 
   return status === "loading" ? (
     <LoadingScreen />
