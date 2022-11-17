@@ -3,6 +3,9 @@ import parse from "html-react-parser";
 import { Loader } from "@mantine/core";
 
 function Video({ type, content }) {
+  function createMarkup() {
+    return { __html: content };
+  }
   const videoRef = useRef(null);
   if (!content) {
     return <Loader />;
@@ -27,11 +30,7 @@ function Video({ type, content }) {
       className="videoWrapper"
       style={{ marginTop: 8, maxHeight: "calc(100vh - 16rem)" }}
     >
-      <div
-        dangerouslySetInnerHTML={{
-          __html: parse(content),
-        }}
-      />
+      <div dangerouslySetInnerHTML={createMarkup()} />
     </div>
   );
 }
