@@ -228,7 +228,7 @@ function PostTile({ post, handlePostTileClick }) {
         >
           <Messages size={16} />
           <Text size="xs" ml={2}>
-            {numeral(post.num_comments).format("0a")} comment
+            {numeral(post.num_comments).format("0.[0]a")} comment
             {post.num_comments === 1 ? "" : "s"}
           </Text>
         </Box>
