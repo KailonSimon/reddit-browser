@@ -27,6 +27,10 @@ export const getRelativeTime = (timestamp) => {
   return dayjs.unix(timestamp).fromNow();
 };
 
+export const getDate = (timestamp) => {
+  return dayjs.unix(timestamp).format("MMMM D, YYYY");
+};
+
 export const mergePages = (pages) => {
   const mergedPages = [];
   for (let i = 0; i < pages.length; i++) {
@@ -93,6 +97,13 @@ export const getUserData = async (username) => {
 
 export const getCurrentUserData = async () => {
   const res = await fetch("/api/user");
+  return await res.json();
+};
+
+export const getSubredditInfo = async (subreddit) => {
+  const res = await fetch(
+    `https://www.reddit.com/r/${subreddit}/about.json?raw_json=1`
+  );
   return await res.json();
 };
 

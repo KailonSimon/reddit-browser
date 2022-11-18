@@ -5,12 +5,14 @@ import {
   useInfiniteQuery,
 } from "@tanstack/react-query";
 import Head from "next/head";
-import { Text, Title } from "@mantine/core";
-import { mergePages, fetchPosts } from "../../utils";
+import { Box, Text } from "@mantine/core";
+import { mergePages, fetchPosts, getSubredditInfo } from "../../utils";
 import LoadingScreen from "../../src/components/LoadingScreen";
 import Feed from "../../src/components/Feed";
 import FeedControls from "../../src/components/FeedControls";
 import Layout from "../../src/components/Layout";
+import SubredditBanner from "../../src/components/SubredditBanner";
+import SubredditSidebar from "../../src/components/SubredditSidebar";
 
 function Subreddit({ subreddit }) {
   const [sorting, setSorting] = useState("hot");
@@ -26,7 +28,8 @@ function Subreddit({ subreddit }) {
     hasNextPage,
   } = useInfiniteQuery(
     ["posts", { subreddit }],
-    ({ pageParam = "" }) => fetchPosts(sorting, subreddit, 10, pageParam),
+    ({ pageParam = "" }) =>
+      fetchPosts(sorting, subreddit.display_name, 10, pageParam),
     {
       refetchOnMount: false,
       getNextPageParam: (lastPage, pages) => {
@@ -44,31 +47,56 @@ function Subreddit({ subreddit }) {
   ) : status === "error" ? (
     <Text>Error: {error.message}</Text>
   ) : (
-    <>
+    <Box
+      sx={(theme) => ({
+        width: "100%",
+        backgroundColor:
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[9]
+            : theme.colors.gray[2],
+      })}
+    >
       <Head>
-        <title>r/{subreddit}</title>
+        <title>{subreddit.display_name_prefixed}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta property="og:title" content="Reddit Browser | Home" />
       </Head>
       <Layout>
-        <Title mb={16} color="brand" order={1} align="center">
-          r/{subreddit}
-        </Title>
-        <FeedControls
-          sorting={sorting}
-          setSorting={setSorting}
-          isRefetching={isRefetching}
-        />
+        <SubredditBanner subreddit={subreddit} />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row-reverse",
+            justifyContent: "space-between",
+            width: "100%",
+            padding: "0 1rem",
+          }}
+        >
+          <SubredditSidebar subreddit={subreddit} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+            }}
+          >
+            <FeedControls
+              sorting={sorting}
+              setSorting={setSorting}
+              isRefetching={isRefetching}
+            />
 
-        <Feed
-          key={mergePages(data.pages)}
-          posts={mergePages(data.pages)}
-          fetchNextPage={fetchNextPage}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-        />
+            <Feed
+              key={mergePages(data.pages)}
+              posts={mergePages(data.pages)}
+              fetchNextPage={fetchNextPage}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          </div>
+        </div>
       </Layout>
-    </>
+    </Box>
   );
 }
 
@@ -76,6 +104,7 @@ export default Subreddit;
 
 export async function getServerSideProps(context) {
   const { subreddit } = context.query;
+  const subredditInfo = await getSubredditInfo(subreddit[0]);
 
   const queryClient = new QueryClient();
 
@@ -94,7 +123,7 @@ export async function getServerSideProps(context) {
   }
   return {
     props: {
-      subreddit: subreddit[0],
+      subreddit: subredditInfo.data,
       dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
     },
   };

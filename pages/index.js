@@ -61,21 +61,31 @@ export default function Home() {
         <meta property="og:title" content="Reddit Browser | Home" />
       </Head>
       <Layout>
-        <FeedControls
-          sorting={state.sorting}
-          setSorting={(value) =>
-            dispatch({ type: "SET_SORTING", payload: value })
-          }
-          isRefetching={isRefetching}
-        />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            padding: "0 1rem",
+            marginTop: "5rem",
+          }}
+        >
+          <FeedControls
+            sorting={state.sorting}
+            setSorting={(value) =>
+              dispatch({ type: "SET_SORTING", payload: value })
+            }
+            isRefetching={isRefetching}
+          />
 
-        <Feed
-          key={mergePages(data.pages)}
-          posts={mergePages(data.pages)}
-          fetchNextPage={fetchNextPage}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-        />
+          <Feed
+            key={mergePages(data.pages)}
+            posts={mergePages(data.pages)}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+          />
+        </div>
       </Layout>
     </>
   );

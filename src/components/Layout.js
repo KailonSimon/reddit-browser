@@ -48,10 +48,7 @@ function Layout({ children }) {
         <main
           className={classes.contentWrapper}
           style={{
-            width: 1000,
-            maxWidth: "100vw",
-            padding: "1rem 0.5rem",
-            marginTop: "4rem",
+            width: "100%",
           }}
         >
           {children}
@@ -74,7 +71,6 @@ function Layout({ children }) {
             <div
               style={{
                 width: "100%",
-                maxWidth: 1000,
                 display: "flex",
                 justifyContent: "flex-end",
               }}
