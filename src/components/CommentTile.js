@@ -1,6 +1,6 @@
 import { ActionIcon, Anchor, Box, Text } from "@mantine/core";
 import numeral from "numeral";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { ArrowUp, ChevronDown, Lock, Pinned } from "tabler-icons-react";
 import {
   fetchMoreChildrenComments,
@@ -11,23 +11,51 @@ import CommentReplyArea from "./CommentReplyArea";
 import CommentTileControls from "./CommentTileControls";
 import { markdown } from "snudown-js";
 
+const initialState = {
+  isCollapsed: false,
+  isReplyAreaOpen: false,
+  isLoading: false,
+  moreChildrenLoaded: false,
+  replies: [],
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_IS_COLLAPSED":
+      return { ...state, isCollapsed: action.payload };
+    case "SET_IS_REPLY_AREA_OPEN":
+      return { ...state, isReplyAreaOpen: action.payload };
+    case "SET_IS_LOADING":
+      return { ...state, isLoading: action.payload };
+    case "SET_MORE_CHILDREN_LOADED":
+      return { ...state, moreChildrenLoaded: action.payload };
+    case "SET_REPLIES":
+      return { ...state, replies: action.payload };
+    default:
+      return initialState;
+  }
+}
+
 function CommentTile({ comment, depth = 0 }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  /*const [isCollapsed, setIsCollapsed] = useState(false);
   const [replyAreaOpen, setReplyAreaOpen] = useState(false);
   const [replies, setReplies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [moreChildrenLoaded, setMoreChildrenLoaded] = useState(false);
+  const [moreChildrenLoaded, setMoreChildrenLoaded] = useState(false);*/
+
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    setReplies(
-      comment?.replies?.data?.children?.reduce(function (data, reply) {
+    dispatch({
+      type: "SET_REPLIES",
+      payload: comment?.replies?.data?.children?.reduce(function (data, reply) {
         if (reply.kind !== "more") {
           data.push(reply.data);
         }
         return data;
-      }, [])
-    );
-  }, [comment, setReplies]);
+      }, []),
+    });
+  }, [comment]);
 
   const hiddenReplies = comment?.replies?.data?.children?.filter(
     (reply) => reply.kind === "more"
@@ -43,15 +71,18 @@ function CommentTile({ comment, depth = 0 }) {
 
   const handleMoreChildrenClick = async () => {
     try {
-      setIsLoading(true);
+      dispatch({ type: "SET_IS_LOADING", payload: true });
       const children = await fetchMoreChildrenComments(
         hiddenReplies.children.toString()
       );
-      setReplies((current) => [...current, ...children.data]);
-      setMoreChildrenLoaded(true);
-      setIsLoading(false);
+      dispatch({
+        type: "SET_REPLIES",
+        payload: [...state.replies, ...children.data],
+      });
+      dispatch({ type: "SET_MORE_CHILDREN_LOADED", payload: true });
+      dispatch({ type: "SET_IS_LOADING", payload: false });
     } catch (error) {
-      setIsLoading(false);
+      dispatch({ type: "SET_IS_LOADING", payload: false });
       console.log(error);
     }
   };
@@ -70,12 +101,12 @@ function CommentTile({ comment, depth = 0 }) {
           className={`comment-depth-${getNestedCommentClass(
             comment.depth || depth
           )} comment-collapse-button`}
-          style={{ display: isCollapsed ? "none" : "block" }}
-          onClick={() => setIsCollapsed(true)}
+          style={{ display: state.isCollapsed ? "none" : "block" }}
+          onClick={() => dispatch({ type: "SET_IS_COLLAPSED", payload: true })}
         />
         <Box
           sx={(theme) => ({
-            padding: isCollapsed
+            padding: state.isCollapsed
               ? "0 0.75rem 0 0"
               : "0.25rem 0.75rem 0 0.75rem",
             color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
@@ -87,7 +118,7 @@ function CommentTile({ comment, depth = 0 }) {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              marginBottom: isCollapsed ? 0 : 4,
+              marginBottom: state.isCollapsed ? 0 : 4,
             }}
           >
             <div
@@ -98,9 +129,11 @@ function CommentTile({ comment, depth = 0 }) {
                 width: "100%",
               }}
             >
-              {isCollapsed && (
+              {state.isCollapsed && (
                 <ActionIcon
-                  onClick={() => setIsCollapsed(false)}
+                  onClick={() =>
+                    dispatch({ type: "SET_IS_COLLAPSED", payload: false })
+                  }
                   sx={{ marginRight: 8 }}
                 >
                   <ChevronDown color="#818384" size={20} />
@@ -184,24 +217,30 @@ function CommentTile({ comment, depth = 0 }) {
               )}
             </div>
           </div>
-          {!isCollapsed && (
+          {!state.isCollapsed && (
             <div>
               <Text sx={{ fontSize: 14, wordBreak: "break-word" }}>
                 {<div dangerouslySetInnerHTML={createMarkup()} />}
               </Text>
               <CommentTileControls
                 comment={comment}
-                setReplyAreaOpen={setReplyAreaOpen}
+                replyAreaOpen={state.isReplyAreaOpen}
+                setReplyAreaOpen={(value) =>
+                  dispatch({ type: "SET_IS_REPLY_AREA_OPEN", payload: value })
+                }
               />
               <CommentReplyArea
+                depth={comment.depth || depth}
                 comment={comment}
-                replyAreaOpen={replyAreaOpen}
-                setReplyAreaOpen={setReplyAreaOpen}
+                replyAreaOpen={state.isReplyAreaOpen}
+                setReplyAreaOpen={(value) =>
+                  dispatch({ type: "SET_IS_REPLY_AREA_OPEN", payload: value })
+                }
               />
             </div>
           )}
         </Box>
-        {replies?.length > 0 && !isCollapsed && (
+        {state.replies?.length > 0 && !state.isCollapsed && (
           <div
             style={{
               display: "flex",
@@ -210,7 +249,7 @@ function CommentTile({ comment, depth = 0 }) {
               gap: "0.25rem",
             }}
           >
-            {replies.map((reply, i) => (
+            {state.replies.map((reply, i) => (
               <CommentTile
                 comment={reply}
                 key={reply.id}
@@ -221,8 +260,8 @@ function CommentTile({ comment, depth = 0 }) {
         )}
         {hiddenReplies &&
           hiddenReplies.children?.length > 0 &&
-          !isCollapsed &&
-          !moreChildrenLoaded && (
+          !state.isCollapsed &&
+          !state.moreChildrenLoaded && (
             <Text
               align="left"
               size="sm"
@@ -235,7 +274,7 @@ function CommentTile({ comment, depth = 0 }) {
               }}
               onClick={handleMoreChildrenClick}
             >
-              {isLoading
+              {state.isLoading
                 ? "loading..."
                 : `${hiddenReplies.children?.length} more repl${
                     hiddenReplies.children?.length > 1 ? "ies" : "y"

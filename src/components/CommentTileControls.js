@@ -1,10 +1,10 @@
 import { Button } from "@mantine/core";
-import React, { useEffect } from "react";
+import React from "react";
 import { Message } from "tabler-icons-react";
 import SubmissionMenu from "./SubmissionMenu";
 import SubmissionVotingControls from "./SubmissionVotingControls";
 
-function CommentTileControls({ comment, setReplyAreaOpen }) {
+function CommentTileControls({ comment, replyAreaOpen, setReplyAreaOpen }) {
   return (
     <div
       style={{
@@ -19,7 +19,7 @@ function CommentTileControls({ comment, setReplyAreaOpen }) {
         variant="subtle"
         color="dark"
         radius={0}
-        onClick={() => setReplyAreaOpen((o) => !o)}
+        onClick={() => setReplyAreaOpen(!replyAreaOpen)}
         leftIcon={<Message size="18" />}
         styles={{ root: { padding: 8 }, leftIcon: { marginRight: 4 } }}
       >

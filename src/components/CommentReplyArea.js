@@ -13,7 +13,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function CommentReplyArea({ comment, replyAreaOpen, setReplyAreaOpen }) {
+function CommentReplyArea({ replyAreaOpen, setReplyAreaOpen, depth }) {
   const { classes } = useStyles();
   const { data: session } = useSession();
   const [input, setInput] = useState("");
@@ -50,7 +50,7 @@ function CommentReplyArea({ comment, replyAreaOpen, setReplyAreaOpen }) {
     >
       <div
         className={`comment-depth-${getNestedCommentClass(
-          comment.depth + 1
+          depth + 1
         )} comment-collapse-button`}
         style={{
           height: "100%",
