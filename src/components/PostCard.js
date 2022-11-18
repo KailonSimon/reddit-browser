@@ -30,6 +30,9 @@ const useStyles = createStyles((theme) => ({
     width: "100%",
     minWidth: 600,
     maxWidth: 800,
+    border: `1px solid ${
+      theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+    }`,
     [theme.fn.smallerThan(800)]: {
       padding: "8px 21px 8px 8px",
       minWidth: 300,
@@ -60,16 +63,7 @@ function PostCard({ post }) {
   }
 
   return (
-    <Box
-      className={classes.container}
-      sx={(theme) => ({
-        border: post.stickied
-          ? `2px solid ${theme.colors.brand[6]}`
-          : `1px solid ${
-              theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
-            }`,
-      })}
-    >
+    <Box className={classes.container}>
       <div>
         <SubmissionVotingControls type="post" submission={post} />
       </div>

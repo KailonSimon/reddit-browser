@@ -26,6 +26,9 @@ const useStyles = createStyles((theme) => ({
     justifyContent: "flex-start",
     position: "relative",
     borderRadius: "4px",
+    border: `1px solid ${
+      theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+    }`,
   },
 }));
 
@@ -34,16 +37,7 @@ function PostTile({ post, handlePostTileClick }) {
   const router = useRouter();
 
   return (
-    <Box
-      className={classes.container}
-      sx={(theme) => ({
-        border: post.stickied
-          ? `2px solid ${theme.colors.brand[6]}`
-          : `1px solid ${
-              theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
-            }`,
-      })}
-    >
+    <Box className={classes.container}>
       <SubmissionVotingControls type="post" submission={post} />
       {post.preview?.images[0]?.source.url && (
         <Image
