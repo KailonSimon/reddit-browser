@@ -6,7 +6,7 @@ import {
   Button,
   Skeleton,
 } from "@mantine/core";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import CommentTile from "./CommentTile";
 import { useQuery } from "@tanstack/react-query";
 import { fetchComments } from "../../utils";
@@ -132,9 +132,11 @@ function CommentSection({ post, commentId }) {
           </div>
         ) : data[1]?.data.children?.length ? (
           <>
-            {data[1].data.children.map((comment) => (
-              <CommentTile comment={comment.data} key={comment.data.id} />
-            ))}
+            {data[1].data.children.map((comment) => {
+              return (
+                <CommentTile comment={comment.data} key={comment.data.id} />
+              );
+            })}
           </>
         ) : (
           <Text color="dimmed">No Comments</Text>
