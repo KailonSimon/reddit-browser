@@ -40,7 +40,7 @@ function Subreddit({ subreddit }) {
 
   useEffect(() => {
     refetch();
-  }, [sorting]);
+  }, [sorting, refetch]);
 
   return status === "loading" ? (
     <LoadingScreen />
@@ -59,7 +59,7 @@ function Subreddit({ subreddit }) {
       <Head>
         <title>{subreddit.display_name_prefixed}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta property="og:title" content="Reddit Browser | Home" />
+        <meta property="og:title" content={subreddit.display_name_prefixed} />
       </Head>
       <Layout>
         <SubredditBanner subreddit={subreddit} />

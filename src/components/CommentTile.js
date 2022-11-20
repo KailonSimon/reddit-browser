@@ -37,12 +37,6 @@ function reducer(state, action) {
 }
 
 function CommentTile({ comment, depth = 0 }) {
-  /*const [isCollapsed, setIsCollapsed] = useState(false);
-  const [replyAreaOpen, setReplyAreaOpen] = useState(false);
-  const [replies, setReplies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [moreChildrenLoaded, setMoreChildrenLoaded] = useState(false);*/
-
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
