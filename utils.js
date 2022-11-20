@@ -114,6 +114,13 @@ export const getSubredditInfo = async (subreddit) => {
   return await res.json();
 };
 
+export const getTrendingSubreddits = async (limit) => {
+  const res = await fetch(
+    `https://www.reddit.com/subreddits/popular.json?limit=${limit}&raw_json=1`
+  );
+  return await res.json();
+};
+
 export const voteOnSubmission = async (id, direction) => {
   let directionNumber;
   switch (direction) {

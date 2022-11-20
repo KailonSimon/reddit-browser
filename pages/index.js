@@ -11,6 +11,7 @@ import Layout from "../src/components/Layout";
 import Head from "next/head";
 import { fetchPosts, mergePages } from "../utils";
 import LoadingScreen from "../src/components/LoadingScreen";
+import TrendingSubsCard from "../src/components/TrendingSubsCard";
 
 const initialState = { sorting: "hot" };
 
@@ -47,7 +48,7 @@ export default function Home() {
 
   useEffect(() => {
     refetch();
-  }, [state.sorting]);
+  }, [state.sorting, refetch]);
 
   return status === "loading" ? (
     <LoadingScreen />
@@ -64,27 +65,38 @@ export default function Home() {
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            flex: 1,
+            flexDirection: "row-reverse",
+            justifyContent: "space-between",
+            width: "100%",
             padding: "0 1rem",
             marginTop: "5rem",
           }}
         >
-          <FeedControls
-            sorting={state.sorting}
-            setSorting={(value) =>
-              dispatch({ type: "SET_SORTING", payload: value })
-            }
-            isRefetching={isRefetching}
-          />
+          <TrendingSubsCard />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+              padding: "0 1rem",
+            }}
+          >
+            <FeedControls
+              sorting={state.sorting}
+              setSorting={(value) =>
+                dispatch({ type: "SET_SORTING", payload: value })
+              }
+              isRefetching={isRefetching}
+            />
 
-          <Feed
-            key={mergePages(data.pages)}
-            posts={mergePages(data.pages)}
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-          />
+            <Feed
+              key={mergePages(data.pages)}
+              posts={mergePages(data.pages)}
+              fetchNextPage={fetchNextPage}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          </div>
         </div>
       </Layout>
     </>
