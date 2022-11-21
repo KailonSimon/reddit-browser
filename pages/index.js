@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from "react";
-import { Text } from "@mantine/core";
+import { Text, createStyles } from "@mantine/core";
 import {
   dehydrate,
   QueryClient,
@@ -13,6 +13,21 @@ import { fetchPosts, mergePages } from "../utils";
 import LoadingScreen from "../src/components/LoadingScreen";
 import TrendingSubsCard from "../src/components/TrendingSubsCard";
 
+const useStyles = createStyles((theme) => ({
+  main: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: "0 1rem",
+    marginTop: "5rem",
+
+    [theme.fn.smallerThan("md")]: {
+      justifyContent: "center",
+    },
+  },
+}));
+
 const initialState = { sorting: "hot" };
 
 function reducer(state, action) {
@@ -25,6 +40,7 @@ function reducer(state, action) {
 }
 
 export default function Home() {
+  const { classes } = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const {
@@ -62,16 +78,7 @@ export default function Home() {
         <meta property="og:title" content="Reddit Browser | Home" />
       </Head>
       <Layout>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row-reverse",
-            justifyContent: "space-between",
-            width: "100%",
-            padding: "0 1rem",
-            marginTop: "5rem",
-          }}
-        >
+        <div className={classes.main}>
           <TrendingSubsCard />
           <div
             style={{
