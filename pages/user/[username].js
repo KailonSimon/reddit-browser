@@ -33,32 +33,41 @@ function User({ user }) {
       {!user ? (
         <div>Error: user not found</div>
       ) : (
-        <div className={classes.container}>
-          <Image
-            src={
-              user.data.snoovatar_img ||
-              "https://logodownload.org/wp-content/uploads/2018/02/reddit-logo-16.png"
-            }
-            height={100}
-            width={100}
-            alt={`${user.data.name}'s snoovatar`}
-            classNames={{ image: classes.image }}
-            radius={8}
-            fit="contain"
-            mr={16}
-          />
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <Title order={2} variant="text" sx={{ fontFamily: "Chillax" }}>
-              {user.data.name}
-              {session && session.user.name == user.data.name && " (you)"}
-            </Title>
-            <Text size="xs" color="dimmed">
-              Member since{" "}
-              {moment.unix(user.data.created).format("MMMM Do, YYYY")} (
-              {moment.unix(user.data.created).fromNow()})
-            </Text>
-            <Text>Post Karma: {user.data.link_karma}</Text>
-            <Text>Comment Karma: {user.data.comment_karma}</Text>
+        <div
+          style={{
+            marginTop: "4rem",
+            display: "flex",
+            justifyContent: "center",
+            padding: "1rem",
+          }}
+        >
+          <div className={classes.container}>
+            <Image
+              src={
+                user.data.snoovatar_img ||
+                "https://logodownload.org/wp-content/uploads/2018/02/reddit-logo-16.png"
+              }
+              height={100}
+              width={100}
+              alt={`${user.data.name}'s snoovatar`}
+              classNames={{ image: classes.image }}
+              radius={8}
+              fit="contain"
+              mr={16}
+            />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <Title order={2} variant="text" sx={{ fontFamily: "Chillax" }}>
+                {user.data.name}
+                {session && session.user.name == user.data.name && " (you)"}
+              </Title>
+              <Text size="xs" color="dimmed">
+                Member since{" "}
+                {moment.unix(user.data.created).format("MMMM Do, YYYY")} (
+                {moment.unix(user.data.created).fromNow()})
+              </Text>
+              <Text>Post Karma: {user.data.link_karma}</Text>
+              <Text>Comment Karma: {user.data.comment_karma}</Text>
+            </div>
           </div>
         </div>
       )}
