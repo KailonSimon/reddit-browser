@@ -9,6 +9,12 @@ function SignInButton() {
       size="sm"
       leftIcon={<BrandReddit />}
       onClick={() => signIn()}
+      sx={(theme) => ({
+        ":hover": {
+          background: theme.colors.brand,
+          color: theme.colors.dark[9],
+        },
+      })}
     >
       Sign in with Reddit
     </Button>
