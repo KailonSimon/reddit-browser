@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, createStyles } from "@mantine/core";
 import { BrandReddit } from "tabler-icons-react";
-
+import { useRouter } from "next/router";
 import { getProviders, signIn } from "next-auth/react";
 
 const useStyles = createStyles((theme) => ({
@@ -19,6 +19,7 @@ const useStyles = createStyles((theme) => ({
 
 export default function SignIn({ providers }) {
   const { classes } = useStyles();
+  const { callbackUrl } = useRouter().query;
   return (
     <div className={classes.container}>
       <div className={classes.controls}>
@@ -36,7 +37,7 @@ export default function SignIn({ providers }) {
                 },
               }}
               key={provider.id}
-              onClick={() => signIn(provider.id)}
+              onClick={() => signIn(provider.id, { callbackUrl })}
             >
               Sign in with {provider.name}
             </Button>
