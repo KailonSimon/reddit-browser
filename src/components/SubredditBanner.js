@@ -8,9 +8,16 @@ const useStyles = createStyles((theme) => ({
     flexDirection: "column",
     position: "relative",
   },
-  image: {
+  imageWrapper: {
     width: "100%",
-    maxHeight: "20vh",
+    maxHeight: "15vh",
+  },
+  image: {
+    height: "12rem",
+    maxHeight: "15vh",
+    [theme.fn.smallerThan("sm")]: {
+      maxHeight: "6rem",
+    },
   },
   details: {
     padding: "0 1rem",
@@ -26,7 +33,7 @@ function SubredditBanner({ subreddit }) {
   return (
     <div className={classes.container}>
       {subreddit.banner_background_image && (
-        <div className={classes.image}>
+        <div className={classes.imageWrapper}>
           <Image
             src={subreddit.banner_background_image}
             alt={subreddit.title}
@@ -35,8 +42,8 @@ function SubredditBanner({ subreddit }) {
                 position: "relative",
                 top: "100%",
               },
-              image: { maxHeight: "12rem" },
             }}
+            classNames={{ image: classes.image }}
           />
         </div>
       )}
