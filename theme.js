@@ -39,6 +39,7 @@ export const theme = {
     "p + p": {
       marginTop: 8,
     },
+    "nav > a": { ":hover": { textDecoration: "none" } },
     table: {
       width: "100%",
       borderCollapse: "collapse",
