@@ -1,25 +1,26 @@
 import { Button, createStyles } from "@mantine/core";
 import Link from "next/link";
 import { ArrowLeft } from "tabler-icons-react";
-import Layout from "../../src/components/Layout";
-import CommentSection from "../../src/components/CommentSection";
 import Head from "next/head";
-import PostCard from "../../src/components/PostCard";
+import Layout from "../../src/components/Layout";
+import CommentSection from "../../src/components/Comment/CommentSection";
+import PostCard from "../../src/components/Post/PostCard";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    maxWidth: 600,
-    width: "100%",
     display: "flex",
     flexDirection: "column",
-    alignItems: "flex-start",
-    gap: "0.5rem",
-  },
-  details: {
-    display: "flex",
     alignItems: "center",
-    flexFlow: "row wrap",
-    margin: "0 0 4px",
+    gap: "0.5rem",
+    position: "relative",
+    [theme.fn.smallerThan(800)]: {
+      minWidth: 300,
+    },
+    padding: "5rem 1rem 1rem",
+  },
+  controlsWrapper: {
+    width: "100%",
+    display: "flex",
   },
 }));
 
@@ -34,11 +35,13 @@ function Comment({ commentId, post }) {
       <Layout>
         <>
           <div className={classes.container}>
-            <Link href={"/"} passHref>
-              <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
-                Go to feed
-              </Button>
-            </Link>
+            <div className={classes.controlsWrapper}>
+              <Link href={"/"} passHref>
+                <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
+                  Go to feed
+                </Button>
+              </Link>
+            </div>
             <PostCard post={post} />
             <CommentSection post={post} commentId={commentId} />
           </div>
