@@ -8,6 +8,10 @@ const useStyles = createStyles((theme) => ({
     flexDirection: "column",
     position: "relative",
   },
+  image: {
+    width: "100%",
+    maxHeight: "20vh",
+  },
   details: {
     padding: "0 1rem",
     display: "flex",
@@ -22,7 +26,19 @@ function SubredditBanner({ subreddit }) {
   return (
     <div className={classes.container}>
       {subreddit.banner_background_image && (
-        <Image src={subreddit.banner_background_image} height={128} />
+        <div className={classes.image}>
+          <Image
+            src={subreddit.banner_background_image}
+            alt={subreddit.title}
+            styles={{
+              root: {
+                position: "relative",
+                top: "100%",
+              },
+              image: { maxHeight: "12rem" },
+            }}
+          />
+        </div>
       )}
       <div
         className={classes.details}
