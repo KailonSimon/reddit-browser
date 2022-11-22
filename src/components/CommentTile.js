@@ -1,4 +1,4 @@
-import { ActionIcon, Anchor, Box, Text } from "@mantine/core";
+import { ActionIcon, Anchor, Badge, Box, Image, Text } from "@mantine/core";
 import numeral from "numeral";
 import React, { useEffect, useReducer, useState } from "react";
 import { ArrowUp, ChevronDown, Lock, Pinned } from "tabler-icons-react";
@@ -176,6 +176,28 @@ function CommentTile({ comment, depth = 0 }) {
                 >
                   OP
                 </span>
+              )}
+              {comment.author_flair_richtext?.length > 0 && (
+                <Badge
+                  size="sm"
+                  variant="light"
+                  radius={4}
+                  ml={8}
+                  leftSection={
+                    comment.author_flair_richtext.length > 1 ? (
+                      <Image
+                        height={14}
+                        fit="contain"
+                        src={comment.author_flair_richtext[0]?.u}
+                        alt={comment.author_flair_richtext[1]?.t}
+                      />
+                    ) : null
+                  }
+                >
+                  {comment.author_flair_richtext.length > 1
+                    ? comment.author_flair_richtext[1].t
+                    : comment.author_flair_richtext[0].t}
+                </Badge>
               )}
               <div
                 style={{
