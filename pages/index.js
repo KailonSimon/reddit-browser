@@ -5,8 +5,8 @@ import {
   QueryClient,
   useInfiniteQuery,
 } from "@tanstack/react-query";
-import FeedControls from "../src/components/FeedControls";
-import Feed from "../src/components/Feed";
+import Feed from "../src/components/Feed/Feed";
+import FeedControls from "../src/components/Feed/FeedControls";
 import Layout from "../src/components/Layout";
 import Head from "next/head";
 import { fetchPosts, mergePages } from "../utils";

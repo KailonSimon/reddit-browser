@@ -1,12 +1,12 @@
 import { ActionIcon, Anchor, Badge, Box, Image, Text } from "@mantine/core";
 import numeral from "numeral";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { ArrowUp, ChevronDown, Lock, Pinned } from "tabler-icons-react";
 import {
   fetchMoreChildrenComments,
   getNestedCommentClass,
   getRelativeTime,
-} from "../../utils";
+} from "../../../utils";
 import CommentReplyArea from "./CommentReplyArea";
 import CommentTileControls from "./CommentTileControls";
 import { markdown } from "snudown-js";

@@ -6,10 +6,10 @@ import {
   Button,
   Skeleton,
 } from "@mantine/core";
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 import CommentTile from "./CommentTile";
 import { useQuery } from "@tanstack/react-query";
-import { fetchComments } from "../../utils";
+import { fetchComments } from "../../../utils";
 import CommentSectionControls from "./CommentSectionControls";
 import { useSession } from "next-auth/react";
 

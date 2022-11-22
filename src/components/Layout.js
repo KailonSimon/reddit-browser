@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createStyles, Button, Affix, Transition } from "@mantine/core";
 import { ArrowUp } from "tabler-icons-react";
 import { useRouter } from "next/router";
-import Navbar from "./Navbar";
+import Navbar from "./Navigation/Navbar";
 
 const useStyles = createStyles((theme) => ({
   container: {

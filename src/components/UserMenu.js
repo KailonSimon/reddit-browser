@@ -5,7 +5,6 @@ import {
   Text,
   Menu,
   UnstyledButton,
-  Switch,
   useMantineColorScheme,
 } from "@mantine/core";
 import { signOut } from "next-auth/react";

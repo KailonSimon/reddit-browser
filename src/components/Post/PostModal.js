@@ -1,6 +1,6 @@
 import { Button } from "@mantine/core";
 import PostCard from "./PostCard";
-import CommentSection from "./CommentSection";
+import CommentSection from "../Comment/CommentSection";
 import { ArrowLeft } from "tabler-icons-react";
 
 export default function PostModal({ context, id, innerProps }) {

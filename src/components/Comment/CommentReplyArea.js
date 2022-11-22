@@ -2,8 +2,8 @@ import { Button, createStyles, Textarea } from "@mantine/core";
 import { openModal, closeModal } from "@mantine/modals";
 import { useSession } from "next-auth/react";
 import React, { useId, useState } from "react";
-import { getNestedCommentClass } from "../../utils";
-import SignInButton from "./SignInButton";
+import { getNestedCommentClass } from "../../../utils";
+import SignInButton from "../Authentication/SignInButton";
 
 const useStyles = createStyles((theme) => ({
   modalContainer: {

@@ -10,7 +10,7 @@ import { ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
 import { theme } from "../theme";
-import PostModal from "../src/components/PostModal";
+import PostModal from "../src/components/Post/PostModal";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const [queryClient] = useState(

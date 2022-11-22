@@ -9,12 +9,12 @@ import {
 } from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
 import React from "react";
-import Video from "./Video";
-import { getRelativeTime } from "../../utils";
-import SubmissionMenu from "./SubmissionMenu";
+import Video from "../Video";
+import { getRelativeTime } from "../../../utils";
+import SubmissionMenu from "../SubmissionMenu";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import SubmissionVotingControls from "./SubmissionVotingControls";
+import SubmissionVotingControls from "../SubmissionVotingControls";
 import { Speakerphone } from "tabler-icons-react";
 import { markdown } from "snudown-js";
 
@@ -67,7 +67,12 @@ function PostCard({ post }) {
       <div>
         <SubmissionVotingControls type="post" submission={post} />
       </div>
-      <div style={{ width: "100%" }}>
+      <div
+        style={{
+          width: "100%",
+          position: "relative",
+        }}
+      >
         <div
           style={{
             display: "flex",

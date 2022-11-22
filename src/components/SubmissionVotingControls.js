@@ -4,7 +4,7 @@ import numeral from "numeral";
 import { useSession } from "next-auth/react";
 import { closeModal, openModal } from "@mantine/modals";
 import { useId } from "@mantine/hooks";
-import SignInButton from "./SignInButton";
+import SignInButton from "./Authentication/SignInButton";
 import { voteOnSubmission } from "../../utils";
 import {
   TiArrowUpOutline,

@@ -1,15 +1,13 @@
 import { Button, createStyles } from "@mantine/core";
 import Link from "next/link";
 import { ArrowLeft } from "tabler-icons-react";
-import Layout from "../../src/components/Layout";
-import CommentSection from "../../src/components/CommentSection";
 import Head from "next/head";
-import PostCard from "../../src/components/PostCard";
+import Layout from "../../src/components/Layout";
+import CommentSection from "../../src/components/Comment/CommentSection";
+import PostCard from "../../src/components/Post/PostCard";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    minWidth: 600,
-    maxWidth: 800,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -18,6 +16,7 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan(800)]: {
       minWidth: 300,
     },
+    padding: "5rem 1rem 1rem",
   },
   controlsWrapper: {
     width: "100%",

@@ -1,8 +1,8 @@
 import { Button } from "@mantine/core";
 import React from "react";
 import { Message } from "tabler-icons-react";
-import SubmissionMenu from "./SubmissionMenu";
-import SubmissionVotingControls from "./SubmissionVotingControls";
+import SubmissionMenu from "../SubmissionMenu";
+import SubmissionVotingControls from "../SubmissionVotingControls";
 
 function CommentTileControls({ comment, replyAreaOpen, setReplyAreaOpen }) {
   return (

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
-import PostTile from "./PostTile";
+import PostTile from "../Post/PostTile";
 import { createStyles, Skeleton, Text } from "@mantine/core";
 import Head from "next/head";
 import { openContextModal } from "@mantine/modals";

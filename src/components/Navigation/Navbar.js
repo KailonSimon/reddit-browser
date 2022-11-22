@@ -1,10 +1,10 @@
 import { createStyles, Anchor, Loader } from "@mantine/core";
 import Link from "next/link";
-import SubredditSearch from "./SubredditSearch";
+import SubredditSearch from "../SubredditSearch";
 import NavigationDrawer from "./NavigationDrawer";
-import SignInButton from "./SignInButton";
-import UserMenu from "./UserMenu";
-import { getUserData } from "../../utils";
+import SignInButton from "../Authentication/SignInButton";
+import UserMenu from "../UserMenu";
+import { getUserData } from "../../../utils";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 

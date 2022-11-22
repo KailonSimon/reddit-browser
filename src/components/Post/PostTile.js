@@ -12,9 +12,9 @@ import React from "react";
 import { ClockHour3, Messages, Pinned, Speakerphone } from "tabler-icons-react";
 import numeral from "numeral";
 import Link from "next/link";
-import { getRelativeTime } from "../../utils";
-import SubmissionMenu from "./SubmissionMenu";
-import SubmissionVotingControls from "./SubmissionVotingControls";
+import { getRelativeTime } from "../../../utils";
+import SubmissionMenu from "../SubmissionMenu";
+import SubmissionVotingControls from "../SubmissionVotingControls";
 
 const useStyles = createStyles((theme) => ({
   container: {
