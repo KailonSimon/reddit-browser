@@ -8,7 +8,7 @@ Deployed using Vercel.
 
 ## Features
 
-- Authentication using Reddit OAuth
+- Authentication using Reddit OAuth and [NextAuth.js](https://next-auth.js.org/)
 - Infinite scroll on submissions and comments
 - Nested comment sections on each post
 - Subreddit search with autocomplete
