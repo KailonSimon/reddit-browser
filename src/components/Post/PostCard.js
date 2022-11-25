@@ -212,6 +212,18 @@ function PostCard({ post }) {
           <Video type="external" content={post.secure_media_embed?.content} />
         ) : post.post_hint === "hosted:video" ? (
           <Video type="hosted" content={post.media.reddit_video.fallback_url} />
+        ) : post.preview?.images[0]?.source.url ? (
+          <Image
+            src={post.preview.images[0]?.source.url}
+            alt={post.title}
+            classNames={{ root: classes.imageRoot, image: classes.image }}
+            fit="contain"
+            caption={
+              <Anchor href={post.url} target="_blank">
+                {post.domain}
+              </Anchor>
+            }
+          />
         ) : (
           <div
             style={{
