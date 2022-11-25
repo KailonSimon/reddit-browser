@@ -114,6 +114,18 @@ export const getSubredditInfo = async (subreddit) => {
   return await res.json();
 };
 
+export const getSubredditWikiPages = async (subreddit) => {
+  const res = await fetch(`https://api.reddit.com/r/${subreddit}/wiki/pages`);
+  return await res.json();
+};
+
+export const getSubredditWikiPage = async (subreddit, page) => {
+  const res = await fetch(
+    `https://api.reddit.com/r/${subreddit}/wiki/${page}.json`
+  );
+  return await res.json();
+};
+
 export const getTrendingSubreddits = async (limit) => {
   const res = await fetch(
     `https://www.reddit.com/subreddits/popular.json?limit=${limit}&raw_json=1`

@@ -6,13 +6,13 @@ import {
 } from "@tanstack/react-query";
 import Head from "next/head";
 import { Box, Text } from "@mantine/core";
-import { mergePages, fetchPosts, getSubredditInfo } from "../../utils";
-import LoadingScreen from "../../src/components/LoadingScreen";
-import Feed from "../../src/components/Feed/Feed";
-import FeedControls from "../../src/components/Feed/FeedControls";
-import Layout from "../../src/components/Layout";
-import SubredditBanner from "../../src/components/SubredditBanner";
-import SubredditSidebar from "../../src/components/SubredditSidebar";
+import { mergePages, fetchPosts, getSubredditInfo } from "../../../utils";
+import LoadingScreen from "../../../src/components/LoadingScreen";
+import Feed from "../../../src/components/Feed/Feed";
+import FeedControls from "../../../src/components/Feed/FeedControls";
+import Layout from "../../../src/components/Layout";
+import SubredditBanner from "../../../src/components/SubredditBanner";
+import SubredditSidebar from "../../../src/components/SubredditSidebar";
 
 function Subreddit({ subreddit }) {
   const [sorting, setSorting] = useState("hot");
@@ -50,10 +50,6 @@ function Subreddit({ subreddit }) {
     <Box
       sx={(theme) => ({
         width: "100%",
-        backgroundColor:
-          theme.colorScheme === "dark"
-            ? theme.colors.dark[9]
-            : theme.colors.gray[2],
       })}
     >
       <Head>
@@ -104,7 +100,7 @@ export default Subreddit;
 
 export async function getServerSideProps(context) {
   const { subreddit } = context.query;
-  const subredditInfo = await getSubredditInfo(subreddit[0]);
+  const subredditInfo = await getSubredditInfo(subreddit);
 
   const queryClient = new QueryClient();
 

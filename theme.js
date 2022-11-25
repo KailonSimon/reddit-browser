@@ -40,6 +40,15 @@ export const theme = {
       marginTop: 8,
     },
     "nav > a": { ":hover": { textDecoration: "none" } },
+    h1: {
+      marginTop: 0,
+    },
+    h2: {
+      marginTop: 0,
+    },
+    h3: {
+      marginTop: 0,
+    },
     table: {
       width: "100%",
       borderCollapse: "collapse",
