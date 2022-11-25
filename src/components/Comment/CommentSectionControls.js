@@ -7,6 +7,7 @@ function CommentSectionControls({
   isLoading,
   isFetching,
   isRefetching,
+  commentSorting,
   handleChangeCommentSort,
   commentId,
 }) {
@@ -41,16 +42,33 @@ function CommentSectionControls({
           fullWidth
           color="brand"
           radius={4}
-          label={
-            <Text color="#D7DADC" mb={4}>
-              Sort By
-            </Text>
-          }
+          label={<Text mb={4}>Sort By</Text>}
+          value={commentSorting}
           data={[
-            { value: "confidence", label: "Best" },
-            { value: "top", label: "Top" },
-            { value: "new", label: "New" },
-            { value: "random", label: "Random" },
+            {
+              value: "confidence",
+              label: `Best ${
+                post.suggested_sort === "confidence" ? "(suggested)" : ""
+              }`,
+            },
+            {
+              value: "top",
+              label: `Top ${
+                post.suggested_sort === "top" ? "(suggested)" : ""
+              }`,
+            },
+            {
+              value: "new",
+              label: `New ${
+                post.suggested_sort === "new" ? "(suggested)" : ""
+              }`,
+            },
+            {
+              value: "random",
+              label: `Random ${
+                post.suggested_sort === "random" ? "(suggested)" : ""
+              }`,
+            },
           ]}
           onChange={(value) => handleChangeCommentSort(value)}
           styles={(theme) => ({

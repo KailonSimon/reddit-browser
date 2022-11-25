@@ -36,7 +36,6 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const initialState = {
-  commentSorting: "confidence",
   commentInput: "",
 };
 
@@ -53,7 +52,10 @@ function reducer(state, action) {
 
 function CommentSection({ post, commentId }) {
   const { classes } = useStyles();
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, {
+    commentSorting: post.suggested_sort || "confidence",
+    ...initialState,
+  });
   const { data: session } = useSession();
 
   const { isLoading, isFetching, isRefetching, data, refetch } = useQuery(
@@ -115,6 +117,7 @@ function CommentSection({ post, commentId }) {
           isLoading={isLoading}
           isFetching={isFetching}
           isRefetching={isRefetching}
+          commentSorting={state.commentSorting}
           handleChangeCommentSort={handleChangeCommentSort}
           commentId={commentId}
         />
