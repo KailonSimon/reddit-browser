@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Loader, Select } from "@mantine/core";
-import { BrandReddit } from "tabler-icons-react";
+import { BrandReddit, Search } from "tabler-icons-react";
 import AutoCompleteItem from "./AutoCompleteItem";
 import { fetchSubreddits } from "../../utils";
 import { useRouter } from "next/router";
@@ -10,6 +10,7 @@ function SubredditSearch() {
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSubredditChange = (subreddit) => {
     if (subreddit) {
@@ -54,11 +55,12 @@ function SubredditSearch() {
       onSearchChange={setSearchValue}
       onChange={handleSubredditChange}
       data={subreddits}
-      icon={<BrandReddit />}
+      icon={isFocused ? <BrandReddit /> : <Search />}
       spellCheck={false}
       placeholder={"Search subreddits..."}
       itemComponent={AutoCompleteItem}
       rightSection={loading ? <Loader size={16} /> : null}
+      size="md"
       filter={(value, item) => {
         return (
           item.title.toLowerCase().includes(value.toLowerCase().trim()) ||
@@ -76,8 +78,14 @@ function SubredditSearch() {
             theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
           }`,
           background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
+          borderRadius: 4,
+          [theme.fn.largerThan("md")]: {
+            borderRadius: 999,
+          },
         },
       })}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
     />
   );
 }

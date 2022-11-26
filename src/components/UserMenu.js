@@ -1,12 +1,6 @@
 import { forwardRef } from "react";
 import { ChevronDown, Logout } from "tabler-icons-react";
-import {
-  Avatar,
-  Text,
-  Menu,
-  UnstyledButton,
-  useMantineColorScheme,
-} from "@mantine/core";
+import { Avatar, Text, Menu, UnstyledButton } from "@mantine/core";
 import { signOut } from "next-auth/react";
 import { openConfirmModal } from "@mantine/modals";
 import numeral from "numeral";
@@ -21,13 +15,19 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
       backgroundColor: theme.colorScheme === "dark" ? "#121212" : "#fff",
       color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
       borderRadius: "4px",
-      padding: "0 0.25rem",
-
+      padding: "0 0.5rem",
+      height: 42,
+      minWidth: 66,
+      borderRadius: 4,
+      overflow: "hidden",
       "&:hover": {
         backgroundColor:
           theme.colorScheme === "dark"
             ? theme.colors.dark[8]
             : theme.colors.gray[0],
+      },
+      [theme.fn.largerThan("md")]: {
+        borderRadius: 999,
       },
     })}
     {...others}
@@ -36,7 +36,6 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
       style={{
         display: "flex",
         justifyContent: "space-between",
-
         gap: "0.25rem",
       }}
     >
@@ -73,7 +72,6 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
 UserButton.displayName = "UserButton";
 
 function UserMenu({ user }) {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const openSignOutModal = () =>
     openConfirmModal({
       title: "Sign out of Reddit?",
@@ -104,16 +102,6 @@ function UserMenu({ user }) {
           Profile
         </Menu.Item>
 
-        {/*<Menu.Divider />
-        <Menu.Label>Theme options</Menu.Label>
-        <Switch
-          styles={{
-            root: { display: "flex", padding: "0.5rem 0" },
-          }}
-          label="Dark theme"
-          checked={colorScheme === "dark"}
-          onChange={() => toggleColorScheme()}
-        />*/}
         <Menu.Divider />
         <Menu.Item
           color="red"

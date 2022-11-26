@@ -4,8 +4,9 @@ import SubredditSearch from "../SubredditSearch";
 import SignInButton from "../Authentication/SignInButton";
 import { useSession } from "next-auth/react";
 import SignOutButton from "../Authentication/SignOutButton";
+import UserMenu from "../UserMenu";
 
-function NavigationDrawer() {
+function NavigationDrawer({ user }) {
   const [opened, setOpened] = useState(false);
   const { data: session } = useSession();
   return (
@@ -33,7 +34,10 @@ function NavigationDrawer() {
           },
         })}
       >
-        <SubredditSearch />
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          {user ? <UserMenu user={user} /> : null}
+          <SubredditSearch />
+        </div>
         {session ? <SignOutButton /> : <SignInButton />}
       </Drawer>
     </>

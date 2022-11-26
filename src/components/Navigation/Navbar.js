@@ -30,17 +30,13 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
     margin: "0 auto",
     position: "relative",
+
     [theme.fn.smallerThan("md")]: {
       justifyContent: "center",
     },
   },
-  title: {
-    [theme.fn.largerThan("md")]: {
-      position: "absolute",
-      left: 16,
-    },
-  },
   searchBar: {
+    flex: 1,
     [theme.fn.smallerThan("md")]: {
       display: "none",
     },
@@ -53,8 +49,7 @@ const useStyles = createStyles((theme) => ({
     },
   },
   userControls: {
-    position: "absolute",
-    right: 16,
+    maxHeight: 42,
     [theme.fn.smallerThan("md")]: {
       display: "none",
     },
@@ -83,20 +78,33 @@ function Navbar() {
             Reddit<span>B</span>rowser
           </Anchor>
         </Link>
-        <div className={classes.searchBar}>
-          <SubredditSearch />
-        </div>
-        <div className={classes.drawer}>
-          <NavigationDrawer />
-        </div>
-        <div className={classes.userControls}>
-          {isLoading && session ? (
-            <Loader size="xs" />
-          ) : !!userData ? (
-            <UserMenu user={userData.data} />
-          ) : (
-            <SignInButton />
-          )}
+        <div
+          style={{
+            position: "relative",
+            flex: 1,
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            gap: "1.5rem",
+            paddingLeft: "1rem",
+          }}
+        >
+          <div className={classes.searchBar}>
+            <SubredditSearch />
+          </div>
+
+          <div className={classes.drawer}>
+            <NavigationDrawer user={userData?.data} />
+          </div>
+          <div className={classes.userControls}>
+            {isLoading && session ? (
+              <Loader size="xs" />
+            ) : !!userData ? (
+              <UserMenu user={userData.data} />
+            ) : (
+              <SignInButton />
+            )}
+          </div>
         </div>
       </nav>
     </header>
