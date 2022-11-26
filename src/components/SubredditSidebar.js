@@ -2,6 +2,7 @@ import React from "react";
 import { createStyles, Divider, Text, Title } from "@mantine/core";
 import numeral from "numeral";
 import { getDate } from "../../utils";
+import { markdown } from "snudown-js";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -21,12 +22,20 @@ const useStyles = createStyles((theme) => ({
 }));
 function SubredditSidebar({ subreddit }) {
   const { classes } = useStyles();
+
+  const createMarkup = (text) => {
+    return { __html: markdown(text, { target: "_blank" }) };
+  };
   return (
     <div className={classes.container}>
       <Title color="dimmed" order={2} size={14} mb={12}>
         About community
       </Title>
-      <Text color="white">{subreddit.public_description}</Text>
+      <Text color="white">
+        <div
+          dangerouslySetInnerHTML={createMarkup(subreddit.public_description)}
+        />
+      </Text>
       <Text color="dimmed">Created {getDate(subreddit.created)}</Text>
       <Divider mb="sm" />
       <div

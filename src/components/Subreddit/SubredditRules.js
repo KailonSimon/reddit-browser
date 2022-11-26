@@ -39,43 +39,41 @@ function SubredditRules({ subreddit }) {
     }
   }, [subreddit]);
 
+  if (!rules) {
+    return null;
+  }
+
   return (
     <div className={classes.container}>
-      {rules ? (
-        <>
-          <Title color="dimmed" order={2} size={14} mb={12}>
-            {subreddit.display_name_prefixed} rules
-          </Title>
-          <Accordion
-            styles={{
-              label: { fontSize: 14 },
-              chevron: { marginLeft: 0 },
-            }}
-          >
-            {rules.map((rule, i) => {
-              const createMarkup = (text) => {
-                return { __html: markdown(text, { target: "_blank" }) };
-              };
-              return (
-                <Accordion.Item value={rule.short_name} key={rule.short_name}>
-                  <Accordion.Control>{`${i + 1}. ${
-                    rule.short_name
-                  }`}</Accordion.Control>
-                  <Accordion.Panel>
-                    {
-                      <div
-                        dangerouslySetInnerHTML={createMarkup(rule.description)}
-                      />
-                    }
-                  </Accordion.Panel>
-                </Accordion.Item>
-              );
-            })}
-          </Accordion>
-        </>
-      ) : (
-        <Text>Error loading rules</Text>
-      )}
+      <Title color="dimmed" order={2} size={14} mb={12}>
+        {subreddit.display_name_prefixed} rules
+      </Title>
+      <Accordion
+        styles={{
+          label: { fontSize: 14 },
+          chevron: { marginLeft: 0 },
+        }}
+      >
+        {rules.map((rule, i) => {
+          const createMarkup = (text) => {
+            return { __html: markdown(text, { target: "_blank" }) };
+          };
+          return (
+            <Accordion.Item value={rule.short_name} key={rule.short_name}>
+              <Accordion.Control>
+                <Text weight="bold">{`${i + 1}. ${rule.short_name}`}</Text>
+              </Accordion.Control>
+              <Accordion.Panel>
+                {
+                  <div
+                    dangerouslySetInnerHTML={createMarkup(rule.description)}
+                  />
+                }
+              </Accordion.Panel>
+            </Accordion.Item>
+          );
+        })}
+      </Accordion>
     </div>
   );
 }
