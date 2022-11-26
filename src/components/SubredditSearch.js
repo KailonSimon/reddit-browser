@@ -1,16 +1,35 @@
-import { useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import { Loader, Select } from "@mantine/core";
-import { BrandReddit, Search } from "tabler-icons-react";
 import AutoCompleteItem from "./AutoCompleteItem";
 import { fetchSubreddits } from "../../utils";
 import { useRouter } from "next/router";
+import { BrandReddit, Search } from "tabler-icons-react";
+
+const initialState = {
+  isFocused: false,
+  subreddits: [],
+  searchValue: "",
+  loading: false,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_IS_FOCUSED":
+      return { ...state, isFocused: action.payload };
+    case "SET_SUBREDDITS":
+      return { ...state, subreddits: action.payload };
+    case "SET_SEARCH_VALUE":
+      return { ...state, searchValue: action.payload };
+    case "SET_LOADING":
+      return { ...state, loading: action.payload };
+    default:
+      return initialState;
+  }
+}
 
 function SubredditSearch() {
   const router = useRouter();
-  const [isFocused, setIsFocused] = useState(false);
-  const [subreddits, setSubreddits] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleSubredditChange = (subreddit) => {
     if (subreddit) {
@@ -19,43 +38,46 @@ function SubredditSearch() {
   };
 
   useEffect(() => {
-    if (!searchValue) {
+    if (!state.searchValue) {
       return;
     }
-    if (searchValue.trim().length === 0) {
-      setLoading(false);
+    if (state.searchValue.trim().length === 0) {
+      dispatch({ type: "SET_LOADING", payload: false });
     } else {
-      setLoading(true);
-      fetchSubreddits(searchValue)
+      dispatch({ type: "SET_LOADING", payload: true });
+      fetchSubreddits(state.searchValue)
         .then((data) => {
           if (!data?.data?.children?.length) {
-            setLoading(false);
+            dispatch({ type: "SET_LOADING", payload: false });
             return;
           } else {
-            setSubreddits(
-              data.data.children.map((subreddit) => {
+            dispatch({
+              type: "SET_SUBREDDITS",
+              payload: data.data.children.map((subreddit) => {
                 return {
                   label: `/r/${subreddit.data.display_name}`,
                   value: subreddit.data.display_name,
                   title: subreddit.data.title,
                   image: subreddit.data.icon_img,
                 };
-              })
-            );
+              }),
+            });
           }
         })
-        .finally(() => setLoading(false));
+        .finally(() => dispatch({ type: "SET_LOADING", payload: false }));
     }
-  }, [searchValue]);
+  }, [state.searchValue]);
   return (
     <Select
       searchable
       clearable
-      searchValue={searchValue}
-      onSearchChange={setSearchValue}
+      searchValue={state.searchValue}
+      onSearchChange={(value) =>
+        dispatch({ type: "SET_SEARCH_VALUE", payload: value })
+      }
       onChange={handleSubredditChange}
-      data={subreddits}
-      icon={isFocused ? <BrandReddit /> : <Search />}
+      data={state.subreddits}
+      icon={state.isFocused ? <BrandReddit /> : <Search />}
       spellCheck={false}
       placeholder={
         router.query.subreddit
@@ -63,7 +85,7 @@ function SubredditSearch() {
           : "Search subreddits..."
       }
       itemComponent={AutoCompleteItem}
-      rightSection={loading ? <Loader size={16} /> : null}
+      rightSection={state.loading ? <Loader size={16} /> : null}
       size="md"
       filter={(value, item) => {
         return (
@@ -88,8 +110,8 @@ function SubredditSearch() {
           },
         },
       })}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
+      onFocus={() => dispatch({ type: "SET_IS_FOCUSED", payload: true })}
+      onBlur={() => dispatch({ type: "SET_IS_FOCUSED", payload: false })}
     />
   );
 }
