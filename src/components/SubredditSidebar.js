@@ -1,34 +1,17 @@
 import React from "react";
-import { createStyles, Divider, Text, Title } from "@mantine/core";
+import { Divider, Text, Title } from "@mantine/core";
 import numeral from "numeral";
 import { getDate } from "../../utils";
 import { markdown } from "snudown-js";
+import { Cake } from "tabler-icons-react";
 
-const useStyles = createStyles((theme) => ({
-  container: {
-    height: "min-content",
-    width: "20rem",
-    background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
-    padding: "0.75rem",
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.5rem",
-    position: "relative",
-    borderRadius: "4px",
-    border: `1px solid ${
-      theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
-    }`,
-  },
-}));
 function SubredditSidebar({ subreddit }) {
-  const { classes } = useStyles();
-
   const createMarkup = (text) => {
     return { __html: markdown(text, { target: "_blank" }) };
   };
   return (
-    <div className={classes.container}>
-      <Title color="dimmed" order={2} size={14} mb={12}>
+    <>
+      <Title color="dimmed" order={2} size={14} sx={{ padding: "0.75rem 0" }}>
         About community
       </Title>
       <Text color="white">
@@ -36,7 +19,10 @@ function SubredditSidebar({ subreddit }) {
           dangerouslySetInnerHTML={createMarkup(subreddit.public_description)}
         />
       </Text>
-      <Text color="dimmed">Created {getDate(subreddit.created)}</Text>
+      <Text color="dimmed" my={8}>
+        <Cake style={{ position: "relative", top: 4 }} /> Created{" "}
+        {getDate(subreddit.created)}
+      </Text>
       <Divider mb="sm" />
       <div
         style={{
@@ -74,7 +60,7 @@ function SubredditSidebar({ subreddit }) {
           </Text>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

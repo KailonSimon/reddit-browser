@@ -1,5 +1,6 @@
-import React from "react";
+import { Children } from "react";
 import { createStyles } from "@mantine/core";
+import InfoCard from "../InfoCard";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -16,7 +17,15 @@ const useStyles = createStyles((theme) => ({
 
 function SidebarContainer({ children }) {
   const { classes } = useStyles();
-  return <div className={classes.container}>{children}</div>;
+  const childrenArray = Children.toArray(children);
+
+  return (
+    <div className={classes.container}>
+      {childrenArray.map((child, i) => {
+        return <InfoCard key={i}>{child}</InfoCard>;
+      })}
+    </div>
+  );
 }
 
 export default SidebarContainer;

@@ -12,24 +12,9 @@ import { getTrendingSubreddits } from "../../utils";
 import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
-  container: {
-    height: "min-content",
-    minHeight: "120px",
-    width: "20rem",
-    background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
-    padding: "00 0",
-    display: "flex",
-    flexDirection: "column",
-
-    position: "relative",
-    borderRadius: "4px",
-    border: `1px solid ${
-      theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
-    }`,
-  },
   subredditTile: {
     width: "100%",
-    padding: "1.25rem",
+    padding: "1rem 0",
     display: "flex",
     color: "#fff",
     ":hover": {
@@ -52,8 +37,8 @@ function TrendingSubsCard() {
   });
 
   return (
-    <div className={classes.container}>
-      <Title color="dimmed" order={2} size={14} sx={{ padding: "0.75rem" }}>
+    <>
+      <Title color="dimmed" order={2} size={14} sx={{ padding: "0.75rem 0" }}>
         Trending Subreddits
       </Title>
 
@@ -100,7 +85,7 @@ function TrendingSubsCard() {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
 
