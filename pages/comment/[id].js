@@ -5,6 +5,11 @@ import Head from "next/head";
 import Layout from "../../src/components/Layout";
 import CommentSection from "../../src/components/Comment/CommentSection";
 import PostCard from "../../src/components/Post/PostCard";
+import SidebarContainer from "../../src/components/Navigation/SidebarContainer";
+import SubredditRules from "../../src/components/Subreddit/SubredditRules";
+import SubredditSidebar from "../../src/components/SubredditSidebar";
+import { getSubredditInfo } from "../../utils";
+import SubredditBanner from "../../src/components/SubredditBanner";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -16,15 +21,15 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan(800)]: {
       minWidth: 300,
     },
-    padding: "5rem 1rem 1rem",
   },
   controlsWrapper: {
     width: "100%",
     display: "flex",
+    padding: "1rem",
   },
 }));
 
-function Comment({ commentId, post }) {
+function Comment({ commentId, post, subreddit }) {
   const { classes } = useStyles();
 
   return (
@@ -33,19 +38,32 @@ function Comment({ commentId, post }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Layout>
-        <>
+        <SubredditBanner subreddit={subreddit} />
+        <div className={classes.controlsWrapper}>
+          <Link href={`/sub/${subreddit.display_name}`} passHref>
+            <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
+              Go to {subreddit.display_name_prefixed}
+            </Button>
+          </Link>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row-reverse",
+            justifyContent: "center",
+            width: "100%",
+            paddingBottom: "8rem",
+          }}
+        >
+          <SidebarContainer>
+            <SubredditSidebar subreddit={subreddit} />
+            <SubredditRules subreddit={subreddit} />
+          </SidebarContainer>
           <div className={classes.container}>
-            <div className={classes.controlsWrapper}>
-              <Link href={"/"} passHref>
-                <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
-                  Go to feed
-                </Button>
-              </Link>
-            </div>
             <PostCard post={post} />
             <CommentSection post={post} commentId={commentId} />
           </div>
-        </>
+        </div>
       </Layout>
     </>
   );
@@ -69,11 +87,16 @@ export async function getServerSideProps(context) {
   );
   const replies = await repliesRes.json();
 
+  const subreddit = await getSubredditInfo(
+    post.data.children[0].data.subreddit
+  );
+
   return {
     props: {
       commentId: id,
       post: post.data.children[0].data,
       replies: replies[1].data.children,
+      subreddit: subreddit.data,
     },
   };
 }
