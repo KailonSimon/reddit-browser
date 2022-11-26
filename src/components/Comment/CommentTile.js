@@ -139,7 +139,7 @@ function CommentTile({ comment, depth = 0 }) {
                 rel="noreferrer"
                 color="inherit"
                 variant="text"
-                weight="bold"
+                weight={500}
                 sx={(theme) => ({
                   fontSize: 12,
                   whiteSpace: "nowrap",

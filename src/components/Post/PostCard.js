@@ -165,15 +165,7 @@ function PostCard({ post }) {
             color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
           })}
         >
-          <Title
-            order={1}
-            mr={8}
-            style={{
-              fontSize: 20,
-              fontFamily: "Chillax",
-            }}
-            variant="text"
-          >
+          <Title order={1} mr={8} mb={8} size={20} weight={500} variant="text">
             {post.title}
           </Title>
           {post.over_18 && (

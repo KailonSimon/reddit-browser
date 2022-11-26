@@ -84,7 +84,7 @@ function PostTile({ post, handlePostTileClick }) {
               />
             )}
             <Text
-              weight={700}
+              weight={500}
               sx={(theme) => ({
                 wordWrap: "break-word",
                 wordBreak: "break-word",
@@ -147,7 +147,7 @@ function PostTile({ post, handlePostTileClick }) {
                 <Anchor
                   size="sm"
                   variant="text"
-                  weight="bold"
+                  weight={700}
                   sx={(theme) => ({
                     whiteSpace: "nowrap",
                     color:

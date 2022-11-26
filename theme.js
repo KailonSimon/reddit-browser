@@ -1,6 +1,6 @@
 export const theme = {
   colorScheme: "dark",
-  fontFamily: "Chillax, sans-serif",
+  fontFamily: "Albert Sans, sans-serif",
   colors: {
     brand: [
       "#59ba12ff",
