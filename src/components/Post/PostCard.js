@@ -17,6 +17,7 @@ import Link from "next/link";
 import SubmissionVotingControls from "../SubmissionVotingControls";
 import { Speakerphone } from "tabler-icons-react";
 import { markdown } from "snudown-js";
+import AwardsContainer from "../AwardsContainer";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -84,7 +85,7 @@ function PostCard({ post }) {
               <>
                 <Link href={`/sub/${post.subreddit}`} passHref>
                   <Anchor
-                    size="sm"
+                    size="xs"
                     variant="text"
                     weight="bold"
                     color="#D7DADC"
@@ -106,7 +107,7 @@ function PostCard({ post }) {
               </>
             )}
             <Text
-              size="sm"
+              size="xs"
               sx={(theme) => ({
                 color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
                 whiteSpace: "nowrap",
@@ -145,7 +146,7 @@ function PostCard({ post }) {
             </Text>
 
             <Text
-              size="sm"
+              size="xs"
               ml={4}
               sx={(theme) => ({
                 color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
@@ -153,6 +154,7 @@ function PostCard({ post }) {
             >
               {getRelativeTime(post.created)} ago
             </Text>
+            <AwardsContainer awards={post.all_awardings} />
           </div>
           <div style={{ position: "absolute", right: 16, marginLeft: 8 }}>
             <SubmissionMenu type="post" submission={post} />
@@ -161,11 +163,12 @@ function PostCard({ post }) {
         <Box
           sx={(theme) => ({
             display: "flex",
+            alignItems: "center",
             flexFlow: "row wrap",
             color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
           })}
         >
-          <Title order={1} mr={8} mb={8} size={20} weight={500} variant="text">
+          <Title order={1} mr={8} mb={8} size={20} weight={700} variant="text">
             {post.title}
           </Title>
           {post.over_18 && (
@@ -180,7 +183,7 @@ function PostCard({ post }) {
             </Badge>
           )}
           {post.link_flair_text && (
-            <Badge variant="dot" size="md" radius={4}>
+            <Badge variant="dot" size="md" radius={4} sx={{ fontWeight: 700 }}>
               {post.link_flair_text}
             </Badge>
           )}

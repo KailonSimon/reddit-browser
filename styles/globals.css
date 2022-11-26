@@ -7,8 +7,9 @@
 
 @font-face {
   font-family: "Albert Sans";
-  src: url("/fonts/Albert Sans/AlbertSans-VariableFont_wght.ttf");
-  font-style: normal;
+  src: url("/fonts/Albert Sans/AlbertSans-VariableFont_wght.ttf")
+    format("truetype-variations");
+  font-weight: 1 999;
 }
 
 html,

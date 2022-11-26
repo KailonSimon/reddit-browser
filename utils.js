@@ -62,12 +62,12 @@ const fetchPosts = async (
 const fetchComments = async (postId, sorting, commentId) => {
   if (!!commentId) {
     const res = await fetch(
-      `https://www.reddit.com/comments/${postId}.json?comment=${commentId}&limit=100&depth=10&sort=${sorting}`
+      `https://www.reddit.com/comments/${postId}.json?comment=${commentId}&limit=100&depth=10&sort=${sorting}&raw_json=1`
     );
     return await res.json();
   } else {
     const res = await fetch(
-      `https://www.reddit.com/comments/${postId}.json?limit=100&depth=5&sort=${sorting}`
+      `https://www.reddit.com/comments/${postId}.json?limit=100&depth=5&sort=${sorting}&raw_json=1`
     );
     return await res.json();
   }

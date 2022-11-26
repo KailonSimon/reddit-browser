@@ -10,6 +10,7 @@ import {
 import CommentReplyArea from "./CommentReplyArea";
 import CommentTileControls from "./CommentTileControls";
 import { markdown } from "snudown-js";
+import AwardsContainer from "../AwardsContainer";
 
 const initialState = {
   isCollapsed: false,
@@ -231,6 +232,7 @@ function CommentTile({ comment, depth = 0 }) {
               {comment.locked && (
                 <Lock color="#59ba12ff" size={16} style={{ marginLeft: 4 }} />
               )}
+              <AwardsContainer awards={comment.all_awardings} />
             </div>
           </div>
           {!state.isCollapsed && (

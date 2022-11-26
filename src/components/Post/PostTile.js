@@ -15,6 +15,7 @@ import Link from "next/link";
 import { getRelativeTime } from "../../../utils";
 import SubmissionMenu from "../SubmissionMenu";
 import SubmissionVotingControls from "../SubmissionVotingControls";
+import AwardsContainer from "../AwardsContainer";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -216,6 +217,7 @@ function PostTile({ post, handlePostTileClick }) {
           >
             <ClockHour3 size={10} />
             <Text>{getRelativeTime(post.created)}</Text>
+            <AwardsContainer awards={post.all_awardings} />
           </span>
         </Box>
         <Box
