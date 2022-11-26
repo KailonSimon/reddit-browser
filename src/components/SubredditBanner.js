@@ -1,6 +1,7 @@
 import {
   Anchor,
   Avatar,
+  BackgroundImage,
   createStyles,
   Image,
   Text,
@@ -19,13 +20,10 @@ const useStyles = createStyles((theme) => ({
   imageWrapper: {
     width: "100%",
     maxHeight: "15vh",
+    overflow: "hidden",
   },
   image: {
-    height: "12rem",
     maxHeight: "15vh",
-    [theme.fn.smallerThan("sm")]: {
-      maxHeight: "6rem",
-    },
   },
   bannerPlaceholder: {
     height: "15vh",
@@ -38,10 +36,8 @@ const useStyles = createStyles((theme) => ({
     alignItems: "start",
     gap: "1rem",
     position: "relative",
+    background: "#1A1A1B",
     marginBottom: "0.5rem",
-    [theme.fn.largerThan("md")]: {
-      marginBottom: 0,
-    },
   },
 }));
 
