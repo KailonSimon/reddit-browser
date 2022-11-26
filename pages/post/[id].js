@@ -59,6 +59,7 @@ function Post({ post, subreddit }) {
             flexDirection: "row-reverse",
             justifyContent: "center",
             width: "100%",
+            paddingBottom: "8rem",
           }}
         >
           <SidebarContainer>

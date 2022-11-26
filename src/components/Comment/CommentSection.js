@@ -142,7 +142,9 @@ function CommentSection({ post, commentId }) {
             })}
           </>
         ) : (
-          <Text color="dimmed">No Comments</Text>
+          <Text color="dimmed" py={24}>
+            No Comments
+          </Text>
         )}
       </>
     </div>
