@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import SubredditBanner from "../../../../src/components/SubredditBanner";
 import Layout from "../../../../src/components/Layout";
 import { getSubredditInfo, getSubredditWikiPage } from "../../../../utils";
@@ -6,11 +6,14 @@ import { markdown } from "snudown-js";
 import { createStyles, Divider, Text } from "@mantine/core";
 import SubredditSidebar from "../../../../src/components/SubredditSidebar";
 import { getRelativeTime } from "../../../../utils";
+import SubredditRules from "../../../../src/components/Subreddit/SubredditRules";
+import SidebarContainer from "../../../../src/components/Navigation/SidebarContainer";
 
 const useStyles = createStyles((theme) => ({
-  container: {
+  content: {
     height: "min-content",
-    maxWidth: 700,
+    width: 700,
+    maxWidth: "100vw",
     background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
     padding: "2rem",
     display: "flex",
@@ -41,20 +44,31 @@ function WikiPage({ subreddit, wikiPage }) {
           justifyContent: "center",
           width: "100%",
           padding: "0 1rem",
+          gap: "1.5rem",
         }}
       >
-        <SubredditSidebar subreddit={subreddit} />
-        <div className={classes.container}>
-          <div dangerouslySetInnerHTML={createMarkup()} />
-          {wikiPage.revision_by ? (
+        <SidebarContainer>
+          <SubredditSidebar subreddit={subreddit} />
+          <SubredditRules subreddit={subreddit} />
+        </SidebarContainer>
+
+        <div className={classes.content}>
+          {wikiPage ? (
             <>
-              <Divider mt="lg" />{" "}
-              <Text size={14} color="dimmed">
-                Last revised by {wikiPage.revision_by.data.name} -{" "}
-                {getRelativeTime(wikiPage.revision_by.data.created)}
-              </Text>
+              <div dangerouslySetInnerHTML={createMarkup()} />
+              {wikiPage.revision_by ? (
+                <>
+                  <Divider mt="lg" />{" "}
+                  <Text size={14} color="dimmed">
+                    Last revised by {wikiPage.revision_by.data.name} -{" "}
+                    {getRelativeTime(wikiPage.revision_by.data.created)}
+                  </Text>
+                </>
+              ) : null}
             </>
-          ) : null}
+          ) : (
+            <Text align="center">Error loading page</Text>
+          )}
         </div>
       </div>
     </Layout>
@@ -71,7 +85,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       subreddit: subredditInfo.data,
-      wikiPage: wikiPageInfo.data,
+      wikiPage: wikiPageInfo.data || null,
     },
   };
 }

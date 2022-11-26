@@ -17,11 +17,6 @@ const useStyles = createStyles((theme) => ({
     border: `1px solid ${
       theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
     }`,
-    marginLeft: "1.5rem",
-
-    [theme.fn.smallerThan("md")]: {
-      display: "none",
-    },
   },
 }));
 function SubredditSidebar({ subreddit }) {

@@ -94,5 +94,15 @@ export const theme = {
         padding: "2px",
       },
     },
+    ".mantine-Accordion-content > div > ul": {
+      padding: 0,
+      listStyle: "none",
+    },
+    ".mantine-Accordion-content": {
+      padding: "0 0.75rem 1rem",
+    },
+    ".mantine-Accordion-control": {
+      padding: "0.5rem",
+    },
   }),
 };

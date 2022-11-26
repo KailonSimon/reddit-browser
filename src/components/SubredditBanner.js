@@ -1,4 +1,5 @@
-import { Avatar, createStyles, Image, Text } from "@mantine/core";
+import { Anchor, Avatar, createStyles, Image, Text } from "@mantine/core";
+import Link from "next/link";
 import React from "react";
 
 const useStyles = createStyles((theme) => ({
@@ -69,15 +70,18 @@ function SubredditBanner({ subreddit }) {
         </Avatar>
 
         <div>
-          <Text
-            color="white"
-            size={28}
-            weight="bold"
-            sx={{ lineHeight: "32px" }}
-            mt={4}
-          >
-            {subreddit.title}
-          </Text>
+          <Link href={`/sub/${subreddit.display_name}`} passHref>
+            <Anchor
+              variant="text"
+              color="white"
+              size={28}
+              weight="bold"
+              sx={{ lineHeight: "32px" }}
+              mt={4}
+            >
+              {subreddit.title}
+            </Anchor>
+          </Link>
           <Text color="dimmed" size={14}>
             {subreddit.display_name_prefixed}
           </Text>

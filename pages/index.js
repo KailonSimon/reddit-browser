@@ -12,6 +12,7 @@ import Head from "next/head";
 import { fetchPosts, mergePages } from "../utils";
 import LoadingScreen from "../src/components/LoadingScreen";
 import TrendingSubsCard from "../src/components/TrendingSubsCard";
+import SidebarContainer from "../src/components/Navigation/SidebarContainer";
 
 const useStyles = createStyles((theme) => ({
   main: {
@@ -79,7 +80,9 @@ export default function Home() {
       </Head>
       <Layout>
         <div className={classes.main}>
-          <TrendingSubsCard />
+          <SidebarContainer>
+            <TrendingSubsCard />
+          </SidebarContainer>
           <div
             style={{
               display: "flex",

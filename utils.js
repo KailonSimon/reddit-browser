@@ -114,6 +114,13 @@ export const getSubredditInfo = async (subreddit) => {
   return await res.json();
 };
 
+export const getSubredditRules = async (subreddit) => {
+  const res = await fetch(
+    `https://api.reddit.com/r/${subreddit}/about/rules.json`
+  );
+  return await res.json();
+};
+
 export const getSubredditWikiPages = async (subreddit) => {
   const res = await fetch(`https://api.reddit.com/r/${subreddit}/wiki/pages`);
   return await res.json();

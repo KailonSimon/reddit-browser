@@ -13,6 +13,8 @@ import FeedControls from "../../../src/components/Feed/FeedControls";
 import Layout from "../../../src/components/Layout";
 import SubredditBanner from "../../../src/components/SubredditBanner";
 import SubredditSidebar from "../../../src/components/SubredditSidebar";
+import SidebarContainer from "../../../src/components/Navigation/SidebarContainer";
+import SubredditRules from "../../../src/components/Subreddit/SubredditRules";
 
 function Subreddit({ subreddit }) {
   const [sorting, setSorting] = useState("hot");
@@ -68,7 +70,10 @@ function Subreddit({ subreddit }) {
             padding: "0 1rem",
           }}
         >
-          <SubredditSidebar subreddit={subreddit} />
+          <SidebarContainer>
+            <SubredditSidebar subreddit={subreddit} />
+            <SubredditRules subreddit={subreddit} />
+          </SidebarContainer>
           <div
             style={{
               display: "flex",
