@@ -12,12 +12,17 @@ function SignInButton() {
       sx={(theme) => ({
         height: 42,
         borderRadius: 4,
+        border: `2px solid ${theme.colors.brand[6]}`,
+        background: theme.colors.dark[9],
         [theme.fn.largerThan("md")]: {
           borderRadius: 999,
         },
         ":hover": {
-          background: theme.colors.brand,
-          color: theme.colors.dark[9],
+          border: `2px solid transparent`,
+          background: theme.colors.brand[6],
+          color: theme.white,
+          transitionDuration: "200ms",
+          transitionPropery: "background, color",
         },
       })}
     >
