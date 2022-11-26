@@ -6,11 +6,11 @@ import { fetchSubreddits } from "../../utils";
 import { useRouter } from "next/router";
 
 function SubredditSearch() {
+  const router = useRouter();
+  const [isFocused, setIsFocused] = useState(false);
   const [subreddits, setSubreddits] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const [isFocused, setIsFocused] = useState(false);
 
   const handleSubredditChange = (subreddit) => {
     if (subreddit) {
@@ -57,7 +57,11 @@ function SubredditSearch() {
       data={subreddits}
       icon={isFocused ? <BrandReddit /> : <Search />}
       spellCheck={false}
-      placeholder={"Search subreddits..."}
+      placeholder={
+        router.query.subreddit
+          ? `/r/${router.query.subreddit}`
+          : "Search subreddits..."
+      }
       itemComponent={AutoCompleteItem}
       rightSection={loading ? <Loader size={16} /> : null}
       size="md"
