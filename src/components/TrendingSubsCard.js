@@ -1,12 +1,5 @@
-import React, { useEffect } from "react";
-import {
-  Avatar,
-  createStyles,
-  Divider,
-  Loader,
-  Text,
-  Title,
-} from "@mantine/core";
+import React from "react";
+import { Avatar, createStyles, Loader, Text, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { getTrendingSubreddits } from "../../utils";
 import Link from "next/link";

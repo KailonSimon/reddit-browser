@@ -23,23 +23,22 @@ dayjs.updateLocale("en", {
   },
 });
 
-export const getRelativeTime = (timestamp) => {
+const getRelativeTime = (timestamp) => {
   return dayjs.unix(timestamp).fromNow();
 };
 
-export const getDate = (timestamp) => {
+const getDate = (timestamp) => {
   return dayjs.unix(timestamp).format("MMMM D, YYYY");
 };
 
-export const mergePages = (pages) => {
+const mergePages = (pages) => {
   const mergedPages = [];
   for (let i = 0; i < pages.length; i++) {
     mergedPages.push(...pages[i].data.children);
   }
   return mergedPages;
 };
-
-export const getNestedCommentClass = (depth) => {
+const getNestedCommentClass = (depth) => {
   return depth % 5;
 };
 
@@ -48,7 +47,7 @@ const server = dev
   ? "http://localhost:3000"
   : "https://reddit-browser.vercel.app";
 
-export const fetchPosts = async (
+const fetchPosts = async (
   sorting = "hot",
   subreddit = "all",
   limit = 5,
@@ -60,7 +59,7 @@ export const fetchPosts = async (
   return await res.json();
 };
 
-export const fetchComments = async (postId, sorting, commentId) => {
+const fetchComments = async (postId, sorting, commentId) => {
   if (!!commentId) {
     const res = await fetch(
       `https://www.reddit.com/comments/${postId}.json?comment=${commentId}&limit=100&depth=10&sort=${sorting}`
@@ -74,21 +73,21 @@ export const fetchComments = async (postId, sorting, commentId) => {
   }
 };
 
-export const fetchMoreChildrenComments = async (childrenIds) => {
+const fetchMoreChildrenComments = async (childrenIds) => {
   const res = await fetch(
     `https://api.pushshift.io/reddit/comment/search?ids=${childrenIds}`
   );
   return await res.json();
 };
 
-export const fetchSubreddits = async (searchValue) => {
+const fetchSubreddits = async (searchValue) => {
   const res = await fetch(
     `https://www.reddit.com/api/subreddit_autocomplete_v2.json?query=${searchValue}&include_profiles=false&limit=3`
   );
   return await res.json();
 };
 
-export const fetchAuthenticatedUserData = async (accessToken) => {
+const fetchAuthenticatedUserData = async (accessToken) => {
   const res = await fetch(`https://oauth.reddit.com/api/v1/me.json`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -97,50 +96,50 @@ export const fetchAuthenticatedUserData = async (accessToken) => {
   return await res.json();
 };
 
-export const getUserData = async (username) => {
+const getUserData = async (username) => {
   const res = await fetch(`https://www.reddit.com/user/${username}/about.json`);
   return await res.json();
 };
 
-export const getCurrentUserData = async () => {
+const getCurrentUserData = async () => {
   const res = await fetch("/api/user");
   return await res.json();
 };
 
-export const getSubredditInfo = async (subreddit) => {
+const getSubredditInfo = async (subreddit) => {
   const res = await fetch(
     `https://www.reddit.com/r/${subreddit}/about.json?raw_json=1`
   );
   return await res.json();
 };
 
-export const getSubredditRules = async (subreddit) => {
+const getSubredditRules = async (subreddit) => {
   const res = await fetch(
     `https://api.reddit.com/r/${subreddit}/about/rules.json`
   );
   return await res.json();
 };
 
-export const getSubredditWikiPages = async (subreddit) => {
+const getSubredditWikiPages = async (subreddit) => {
   const res = await fetch(`https://api.reddit.com/r/${subreddit}/wiki/pages`);
   return await res.json();
 };
 
-export const getSubredditWikiPage = async (subreddit, page) => {
+const getSubredditWikiPage = async (subreddit, page) => {
   const res = await fetch(
     `https://api.reddit.com/r/${subreddit}/wiki/${page}.json`
   );
   return await res.json();
 };
 
-export const getTrendingSubreddits = async (limit) => {
+const getTrendingSubreddits = async (limit) => {
   const res = await fetch(
     `https://www.reddit.com/subreddits/popular.json?limit=${limit}&raw_json=1`
   );
   return await res.json();
 };
 
-export const voteOnSubmission = async (id, direction) => {
+const voteOnSubmission = async (id, direction) => {
   let directionNumber;
   switch (direction) {
     case "up":
@@ -158,4 +157,24 @@ export const voteOnSubmission = async (id, direction) => {
     body: JSON.stringify({ id, direction: directionNumber }),
   });
   return await res.json();
+};
+
+export {
+  getRelativeTime,
+  getDate,
+  mergePages,
+  getNestedCommentClass,
+  fetchPosts,
+  fetchComments,
+  fetchMoreChildrenComments,
+  fetchSubreddits,
+  fetchAuthenticatedUserData,
+  getUserData,
+  getCurrentUserData,
+  getSubredditInfo,
+  getSubredditRules,
+  getSubredditWikiPages,
+  getSubredditWikiPage,
+  getTrendingSubreddits,
+  voteOnSubmission,
 };
