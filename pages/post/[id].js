@@ -5,6 +5,12 @@ import Head from "next/head";
 import Layout from "../../src/components/Layout";
 import CommentSection from "../../src/components/Comment/CommentSection";
 import PostCard from "../../src/components/Post/PostCard";
+import { getSubredditInfo } from "../../utils";
+import SidebarContainer from "../../src/components/Navigation/SidebarContainer";
+import SubredditRules from "../../src/components/Subreddit/SubredditRules";
+import { useEffect } from "react";
+import SubredditSidebar from "../../src/components/SubredditSidebar";
+import SubredditBanner from "../../src/components/SubredditBanner";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -16,15 +22,15 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan(800)]: {
       minWidth: 300,
     },
-    padding: "5rem 1rem 1rem",
   },
   controlsWrapper: {
     width: "100%",
     display: "flex",
+    padding: "1rem",
   },
 }));
 
-function Post({ post }) {
+function Post({ post, subreddit }) {
   const { classes } = useStyles();
 
   return (
@@ -38,16 +44,31 @@ function Post({ post }) {
         )}
       </Head>
       <Layout>
-        <div className={classes.container}>
-          <div className={classes.controlsWrapper}>
-            <Link href={"/"} passHref>
-              <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
-                Go back
-              </Button>
-            </Link>
+        <SubredditBanner subreddit={subreddit} />
+
+        <div className={classes.controlsWrapper}>
+          <Link href={`/sub/${subreddit.display_name}`} passHref>
+            <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
+              Go to {subreddit.display_name_prefixed}
+            </Button>
+          </Link>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row-reverse",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
+          <SidebarContainer>
+            <SubredditSidebar subreddit={subreddit} />
+            <SubredditRules subreddit={subreddit} />
+          </SidebarContainer>
+          <div className={classes.container}>
+            <PostCard post={post} />
+            <CommentSection post={post} />
           </div>
-          <PostCard post={post} />
-          <CommentSection post={post} />
         </div>
       </Layout>
     </>
@@ -60,6 +81,11 @@ export async function getServerSideProps(context) {
   const { id } = context.query;
   const res = await fetch(`https://www.reddit.com/api/info.json?id=t3_${id}`);
   const post = await res.json();
+  const subreddit = await getSubredditInfo(
+    post.data.children[0].data.subreddit
+  );
 
-  return { props: { post: post.data.children[0].data } };
+  return {
+    props: { post: post.data.children[0].data, subreddit: subreddit.data },
+  };
 }

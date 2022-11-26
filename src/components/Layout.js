@@ -17,9 +17,7 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
 
     backgroundColor:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[9]
-        : theme.colors.gray[2],
+      theme.colorScheme === "dark" ? "#030303" : theme.colors.gray[2],
   },
 }));
 
