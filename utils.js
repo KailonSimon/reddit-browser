@@ -1,3 +1,4 @@
+import Color from "color";
 import dayjs from "dayjs";
 
 const relativeTime = require("dayjs/plugin/relativeTime");
@@ -169,6 +170,11 @@ const getOverlayColor = (awards) => {
   }
 };
 
+const isColorDark = (hexColor) => {
+  const color = Color(hexColor);
+  return color.isDark();
+};
+
 export {
   getRelativeTime,
   getDate,
@@ -188,4 +194,5 @@ export {
   getTrendingSubreddits,
   voteOnSubmission,
   getOverlayColor,
+  isColorDark,
 };

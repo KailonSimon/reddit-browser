@@ -1,4 +1,5 @@
 import { Badge, Image } from "@mantine/core";
+import { isColorDark } from "../../utils";
 
 function FlairContainer({ submission, type }) {
   if (type === "author" && submission.author_flair_richtext?.length > 0) {
@@ -39,10 +40,13 @@ function FlairContainer({ submission, type }) {
         styles={(theme) => ({
           root: {
             fontSize: 12,
-            color:
-              submission.link_flair_text_color === "dark" ? "#000" : "#fff",
+            color: submission.link_flair_background_color
+              ? isColorDark(submission.link_flair_background_color)
+                ? "#fff"
+                : "#000"
+              : "#fff",
             background:
-              submission.link_flair_background_color || theme.colors.gray[5],
+              submission.link_flair_background_color || theme.colors.gray[8],
           },
           inner: { display: "flex", gap: "4px" },
         })}
