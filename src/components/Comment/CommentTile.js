@@ -102,10 +102,9 @@ function CommentTile({ comment, depth = 0 }) {
             left: 0,
             right: 0,
             maxHeight: 100,
-
             background: getOverlayColor(comment.all_awardings),
-
             borderRadius: 4,
+            pointerEvents: "none",
           }}
         ></div>
         <div
@@ -234,13 +233,12 @@ function CommentTile({ comment, depth = 0 }) {
             </div>
           </div>
           {!state.isCollapsed && (
-            <div>
-              <Text sx={{ fontSize: 14, wordBreak: "break-word" }}>
-                <div
-                  className="comment-body"
-                  dangerouslySetInnerHTML={createMarkup()}
-                />
-              </Text>
+            <>
+              <div
+                className="comment-body"
+                dangerouslySetInnerHTML={createMarkup()}
+              />
+
               <CommentTileControls
                 comment={comment}
                 replyAreaOpen={state.isReplyAreaOpen}
@@ -256,7 +254,7 @@ function CommentTile({ comment, depth = 0 }) {
                   dispatch({ type: "SET_IS_REPLY_AREA_OPEN", payload: value })
                 }
               />
-            </div>
+            </>
           )}
         </Box>
         {state.replies?.length > 0 && !state.isCollapsed && (
