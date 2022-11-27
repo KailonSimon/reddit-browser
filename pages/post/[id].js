@@ -29,6 +29,16 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     padding: "1rem",
   },
+  content: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "center",
+    width: "100%",
+    padding: "0 1rem 8rem",
+    [theme.fn.smallerThan("md")]: {
+      padding: "0 0.5rem 8rem",
+    },
+  },
 }));
 
 function Post({ post, subreddit }) {
@@ -61,15 +71,7 @@ function Post({ post, subreddit }) {
             </Button>
           </Link>
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row-reverse",
-            justifyContent: "center",
-            width: "100%",
-            paddingBottom: "8rem",
-          }}
-        >
+        <div className={classes.content}>
           <SidebarContainer>
             <SubredditSidebar subreddit={subreddit} />
             <SubredditRules subreddit={subreddit} />
@@ -92,7 +94,9 @@ export default Post;
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
-  const res = await fetch(`https://www.reddit.com/api/info.json?id=t3_${id}`);
+  const res = await fetch(
+    `https://www.reddit.com/api/info.json?id=t3_${id}&raw_json=1`
+  );
   const post = await res.json();
   const subreddit = await getSubredditInfo(
     post.data.children[0].data.subreddit

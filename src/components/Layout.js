@@ -53,13 +53,17 @@ function Layout({ children }) {
         </main>
       </div>
       <Affix
-        position={{ bottom: 20, right: 20 }}
-        sx={{
-          width: "calc(100vw - 32px)",
+        position={{ bottom: 20 }}
+        sx={(theme) => ({
+          width: "calc(100vw - 2rem)",
           display: "flex",
           justifyContent: "center",
           zIndex: 50,
-        }}
+
+          [theme.fn.smallerThan("md")]: {
+            width: "calc(100vw - 1rem)",
+          },
+        })}
       >
         <Transition
           transition="slide-up"

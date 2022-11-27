@@ -25,6 +25,7 @@ const useStyles = createStyles((theme) => ({
 
     [theme.fn.smallerThan("md")]: {
       justifyContent: "center",
+      padding: "0 0.5rem",
     },
   },
 }));
@@ -88,7 +89,6 @@ export default function Home() {
               display: "flex",
               flexDirection: "column",
               flex: 1,
-              padding: "0 1rem",
             }}
           >
             <FeedControls

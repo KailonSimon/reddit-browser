@@ -5,7 +5,7 @@ import {
   useInfiniteQuery,
 } from "@tanstack/react-query";
 import Head from "next/head";
-import { Box, Text } from "@mantine/core";
+import { createStyles, Box, Text } from "@mantine/core";
 import { mergePages, fetchPosts, getSubredditInfo } from "../../../utils";
 import LoadingScreen from "../../../src/components/LoadingScreen";
 import Feed from "../../../src/components/Feed/Feed";
@@ -17,7 +17,21 @@ import SidebarContainer from "../../../src/components/Navigation/SidebarContaine
 import SubredditRules from "../../../src/components/Subreddit/SubredditRules";
 import ContentWarningModal from "../../../src/components/Modals/ContentWarningModal";
 
+const useStyles = createStyles((theme) => ({
+  content: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: "0 1rem",
+    [theme.fn.smallerThan("md")]: {
+      padding: "0 0.5rem",
+    },
+  },
+}));
+
 function Subreddit({ subreddit }) {
+  const { classes } = useStyles();
   const [sorting, setSorting] = useState("hot");
   const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
     subreddit.over18
@@ -69,15 +83,7 @@ function Subreddit({ subreddit }) {
       <>
         <Layout>
           <SubredditBanner subreddit={subreddit} />
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row-reverse",
-              justifyContent: "space-between",
-              width: "100%",
-              padding: "0 1rem",
-            }}
-          >
+          <div className={classes.content}>
             <SidebarContainer>
               <SubredditSidebar subreddit={subreddit} />
               <SubredditRules subreddit={subreddit} />

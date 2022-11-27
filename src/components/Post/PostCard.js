@@ -38,7 +38,6 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan(800)]: {
       padding: "8px 21px 8px 8px",
       minWidth: 300,
-      maxWidth: "calc(100vw - 2rem)",
     },
   },
   details: {

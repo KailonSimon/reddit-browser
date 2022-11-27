@@ -30,7 +30,6 @@ const useStyles = createStyles((theme) => ({
     borderRadius: 4,
     [theme.fn.smallerThan(800)]: {
       minWidth: 300,
-      maxWidth: "calc(100vw - 2rem)",
     },
   },
 }));

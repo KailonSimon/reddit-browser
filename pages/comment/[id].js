@@ -29,6 +29,16 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     padding: "1rem",
   },
+  content: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "center",
+    width: "100%",
+    padding: "0 1rem 8rem",
+    [theme.fn.smallerThan("md")]: {
+      padding: "0 0.5rem 8rem",
+    },
+  },
 }));
 
 function Comment({ commentId, post, subreddit }) {
@@ -55,15 +65,7 @@ function Comment({ commentId, post, subreddit }) {
             </Button>
           </Link>
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row-reverse",
-            justifyContent: "center",
-            width: "100%",
-            paddingBottom: "8rem",
-          }}
-        >
+        <div className={classes.content}>
           <SidebarContainer>
             <SubredditSidebar subreddit={subreddit} />
             <SubredditRules subreddit={subreddit} />
@@ -92,7 +94,7 @@ export async function getServerSideProps(context) {
   );
   const comment = await commentRes.json();
   const postRes = await fetch(
-    `https://www.reddit.com/api/info.json?id=${comment.data.children[0].data.link_id}`
+    `https://www.reddit.com/api/info.json?id=${comment.data.children[0].data.link_id}&raw_json=1`
   );
   const post = await postRes.json();
   const repliesRes = await fetch(
