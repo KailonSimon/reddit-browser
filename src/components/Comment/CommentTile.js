@@ -229,7 +229,7 @@ function CommentTile({ comment, depth = 0 }) {
                 )}
                 <AwardsContainer awards={comment.all_awardings} />
               </div>
-              <FlairContainer submission={comment} />
+              <FlairContainer submission={comment} type="author" />
             </div>
           </div>
           {!state.isCollapsed && (

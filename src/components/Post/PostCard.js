@@ -18,6 +18,7 @@ import SubmissionVotingControls from "../SubmissionVotingControls";
 import { Speakerphone } from "tabler-icons-react";
 import { markdown } from "snudown-js";
 import AwardsContainer from "../AwardsContainer";
+import FlairContainer from "../FlairContainer";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -182,11 +183,7 @@ function PostCard({ post }) {
               NSFW
             </Badge>
           )}
-          {post.link_flair_text && (
-            <Badge variant="dot" size="md" radius={4} sx={{ fontWeight: 700 }}>
-              {post.link_flair_text}
-            </Badge>
-          )}
+          <FlairContainer submission={post} type="link" />
         </Box>
 
         {post.post_hint === "self" && post?.preview?.images[0]?.source?.url ? (

@@ -1,7 +1,7 @@
 import { Badge, Image } from "@mantine/core";
 
-function FlairContainer({ submission }) {
-  if (submission.author_flair_richtext?.length > 0) {
+function FlairContainer({ submission, type }) {
+  if (type === "author" && submission.author_flair_richtext?.length > 0) {
     return (
       <Badge
         size="sm"
@@ -16,6 +16,40 @@ function FlairContainer({ submission }) {
         {submission.author_flair_richtext?.map((item) => {
           if ("t" in item) {
             return item.t;
+          } else if ("u" in item) {
+            return (
+              <Image
+                height={14}
+                width={14}
+                fit="contain"
+                key={item.u}
+                src={item.u}
+                alt={item.a}
+              />
+            );
+          }
+        })}
+      </Badge>
+    );
+  } else if (type === "link" && submission.link_flair_richtext?.length > 0) {
+    return (
+      <Badge
+        radius={20}
+        onClick={() => console.log(submission)}
+        styles={(theme) => ({
+          root: {
+            fontSize: 12,
+            color:
+              submission.link_flair_text_color === "dark" ? "#000" : "#fff",
+            background:
+              submission.link_flair_background_color || theme.colors.gray[5],
+          },
+          inner: { display: "flex", gap: "4px" },
+        })}
+      >
+        {submission.link_flair_richtext?.map((item, i) => {
+          if ("t" in item) {
+            return <span key={i}>{item.t}</span>;
           } else if ("u" in item) {
             return (
               <Image

@@ -16,6 +16,7 @@ import { getRelativeTime } from "../../../utils";
 import SubmissionMenu from "../SubmissionMenu";
 import SubmissionVotingControls from "../SubmissionVotingControls";
 import AwardsContainer from "../AwardsContainer";
+import FlairContainer from "../FlairContainer";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -123,11 +124,7 @@ function PostTile({ post, handlePostTileClick }) {
                   },
                 })}
               >
-                <Badge variant="dot" radius={4}>
-                  {post.link_flair_text.length > 15
-                    ? post.link_flair_text.substr(0, 15) + "..."
-                    : post.link_flair_text}
-                </Badge>
+                <FlairContainer submission={post} type="link" />
               </Tooltip>
             )}
           </div>
