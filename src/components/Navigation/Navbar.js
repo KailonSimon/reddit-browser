@@ -15,8 +15,7 @@ const useStyles = createStyles((theme) => ({
     top: 0,
     left: 0,
     zIndex: 999,
-    backgroundColor:
-      theme.colorScheme === "dark" ? theme.colors.dark[9] : "#fff",
+    backgroundColor: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
     letterSpacing: 1.5,
     padding: "0 1rem",
     borderBottom: `1px solid ${
