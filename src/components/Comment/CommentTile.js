@@ -11,6 +11,7 @@ import CommentReplyArea from "./CommentReplyArea";
 import CommentTileControls from "./CommentTileControls";
 import { markdown } from "snudown-js";
 import AwardsContainer from "../AwardsContainer";
+import FlairContainer from "../FlairContainer";
 
 const initialState = {
   isCollapsed: false,
@@ -113,132 +114,117 @@ function CommentTile({ comment, depth = 0 }) {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              marginBottom: state.isCollapsed ? 0 : 4,
+              marginBottom: state.isCollapsed ? 0 : 6,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexFlow: "row wrap",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              {state.isCollapsed && (
-                <ActionIcon
-                  onClick={() =>
-                    dispatch({ type: "SET_IS_COLLAPSED", payload: false })
-                  }
-                  sx={{ marginRight: 8 }}
-                >
-                  <ChevronDown color="#818384" size={20} />
-                </ActionIcon>
-              )}
-              <Anchor
-                href={`/user/${comment.author}`}
-                target="_blank"
-                rel="noreferrer"
-                color="inherit"
-                variant="text"
-                weight={500}
-                sx={(theme) => ({
-                  fontSize: 12,
-                  whiteSpace: "nowrap",
-                  color:
-                    comment.distinguished === "moderator"
-                      ? theme.colors.brand
-                      : theme.colorScheme === "dark"
-                      ? "#D7DADC"
-                      : theme.black,
-                  ":hover": {
-                    cursor: "pointer",
-                    textDecoration: "underline",
-                    color: theme.colors.brand,
-                  },
-                })}
-              >
-                {comment.stickied && (
-                  <Pinned
-                    color="#59ba12ff"
-                    size={16}
-                    style={{ position: "relative", top: 4, marginRight: 2 }}
-                  />
-                )}
-                {comment.author}
-              </Anchor>
-              {comment.is_submitter && (
-                <span
-                  style={{
-                    marginLeft: 4,
-                    fontSize: 12,
-                    fontWeight: "bold",
-                    color: "#59ba12",
-                  }}
-                >
-                  OP
-                </span>
-              )}
-              {comment.author_flair_richtext?.length > 0 && (
-                <Badge
-                  size="sm"
-                  variant="light"
-                  radius={4}
-                  ml={8}
-                  leftSection={
-                    comment.author_flair_richtext.length > 1 ? (
-                      <Image
-                        height={14}
-                        fit="contain"
-                        src={comment.author_flair_richtext[0]?.u}
-                        alt={comment.author_flair_richtext[1]?.t}
-                      />
-                    ) : null
-                  }
-                >
-                  {comment.author_flair_richtext.length > 1
-                    ? comment.author_flair_richtext[1].t
-                    : comment.author_flair_richtext[0].t}
-                </Badge>
-              )}
+            <div style={{ display: "flex", flexDirection: "column" }}>
               <div
                 style={{
                   display: "flex",
+                  flexFlow: "row wrap",
                   alignItems: "center",
-                  whiteSpace: "nowrap",
-                  marginLeft: 4,
+                  width: "100%",
                 }}
               >
-                <ArrowUp size={16} color="#818384" />
-                <Text size="sm" color="#818384">
-                  {comment.score_hidden
-                    ? "—"
-                    : numeral(comment.score).format("0.[0]a")}
+                {state.isCollapsed && (
+                  <ActionIcon
+                    onClick={() =>
+                      dispatch({ type: "SET_IS_COLLAPSED", payload: false })
+                    }
+                    sx={{ marginRight: 8 }}
+                  >
+                    <ChevronDown color="#818384" size={20} />
+                  </ActionIcon>
+                )}
+                <Anchor
+                  href={`/user/${comment.author}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  color="inherit"
+                  variant="text"
+                  weight={500}
+                  sx={(theme) => ({
+                    fontSize: 12,
+                    whiteSpace: "nowrap",
+                    color:
+                      comment.distinguished === "moderator"
+                        ? theme.colors.brand
+                        : theme.colorScheme === "dark"
+                        ? "#D7DADC"
+                        : theme.black,
+                    ":hover": {
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                      color: theme.colors.brand,
+                    },
+                  })}
+                >
+                  {comment.stickied && (
+                    <Pinned
+                      color="#59ba12ff"
+                      size={16}
+                      style={{ position: "relative", top: 4, marginRight: 2 }}
+                    />
+                  )}
+                  {comment.author}
+                </Anchor>
+                {comment.is_submitter && (
+                  <span
+                    style={{
+                      marginLeft: 4,
+                      fontSize: 12,
+                      fontWeight: "bold",
+                      color: "#59ba12",
+                    }}
+                  >
+                    OP
+                  </span>
+                )}
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    whiteSpace: "nowrap",
+                    marginLeft: 4,
+                  }}
+                >
+                  <ArrowUp size={16} color="#818384" />
+                  <Text size="sm" color="#818384">
+                    {comment.score_hidden
+                      ? "—"
+                      : numeral(comment.score).format("0.[0]a")}
+                  </Text>
+                </div>
+                <span
+                  style={{
+                    flex: "0 0 auto",
+                    margin: "0 4px 4px",
+                    color: "#818384",
+                    display: "flex",
+                    verticalAlign: "top",
+                  }}
+                >
+                  &#8226;
+                </span>
+                <Text size="sm" color="#818384" sx={{ whiteSpace: "nowrap" }}>
+                  {getRelativeTime(comment.created_utc)}
                 </Text>
+                {comment.locked && (
+                  <Lock color="#59ba12ff" size={16} style={{ marginLeft: 4 }} />
+                )}
+                <AwardsContainer awards={comment.all_awardings} />
               </div>
-              <span
-                style={{
-                  flex: "0 0 auto",
-                  margin: "0 4px 4px",
-                  color: "#818384",
-                  display: "flex",
-                  verticalAlign: "top",
-                }}
-              >
-                &#8226;
-              </span>
-              <Text size="sm" color="#818384" sx={{ whiteSpace: "nowrap" }}>
-                {getRelativeTime(comment.created_utc)}
-              </Text>
-              {comment.locked && (
-                <Lock color="#59ba12ff" size={16} style={{ marginLeft: 4 }} />
-              )}
-              <AwardsContainer awards={comment.all_awardings} />
+              <FlairContainer submission={comment} />
             </div>
           </div>
           {!state.isCollapsed && (
             <div>
               <Text sx={{ fontSize: 14, wordBreak: "break-word" }}>
-                {<div dangerouslySetInnerHTML={createMarkup()} />}
+                <div
+                  className="comment-body"
+                  dangerouslySetInnerHTML={createMarkup()}
+                />
               </Text>
               <CommentTileControls
                 comment={comment}

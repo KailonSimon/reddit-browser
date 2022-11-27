@@ -104,5 +104,13 @@ export const theme = {
     ".mantine-Accordion-control": {
       padding: "0.5rem",
     },
+    ".comment-body > blockquote": {
+      borderLeft: `2px solid ${theme.colors.gray[7]}`,
+      margin: "4px 4px 8px 8px",
+      paddingLeft: 8,
+    },
+    ".comment-body > blockquote:last-child": {
+      marginBottom: 4,
+    },
   }),
 };
