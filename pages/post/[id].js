@@ -1,16 +1,17 @@
-import { Button, createStyles } from "@mantine/core";
+import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "tabler-icons-react";
 import Head from "next/head";
+import { Button, createStyles } from "@mantine/core";
+import { ArrowLeft } from "tabler-icons-react";
 import Layout from "../../src/components/Layout";
 import CommentSection from "../../src/components/Comment/CommentSection";
 import PostCard from "../../src/components/Post/PostCard";
-import { getSubredditInfo } from "../../utils";
 import SidebarContainer from "../../src/components/Navigation/SidebarContainer";
 import SubredditRules from "../../src/components/Subreddit/SubredditRules";
-import { useEffect } from "react";
 import SubredditSidebar from "../../src/components/SubredditSidebar";
 import SubredditBanner from "../../src/components/SubredditBanner";
+import ContentWarningModal from "../../src/components/Modals/ContentWarningModal";
+import { getSubredditInfo } from "../../utils";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -32,6 +33,13 @@ const useStyles = createStyles((theme) => ({
 
 function Post({ post, subreddit }) {
   const { classes } = useStyles();
+  const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
+    post.over_18
+  );
+
+  const handleCloseModal = () => {
+    setContentWarningModalOpen(false);
+  };
 
   return (
     <>
@@ -72,6 +80,10 @@ function Post({ post, subreddit }) {
           </div>
         </div>
       </Layout>
+      <ContentWarningModal
+        open={contentWarningModalOpen}
+        handleCloseModal={handleCloseModal}
+      />
     </>
   );
 }

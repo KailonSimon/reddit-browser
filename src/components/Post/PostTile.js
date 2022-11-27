@@ -102,31 +102,12 @@ function PostTile({ post, handlePostTileClick }) {
             >
               {post.title}
             </Text>
-
             {post.over_18 && (
               <Badge mr={8} variant="filled" radius={4} color="red">
                 NSFW
               </Badge>
             )}
-            {post.link_flair_text && (
-              <Tooltip
-                label={post.link_flair_text}
-                transition="skew-down"
-                styles={(theme) => ({
-                  tooltip: {
-                    color:
-                      theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
-                    border: `1px solid ${
-                      theme.colorScheme === "dark" ? "#474748" : "#1A1A1B"
-                    }`,
-                    backgroundColor:
-                      theme.colorScheme === "dark" ? "#121212" : theme.white,
-                  },
-                })}
-              >
-                <FlairContainer submission={post} type="link" />
-              </Tooltip>
-            )}
+            <FlairContainer submission={post} type="link" />
           </div>
           <SubmissionMenu type="post" submission={post} />
         </div>

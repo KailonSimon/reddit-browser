@@ -13,7 +13,6 @@ import { fetchPosts, mergePages } from "../utils";
 import LoadingScreen from "../src/components/LoadingScreen";
 import TrendingSubsCard from "../src/components/TrendingSubsCard";
 import SidebarContainer from "../src/components/Navigation/SidebarContainer";
-import InfoCard from "../src/components/InfoCard";
 
 const useStyles = createStyles((theme) => ({
   main: {

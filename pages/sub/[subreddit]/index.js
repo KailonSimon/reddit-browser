@@ -15,9 +15,13 @@ import SubredditBanner from "../../../src/components/SubredditBanner";
 import SubredditSidebar from "../../../src/components/SubredditSidebar";
 import SidebarContainer from "../../../src/components/Navigation/SidebarContainer";
 import SubredditRules from "../../../src/components/Subreddit/SubredditRules";
+import ContentWarningModal from "../../../src/components/Modals/ContentWarningModal";
 
 function Subreddit({ subreddit }) {
   const [sorting, setSorting] = useState("hot");
+  const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
+    subreddit.over18
+  );
 
   const {
     status,
@@ -39,6 +43,9 @@ function Subreddit({ subreddit }) {
       },
     }
   );
+  const handleCloseModal = () => {
+    setContentWarningModalOpen(false);
+  };
 
   useEffect(() => {
     refetch();
@@ -59,44 +66,50 @@ function Subreddit({ subreddit }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta property="og:title" content={subreddit.display_name_prefixed} />
       </Head>
-      <Layout>
-        <SubredditBanner subreddit={subreddit} />
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row-reverse",
-            justifyContent: "space-between",
-            width: "100%",
-            padding: "0 1rem",
-          }}
-        >
-          <SidebarContainer>
-            <SubredditSidebar subreddit={subreddit} />
-            <SubredditRules subreddit={subreddit} />
-          </SidebarContainer>
+      <>
+        <Layout>
+          <SubredditBanner subreddit={subreddit} />
           <div
             style={{
               display: "flex",
-              flexDirection: "column",
-              flex: 1,
+              flexDirection: "row-reverse",
+              justifyContent: "space-between",
+              width: "100%",
+              padding: "0 1rem",
             }}
           >
-            <FeedControls
-              sorting={sorting}
-              setSorting={setSorting}
-              isRefetching={isRefetching}
-            />
+            <SidebarContainer>
+              <SubredditSidebar subreddit={subreddit} />
+              <SubredditRules subreddit={subreddit} />
+            </SidebarContainer>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+              }}
+            >
+              <FeedControls
+                sorting={sorting}
+                setSorting={setSorting}
+                isRefetching={isRefetching}
+              />
 
-            <Feed
-              key={mergePages(data.pages)}
-              posts={mergePages(data.pages)}
-              fetchNextPage={fetchNextPage}
-              hasNextPage={hasNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-            />
+              <Feed
+                key={mergePages(data.pages)}
+                posts={mergePages(data.pages)}
+                fetchNextPage={fetchNextPage}
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+              />
+            </div>
           </div>
-        </div>
-      </Layout>
+        </Layout>
+        <ContentWarningModal
+          open={contentWarningModalOpen}
+          handleCloseModal={handleCloseModal}
+        />
+      </>
     </Box>
   );
 }

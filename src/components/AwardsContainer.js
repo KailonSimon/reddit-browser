@@ -7,7 +7,7 @@ function AwardsContainer({ awards }) {
     <div
       style={{
         display: "inline-flex",
-        padding: "0 4px",
+        padding: "0 2px",
         flexWrap: "wrap",
         verticalAlign: "top",
       }}

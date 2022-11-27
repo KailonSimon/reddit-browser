@@ -37,7 +37,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
             toggleColorScheme={toggleColorScheme}
           >
             <MantineProvider theme={{ ...theme }}>
-              <ModalsProvider modals={{ post: PostModal }}>
+              <ModalsProvider
+                modals={{
+                  post: PostModal,
+                }}
+              >
                 <NotificationsProvider>
                   <div style={{ visibility: !mounted ? "hidden" : "" }}>
                     <Component {...pageProps} />
