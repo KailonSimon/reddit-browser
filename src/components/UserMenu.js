@@ -10,9 +10,9 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
     ref={ref}
     sx={(theme) => ({
       border: `1px solid ${
-        theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+        theme.colorScheme === "dark" ? "#474748" : theme.colors.dark[6]
       }`,
-      backgroundColor: theme.colorScheme === "dark" ? "#121212" : "#fff",
+      background: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#fff",
       color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
       borderRadius: "4px",
       padding: "0 0.5rem",
