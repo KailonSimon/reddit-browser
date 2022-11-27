@@ -101,13 +101,20 @@ function SubredditSearch() {
         },
         input: {
           border: `1px solid ${
-            theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+            theme.colorScheme === "dark" ? "#474748" : theme.colors.dark[6]
           }`,
-          background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
+          background:
+            theme.colorScheme === "dark" ? theme.colors.dark[6] : "#fff",
           borderRadius: 4,
           [theme.fn.largerThan("md")]: {
             borderRadius: 999,
           },
+        },
+        dropdown: {
+          border: "1px solid #474748",
+          borderRadius: 4,
+          overflow: "hidden",
+          filter: "drop-shadow(0 0.2rem 0.25rem #000)",
         },
       })}
       onFocus={() => dispatch({ type: "SET_IS_FOCUSED", payload: true })}

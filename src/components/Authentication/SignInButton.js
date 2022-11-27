@@ -10,10 +10,11 @@ function SignInButton() {
       leftIcon={<BrandReddit />}
       onClick={() => signIn()}
       sx={(theme) => ({
+        fontWeight: 700,
         height: 42,
         borderRadius: 4,
         border: `2px solid ${theme.colors.brand[6]}`,
-        background: theme.colors.dark[9],
+        background: theme.colors.dark[7],
         [theme.fn.largerThan("md")]: {
           borderRadius: 999,
         },
