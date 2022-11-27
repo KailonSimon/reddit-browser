@@ -5,6 +5,7 @@ import { ArrowUp, ChevronDown, Lock, Pinned } from "tabler-icons-react";
 import {
   fetchMoreChildrenComments,
   getNestedCommentClass,
+  getOverlayColor,
   getRelativeTime,
 } from "../../../utils";
 import CommentReplyArea from "./CommentReplyArea";
@@ -93,6 +94,20 @@ function CommentTile({ comment, depth = 0 }) {
           position: "relative",
         }}
       >
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            maxHeight: 100,
+
+            background: getOverlayColor(comment.all_awardings),
+
+            borderRadius: 4,
+          }}
+        ></div>
         <div
           className={`comment-depth-${getNestedCommentClass(
             comment.depth || depth

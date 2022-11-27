@@ -159,6 +159,16 @@ const voteOnSubmission = async (id, direction) => {
   return await res.json();
 };
 
+const getOverlayColor = (awards) => {
+  if (awards.filter((award) => award.name === "Gold").length > 0) {
+    return "linear-gradient(188deg,rgba(255,230,0,.15) 1.7%,rgba(255,230,0,0) 46%),hsla(0,0%,100%,0)";
+  } else if (awards.filter((award) => award.name === "Starry").length > 0) {
+    return "linear-gradient(188deg,rgba(89,186,18,.25) 1.7%,rgba(255,230,0,0) 46%),hsla(0,0%,100%,0)";
+  } else {
+    return "tranparent";
+  }
+};
+
 export {
   getRelativeTime,
   getDate,
@@ -177,4 +187,5 @@ export {
   getSubredditWikiPage,
   getTrendingSubreddits,
   voteOnSubmission,
+  getOverlayColor,
 };
