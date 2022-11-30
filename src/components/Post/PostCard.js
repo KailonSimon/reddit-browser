@@ -27,7 +27,7 @@ const useStyles = createStyles((theme) => ({
     color: "#D7DADC",
     background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
     borderRadius: 4,
-    padding: "12px 42px 12px 12px",
+    padding: "0.75rem",
     gap: "0.5rem",
     width: "100%",
     minWidth: 600,
@@ -114,35 +114,35 @@ function PostCard({ post }) {
               })}
             >
               Posted by{" "}
-              <Anchor
-                href={`/user/${post.author}`}
-                target="_blank"
-                rel="noreferrer"
-                color="inherit"
-                variant="text"
-                sx={(theme) => ({
-                  color:
-                    post.distinguished === "moderator"
-                      ? theme.colors.brand
-                      : theme.colorScheme === "dark"
-                      ? "#D7DADC"
-                      : theme.black,
-                  ":hover": {
-                    cursor: "pointer",
-                    textDecoration: "underline",
-                    color: theme.colors.brand,
-                  },
-                })}
-              >
-                {post.stickied && (
-                  <Speakerphone
-                    size={16}
-                    color="#59ba12ff"
-                    style={{ position: "relative", top: 4, marginRight: 2 }}
-                  />
-                )}
-                {post.author}
-              </Anchor>
+              <Link href={`/user/${post.author}`} passHref>
+                <Anchor
+                  rel="noreferrer"
+                  color="inherit"
+                  variant="text"
+                  sx={(theme) => ({
+                    color:
+                      post.distinguished === "moderator"
+                        ? theme.colors.brand
+                        : theme.colorScheme === "dark"
+                        ? "#D7DADC"
+                        : theme.black,
+                    ":hover": {
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                      color: theme.colors.brand,
+                    },
+                  })}
+                >
+                  {post.stickied && (
+                    <Speakerphone
+                      size={16}
+                      color="#59ba12ff"
+                      style={{ position: "relative", top: 4, marginRight: 2 }}
+                    />
+                  )}
+                  {post.author}
+                </Anchor>
+              </Link>
             </Text>
 
             <Text

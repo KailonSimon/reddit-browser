@@ -7,6 +7,9 @@ import UserMenu from "../UserMenu";
 import { getUserData } from "../../../utils";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { useSelector } from "react-redux";
+import { selectAuthentication } from "../../../store/AuthSlice";
+import { selectDemoUser } from "../../../store/DemoUserSlice";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -58,11 +61,20 @@ const useStyles = createStyles((theme) => ({
 function Navbar() {
   const { classes } = useStyles();
   const { data: session } = useSession();
-  const { data: userData, isLoading } = useQuery({
+  const {
+    data: user,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["currentUserData", session],
     queryFn: () => getUserData(session.user.name),
     enabled: !!session,
   });
+
+  const authentication = useSelector(selectAuthentication);
+  const demoUser = useSelector(selectDemoUser);
+
   return (
     <header className={classes.header}>
       <nav className={classes.nav}>
@@ -93,13 +105,15 @@ function Navbar() {
           </div>
 
           <div className={classes.drawer}>
-            <NavigationDrawer user={userData?.data} />
+            <NavigationDrawer user={user?.data || demoUser} />
           </div>
           <div className={classes.userControls}>
-            {isLoading && session ? (
+            {isLoading && isError ? (
               <Loader size="xs" />
-            ) : !!userData ? (
-              <UserMenu user={userData.data} />
+            ) : !!user ? (
+              <UserMenu user={user?.data} />
+            ) : authentication.status === "demo" ? (
+              <UserMenu user={demoUser} />
             ) : (
               <SignInButton />
             )}

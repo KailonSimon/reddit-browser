@@ -2,6 +2,8 @@ import { Button, createStyles, Textarea } from "@mantine/core";
 import { openModal, closeModal } from "@mantine/modals";
 import { useSession } from "next-auth/react";
 import React, { useId, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectAuthentication } from "../../../store/AuthSlice";
 import { getNestedCommentClass } from "../../../utils";
 import SignInButton from "../Authentication/SignInButton";
 
@@ -18,9 +20,10 @@ function CommentReplyArea({ replyAreaOpen, setReplyAreaOpen, depth }) {
   const { data: session } = useSession();
   const [input, setInput] = useState("");
   const modalId = useId();
+  const authentication = useSelector(selectAuthentication);
 
   const handleSubmit = () => {
-    if (!session) {
+    if (!session && authentication.status !== "demo") {
       openModal({
         modalId,
         title: "You must be signed in to vote.",
@@ -82,7 +85,7 @@ function CommentReplyArea({ replyAreaOpen, setReplyAreaOpen, depth }) {
             Cancel
           </Button>
           <Button size="xs" disabled={!input} onClick={handleSubmit}>
-            Submit
+            Comment
           </Button>
         </div>
       </div>

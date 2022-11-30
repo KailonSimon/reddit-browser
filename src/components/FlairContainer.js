@@ -1,7 +1,9 @@
 import { Badge, Image } from "@mantine/core";
+import { useId } from "@mantine/hooks";
 import { isColorDark } from "../../utils";
 
 function FlairContainer({ submission, type }) {
+  const containerID = useId();
   if (type === "author" && submission.author_flair_richtext?.length > 0) {
     return (
       <Badge
@@ -60,7 +62,7 @@ function FlairContainer({ submission, type }) {
                 height={14}
                 width={14}
                 fit="contain"
-                key={item.u}
+                key={i}
                 src={item.u}
                 alt={item.a}
               />

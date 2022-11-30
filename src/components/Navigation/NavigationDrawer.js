@@ -8,7 +8,6 @@ import UserMenu from "../UserMenu";
 
 function NavigationDrawer({ user }) {
   const [opened, setOpened] = useState(false);
-  const { data: session } = useSession();
   return (
     <>
       <Burger
@@ -21,10 +20,11 @@ function NavigationDrawer({ user }) {
         opened={opened}
         onClose={() => setOpened(false)}
         padding="xl"
-        size="md"
+        size="100%"
         position="right"
         withCloseButton={false}
         styles={(theme) => ({
+          root: { zIndex: 99 },
           drawer: {
             marginTop: "4rem",
             display: "flex",
@@ -38,7 +38,7 @@ function NavigationDrawer({ user }) {
           {user ? <UserMenu user={user} /> : null}
           <SubredditSearch />
         </div>
-        {session ? <SignOutButton /> : <SignInButton />}
+        <SignOutButton />
       </Drawer>
     </>
   );

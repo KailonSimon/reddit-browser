@@ -17,6 +17,9 @@ import SidebarContainer from "../../../src/components/Navigation/SidebarContaine
 import SubredditRules from "../../../src/components/Subreddit/SubredditRules";
 import ContentWarningModal from "../../../src/components/Modals/ContentWarningModal";
 
+import { useSelector } from "react-redux";
+import { selectAuthentication } from "../../../store/AuthSlice";
+
 const useStyles = createStyles((theme) => ({
   content: {
     display: "flex",
@@ -36,6 +39,8 @@ function Subreddit({ subreddit }) {
   const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
     subreddit.over18
   );
+
+  const authentication = useSelector(selectAuthentication);
 
   const {
     status,

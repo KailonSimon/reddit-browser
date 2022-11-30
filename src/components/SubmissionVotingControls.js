@@ -13,6 +13,8 @@ import {
   TiArrowDownThick,
 } from "react-icons/ti";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { selectAuthentication } from "../../store/AuthSlice";
 
 const useStyles = createStyles((theme) => ({
   postContainer: {
@@ -43,6 +45,7 @@ const useStyles = createStyles((theme) => ({
 function SubmissionVotingControls({ type, submission }) {
   const { classes } = useStyles();
   const { data: session } = useSession();
+  const authentication = useSelector(selectAuthentication);
   const modalId = useId();
   const queryClient = useQueryClient();
   const [liked, setLiked] = useState(submission.likes);
@@ -58,7 +61,7 @@ function SubmissionVotingControls({ type, submission }) {
   );
 
   const handleVoteClick = async (direction) => {
-    if (!session) {
+    if (!session && authentication.status !== "demo") {
       openModal({
         modalId,
         title: "You must be signed in to vote.",
@@ -72,6 +75,17 @@ function SubmissionVotingControls({ type, submission }) {
           </div>
         ),
         withCloseButton: false,
+      });
+    } else if (authentication.status === "demo") {
+      setLiked(() => {
+        switch (direction) {
+          case "up":
+            return true;
+          case "down":
+            return false;
+          case "unvote":
+            return null;
+        }
       });
     } else {
       mutate({ id: submission.name, direction });

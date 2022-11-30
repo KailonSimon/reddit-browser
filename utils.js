@@ -32,12 +32,17 @@ const getDate = (timestamp) => {
   return dayjs.unix(timestamp).format("MMMM D, YYYY");
 };
 
+const getCondensedDate = (timestamp) => {
+  return dayjs.unix(timestamp).format("MM/DD/YYYY");
+};
+
 const mergePages = (pages) => {
   const mergedPages = [];
   for (let i = 0; i < pages.length; i++) {
     mergedPages.push(...pages[i].data.children);
   }
-  return mergedPages;
+  const mergedPagesRemovedDuplicates = [...new Set(mergedPages)];
+  return mergedPagesRemovedDuplicates;
 };
 const getNestedCommentClass = (depth) => {
   return depth % 5;
@@ -170,6 +175,26 @@ const getOverlayColor = (awards) => {
   }
 };
 
+const getApplicationAccessToken = async () => {
+  try {
+    const params = new URLSearchParams();
+    params.append("grant_type", "client_credentials");
+    const res = await fetch("https://www.reddit.com/api/v1/access_token", {
+      body: "grant_type=client_credentials",
+      headers: {
+        Authorization: `Basic ${Buffer.from(
+          `${process.env.REDDIT_CLIENT_ID}:${process.env.REDDIT_CLIENT_SECRET}`
+        ).toString("base64")}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      method: "POST",
+    });
+    return await res.json();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const isColorDark = (hexColor) => {
   const color = Color(hexColor);
   return color.isDark();
@@ -178,6 +203,7 @@ const isColorDark = (hexColor) => {
 export {
   getRelativeTime,
   getDate,
+  getCondensedDate,
   mergePages,
   getNestedCommentClass,
   fetchPosts,
@@ -192,6 +218,7 @@ export {
   getSubredditWikiPages,
   getSubredditWikiPage,
   getTrendingSubreddits,
+  getApplicationAccessToken,
   voteOnSubmission,
   getOverlayColor,
   isColorDark,

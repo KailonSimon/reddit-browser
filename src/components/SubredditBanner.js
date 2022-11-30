@@ -1,14 +1,20 @@
 import {
-  Anchor,
   Avatar,
-  BackgroundImage,
+  Button,
   createStyles,
   Image,
   Text,
   Title,
 } from "@mantine/core";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import {
+  selectDemoUser,
+  subscribeToSubreddit,
+  unsubscribeFromSubreddit,
+} from "../../store/DemoUserSlice";
+import { useAppDispatch } from "../../store/store";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -43,6 +49,10 @@ const useStyles = createStyles((theme) => ({
 
 function SubredditBanner({ subreddit }) {
   const { classes } = useStyles();
+  const demoUser = useSelector(selectDemoUser);
+  const [subscribeButtonHovered, setSubscribeButtonHovered] = useState(false);
+  const dispatch = useAppDispatch();
+
   return (
     <div className={classes.container}>
       {subreddit.banner_background_image ? (
@@ -97,6 +107,34 @@ function SubredditBanner({ subreddit }) {
           <Text color="dimmed" size={14}>
             {subreddit.display_name_prefixed}
           </Text>
+        </div>
+        <div style={{ padding: "0.5rem 0" }}>
+          {demoUser.subscribedSubreddits.includes(subreddit.display_name) ? (
+            <Button
+              size="xs"
+              radius={99}
+              variant="outline"
+              sx={{ minWidth: "6rem", minHeight: "2rem" }}
+              onClick={() =>
+                dispatch(unsubscribeFromSubreddit(subreddit.display_name))
+              }
+              onMouseOver={() => setSubscribeButtonHovered(true)}
+              onMouseOut={() => setSubscribeButtonHovered(false)}
+            >
+              {subscribeButtonHovered ? "Leave" : "Joined"}
+            </Button>
+          ) : (
+            <Button
+              size="xs"
+              radius={99}
+              sx={{ minWidth: "6rem", minHeight: "2rem" }}
+              onClick={() =>
+                dispatch(subscribeToSubreddit(subreddit.display_name))
+              }
+            >
+              Join
+            </Button>
+          )}
         </div>
       </div>
     </div>

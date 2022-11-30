@@ -1,33 +1,27 @@
-import { forwardRef } from "react";
+import { forwardRef, useEffect } from "react";
 import { ChevronDown, Logout } from "tabler-icons-react";
 import { Avatar, Text, Menu, UnstyledButton } from "@mantine/core";
 import { signOut } from "next-auth/react";
 import { openConfirmModal } from "@mantine/modals";
 import numeral from "numeral";
+import { useAppDispatch } from "../../store/store";
+import { setAuthenticationStatus } from "../../store/AuthSlice";
+import Link from "next/link";
 
 const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
   <UnstyledButton
     ref={ref}
     sx={(theme) => ({
-      border: `1px solid ${
-        theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
-      }`,
-      backgroundColor: theme.colorScheme === "dark" ? "#121212" : "#fff",
+      background: theme.colorScheme === "dark" ? theme.colors.dark[7] : "#fff",
       color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
       borderRadius: "4px",
       padding: "0 0.5rem",
       height: 42,
-      minWidth: 66,
+      minWidth: "3rem",
       borderRadius: 4,
       overflow: "hidden",
       "&:hover": {
-        backgroundColor:
-          theme.colorScheme === "dark"
-            ? theme.colors.dark[8]
-            : theme.colors.gray[0],
-      },
-      [theme.fn.largerThan("md")]: {
-        borderRadius: 999,
+        outline: `1px solid ${theme.colors.dark[4]}`,
       },
     })}
     {...others}
@@ -39,7 +33,14 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
         gap: "0.25rem",
       }}
     >
-      <Avatar src={user.snoovatar_img} radius="xl" />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Avatar src={user.snoovatar_img} radius="xl" size={30} />
+      </div>
 
       <div
         style={{
@@ -72,13 +73,17 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
 UserButton.displayName = "UserButton";
 
 function UserMenu({ user }) {
+  const reduxDispatch = useAppDispatch();
+
   const openSignOutModal = () =>
     openConfirmModal({
       title: "Sign out of Reddit?",
       centered: true,
       labels: { confirm: "Sign out", cancel: "Cancel" },
       confirmProps: { color: "red" },
-      onConfirm: () => signOut(),
+      onConfirm: user.is_demo
+        ? () => reduxDispatch(setAuthenticationStatus("unauthenticated"))
+        : () => signOut(),
     });
 
   return (
@@ -98,10 +103,12 @@ function UserMenu({ user }) {
         <UserButton user={user} />
       </Menu.Target>
       <Menu.Dropdown>
-        <Menu.Item component="a" href={`/user/${user.name}`}>
-          Profile
-        </Menu.Item>
-
+        <Link
+          href={user.is_demo ? `/user/demoUserID` : `/user/${user.name}`}
+          passHref
+        >
+          <Menu.Item component="a">Profile</Menu.Item>
+        </Link>
         <Menu.Divider />
         <Menu.Item
           color="red"

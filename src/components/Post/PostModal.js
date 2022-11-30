@@ -5,7 +5,9 @@ import { ArrowLeft } from "tabler-icons-react";
 
 export default function PostModal({ context, id, innerProps }) {
   const handleCloseModal = () => {
-    innerProps.closeModal();
+    if (innerProps.closeModal !== null) {
+      innerProps.closeModal();
+    }
     context.closeModal(id);
   };
   return (

@@ -12,6 +12,9 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchComments } from "../../../utils";
 import CommentSectionControls from "./CommentSectionControls";
 import { useSession } from "next-auth/react";
+import { selectAuthentication } from "../../../store/AuthSlice";
+import { useSelector } from "react-redux";
+import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -71,46 +74,60 @@ function CommentSection({ post, commentId }) {
     dispatch({ type: "SET_COMMENT_INPUT", payload: "" });
   };
 
+  const authentication = useSelector(selectAuthentication);
+
   return (
     <div className={classes.container}>
       <>
-        {session && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              padding: "0 8px 8px",
-              gap: "0.5rem",
-            }}
-          >
-            <Textarea
-              label={
-                <Text>
-                  Comment as{" "}
-                  <Anchor href={`/user/${session.user.name}`}>
-                    {session.user.name}
-                  </Anchor>
-                </Text>
-              }
-              value={state.commentInput}
-              onChange={(e) =>
-                dispatch({
-                  type: "SET_COMMENT_INPUT",
-                  payload: e.currentTarget.value,
-                })
-              }
-            />
-            <Button
-              size="xs"
-              sx={{ alignSelf: "end" }}
-              disabled={!state.commentInput || !session}
-              onClick={handleSubmitComment}
+        {session ||
+          (authentication.status === "demo" && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                padding: "0 8px 8px",
+                gap: "0.5rem",
+              }}
             >
-              Comment
-            </Button>
-          </div>
-        )}
+              <Textarea
+                label={
+                  <Text>
+                    Comment as{" "}
+                    <Link
+                      href={
+                        authentication.status === "demo"
+                          ? `/user/demouserid`
+                          : `/user/${session.user.name}`
+                      }
+                      passHref
+                    >
+                      <Anchor>
+                        {authentication.status === "demo"
+                          ? "DemoUser"
+                          : session.user.name}
+                      </Anchor>
+                    </Link>
+                  </Text>
+                }
+                value={state.commentInput}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SET_COMMENT_INPUT",
+                    payload: e.currentTarget.value,
+                  })
+                }
+              />
+              <Button
+                size="xs"
+                sx={{ alignSelf: "end" }}
+                disabled={!state.commentInput || !session}
+                onClick={handleSubmitComment}
+              >
+                Comment
+              </Button>
+            </div>
+          ))}
         <CommentSectionControls
           post={post}
           isLoading={isLoading}

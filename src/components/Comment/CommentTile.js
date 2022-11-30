@@ -13,6 +13,7 @@ import CommentTileControls from "./CommentTileControls";
 import { markdown } from "snudown-js";
 import AwardsContainer from "../AwardsContainer";
 import FlairContainer from "../FlairContainer";
+import Link from "next/link";
 
 const initialState = {
   isCollapsed: false,
@@ -150,38 +151,38 @@ function CommentTile({ comment, depth = 0 }) {
                     <ChevronDown color="#818384" size={20} />
                   </ActionIcon>
                 )}
-                <Anchor
-                  href={`/user/${comment.author}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  color="inherit"
-                  variant="text"
-                  weight={500}
-                  sx={(theme) => ({
-                    fontSize: 12,
-                    whiteSpace: "nowrap",
-                    color:
-                      comment.distinguished === "moderator"
-                        ? theme.colors.brand
-                        : theme.colorScheme === "dark"
-                        ? "#D7DADC"
-                        : theme.black,
-                    ":hover": {
-                      cursor: "pointer",
-                      textDecoration: "underline",
-                      color: theme.colors.brand,
-                    },
-                  })}
-                >
-                  {comment.stickied && (
-                    <Pinned
-                      color="#59ba12ff"
-                      size={16}
-                      style={{ position: "relative", top: 4, marginRight: 2 }}
-                    />
-                  )}
-                  {comment.author}
-                </Anchor>
+                <Link href={`/user/${comment.author}`} passHref>
+                  <Anchor
+                    rel="noreferrer"
+                    color="inherit"
+                    variant="text"
+                    weight={500}
+                    sx={(theme) => ({
+                      fontSize: 12,
+                      whiteSpace: "nowrap",
+                      color:
+                        comment.distinguished === "moderator"
+                          ? theme.colors.brand
+                          : theme.colorScheme === "dark"
+                          ? "#D7DADC"
+                          : theme.black,
+                      ":hover": {
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                        color: theme.colors.brand,
+                      },
+                    })}
+                  >
+                    {comment.stickied && (
+                      <Pinned
+                        color="#59ba12ff"
+                        size={16}
+                        style={{ position: "relative", top: 4, marginRight: 2 }}
+                      />
+                    )}
+                    {comment.author}
+                  </Anchor>
+                </Link>
                 {comment.is_submitter && (
                   <span
                     style={{

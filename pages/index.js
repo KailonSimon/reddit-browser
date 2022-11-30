@@ -14,6 +14,16 @@ import LoadingScreen from "../src/components/LoadingScreen";
 import TrendingSubsCard from "../src/components/TrendingSubsCard";
 import SidebarContainer from "../src/components/Navigation/SidebarContainer";
 
+import { useSelector } from "react-redux";
+
+import { useAppDispatch, wrapper } from "../store/store";
+import {
+  setAuthenticationStatus,
+  selectAuthentication,
+} from "../store/AuthSlice";
+import { selectDemoUser, selectVisitedPosts } from "../store/DemoUserSlice";
+import RecentlyVisitedCard from "../src/components/Sidebar/RecentlyVisitedCard";
+
 const useStyles = createStyles((theme) => ({
   main: {
     display: "flex",
@@ -44,6 +54,8 @@ function reducer(state, action) {
 export default function Home() {
   const { classes } = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const recentVisits = useSelector(selectVisitedPosts);
+  const demoUser = useSelector(selectDemoUser);
 
   const {
     status,
@@ -56,7 +68,13 @@ export default function Home() {
     hasNextPage,
   } = useInfiniteQuery(
     ["posts"],
-    ({ pageParam = "" }) => fetchPosts(state.sorting, "all", 10, pageParam),
+    ({ pageParam = "" }) =>
+      fetchPosts(
+        state.sorting,
+        demoUser.subscribedSubreddits.join("+"),
+        10,
+        pageParam
+      ),
     {
       getNextPageParam: (lastPage, pages) => {
         return lastPage.data.after;
@@ -66,7 +84,7 @@ export default function Home() {
 
   useEffect(() => {
     refetch();
-  }, [state.sorting, refetch]);
+  }, [state.sorting, refetch, demoUser.subscribedSubreddits]);
 
   return status === "loading" ? (
     <LoadingScreen />
@@ -83,6 +101,9 @@ export default function Home() {
         <div className={classes.main}>
           <SidebarContainer>
             <TrendingSubsCard />
+            {recentVisits.length > 0 ? (
+              <RecentlyVisitedCard posts={recentVisits} />
+            ) : null}
           </SidebarContainer>
           <div
             style={{
@@ -113,25 +134,33 @@ export default function Home() {
   );
 }
 
-export async function getServerSideProps() {
-  const queryClient = new QueryClient();
-  try {
-    await queryClient.prefetchInfiniteQuery(
-      ["posts"],
-      ({ pageParam = "" }) => fetchPosts("hot", "all", 5, pageParam),
-      {
-        getNextPageParam: (lastPage, pages) => {
-          return lastPage.data.after;
-        },
-      }
-    );
-  } catch (error) {
-    console.log(error);
-  }
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) => async () => {
+    const queryClient = new QueryClient();
+    try {
+      await queryClient.prefetchInfiniteQuery(
+        ["posts"],
+        ({ pageParam = "" }) =>
+          fetchPosts(
+            "hot",
+            store.getState().demoUser.subscribedSubreddits.join("+"),
+            5,
+            pageParam
+          ),
+        {
+          getNextPageParam: (lastPage, pages) => {
+            return lastPage.data.after;
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
 
-  return {
-    props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-    },
-  };
-}
+    return {
+      props: {
+        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      },
+    };
+  }
+);

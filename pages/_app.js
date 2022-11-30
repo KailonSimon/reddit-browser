@@ -1,58 +1,14 @@
 import "../styles/globals.css";
-import { useState, useEffect } from "react";
-import { SessionProvider } from "next-auth/react";
-import {
-  Hydrate,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
-import { ColorSchemeProvider, MantineProvider } from "@mantine/core";
-import { NotificationsProvider } from "@mantine/notifications";
-import { ModalsProvider } from "@mantine/modals";
-import { theme } from "../theme";
-import PostModal from "../src/components/Post/PostModal";
+import { AppProvider } from "../src/providers/app";
+import { wrapper } from "../store/store";
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            refetchOnWindowFocus: false,
-          },
-        },
-      })
-  );
-  const [colorScheme, setColorScheme] = useState("dark");
-  const toggleColorScheme = (value) =>
-    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+function MyApp({ Component, ...appProps }) {
+  const { store, props: reduxProps } = wrapper.useWrappedStore(appProps);
+
   return (
-    <SessionProvider session={session}>
-      <QueryClientProvider client={queryClient}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <ColorSchemeProvider
-            colorScheme={colorScheme}
-            toggleColorScheme={toggleColorScheme}
-          >
-            <MantineProvider theme={{ ...theme }}>
-              <ModalsProvider
-                modals={{
-                  post: PostModal,
-                }}
-              >
-                <NotificationsProvider>
-                  <div style={{ visibility: !mounted ? "hidden" : "" }}>
-                    <Component {...pageProps} />
-                  </div>
-                </NotificationsProvider>
-              </ModalsProvider>
-            </MantineProvider>
-          </ColorSchemeProvider>
-        </Hydrate>
-      </QueryClientProvider>
-    </SessionProvider>
+    <AppProvider reduxProps={reduxProps} reduxStore={store}>
+      <Component {...reduxProps.pageProps} />
+    </AppProvider>
   );
 }
 

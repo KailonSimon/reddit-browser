@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 import PostTile from "../Post/PostTile";
 import { createStyles, Skeleton, Text } from "@mantine/core";
 import Head from "next/head";
-import { openContextModal } from "@mantine/modals";
+import { openContextModal, closeAllModals } from "@mantine/modals";
+import { useRouter } from "next/router";
+import { useAppDispatch } from "../../../store/store";
+import { visitPost } from "../../../store/DemoUserSlice";
 
 const useStyles = createStyles((theme) => ({
   posts: {
@@ -41,15 +44,17 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
   const ref = useRef();
   const isInView = useInView(ref);
   const [openPost, setOpenPost] = useState(null);
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (isInView && hasNextPage) {
-      fetchNextPage();
-    }
-  }, [isInView, fetchNextPage, hasNextPage]);
+  const { events } = useRouter();
+
+  const handleCloseModal = useCallback(() => {
+    setOpenPost("");
+  }, [setOpenPost]);
 
   const handlePostTileClick = (post) => {
     setOpenPost(post);
+    dispatch(visitPost(post));
     openContextModal({
       modal: "post",
       innerProps: {
@@ -68,9 +73,20 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
       overlayBlur: 3,
     });
   };
-  const handleCloseModal = () => {
-    setOpenPost("");
-  };
+
+  useEffect(() => {
+    if (isInView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [isInView, fetchNextPage, hasNextPage]);
+
+  useEffect(() => {
+    events.on("routeChangeStart", closeAllModals);
+    return () => {
+      // unsubscribe to event on unmount to prevent memory leak
+      events.off("routeChangeStart", closeAllModals);
+    };
+  }, [events]);
 
   return (
     <>

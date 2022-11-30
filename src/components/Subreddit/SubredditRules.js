@@ -26,10 +26,16 @@ function SubredditRules({ subreddit }) {
         {subreddit.display_name_prefixed} rules
       </Title>
       <Accordion
-        styles={{
+        styles={(theme) => ({
           label: { fontSize: 14 },
           chevron: { marginLeft: 0 },
-        }}
+          item: {
+            border: "inherit",
+            ":not(:last-child)": {
+              borderBottom: `1px solid ${theme.colors.gray[8]}`,
+            },
+          },
+        })}
       >
         {rules.map((rule, i) => {
           const createMarkup = (text) => {

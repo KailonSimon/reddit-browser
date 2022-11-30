@@ -9,10 +9,10 @@ function LoadingScreen() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: theme.colorScheme === "dark" ? theme.black : theme.white,
+        background: "#030303",
       })}
     >
-      <Loader />
+      <Loader color="#59ba12" />
     </Box>
   );
 }
