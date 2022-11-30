@@ -47,11 +47,6 @@ const getNestedCommentClass = (depth) => {
   return depth % 5;
 };
 
-const dev = process.env.NODE_ENV !== "production";
-const server = dev
-  ? "http://localhost:3000"
-  : "https://reddit-browser.vercel.app";
-
 const fetchPosts = async (
   sorting = "hot",
   subreddit = "all",
@@ -59,7 +54,7 @@ const fetchPosts = async (
   pageParam = ""
 ) => {
   const res = await fetch(
-    `${server}/api/posts/${subreddit}?sorting=${sorting}&limit=${limit}&pageParam=${pageParam}`
+    `/api/posts/${subreddit}?sorting=${sorting}&limit=${limit}&pageParam=${pageParam}`
   );
   return await res.json();
 };
