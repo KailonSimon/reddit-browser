@@ -48,7 +48,9 @@ const getNestedCommentClass = (depth) => {
 };
 
 const dev = process.env.NODE_ENV !== "production";
-const server = dev ? "http://localhost:3000" : "reddit-browser-dev.vercel.app";
+const server = dev
+  ? "http://localhost:3000"
+  : "https://reddit-browser-dev.vercel.app";
 
 const fetchPosts = async (
   sorting = "hot",
