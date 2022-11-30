@@ -86,7 +86,7 @@ export default function Home() {
     refetch();
   }, [state.sorting, refetch, demoUser.subscribedSubreddits]);
 
-  return status === "loading" ? (
+  return status === "loading" && !data ? (
     <LoadingScreen /> || !data
   ) : status === "error" ? (
     <Text>Error: {error.message}</Text>
@@ -140,13 +140,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     try {
       await queryClient.prefetchInfiniteQuery(
         ["posts"],
-        ({ pageParam = "" }) =>
-          fetchPosts(
-            "hot",
-            store.getState().demoUser.subscribedSubreddits.join("+"),
-            5,
-            pageParam
-          ),
+        ({ pageParam = "" }) => fetchPosts("hot", "all", 10, pageParam),
         {
           getNextPageParam: (lastPage, pages) => {
             return lastPage.data.after;

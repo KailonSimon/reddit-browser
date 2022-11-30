@@ -16,9 +16,7 @@ import SubredditSidebar from "../../../src/components/SubredditSidebar";
 import SidebarContainer from "../../../src/components/Navigation/SidebarContainer";
 import SubredditRules from "../../../src/components/Subreddit/SubredditRules";
 import ContentWarningModal from "../../../src/components/Modals/ContentWarningModal";
-
-import { useSelector } from "react-redux";
-import { selectAuthentication } from "../../../store/AuthSlice";
+import { wrapper } from "../../../store/store";
 
 const useStyles = createStyles((theme) => ({
   content: {
@@ -39,8 +37,6 @@ function Subreddit({ subreddit }) {
   const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
     subreddit.over18
   );
-
-  const authentication = useSelector(selectAuthentication);
 
   const {
     status,
@@ -127,29 +123,31 @@ function Subreddit({ subreddit }) {
 
 export default Subreddit;
 
-export async function getServerSideProps(context) {
-  const { subreddit } = context.query;
-  const subredditInfo = await getSubredditInfo(subreddit);
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) => async () => {
+    const { subreddit } = context.query;
+    const subredditInfo = await getSubredditInfo(subreddit);
 
-  const queryClient = new QueryClient();
+    const queryClient = new QueryClient();
 
-  try {
-    await queryClient.prefetchInfiniteQuery(
-      ["posts", { subreddit: subreddit[0] }],
-      ({ pageParam = "" }) => fetchPosts("hot", subreddit[0], 5, pageParam),
-      {
-        getNextPageParam: (lastPage, pages) => {
-          return lastPage.data.after;
-        },
-      }
-    );
-  } catch (error) {
-    console.log(error);
+    try {
+      await queryClient.prefetchInfiniteQuery(
+        ["posts", { subreddit: subreddit[0] }],
+        ({ pageParam = "" }) => fetchPosts("hot", subreddit[0], 5, pageParam),
+        {
+          getNextPageParam: (lastPage, pages) => {
+            return lastPage.data.after;
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+    return {
+      props: {
+        subreddit: subredditInfo.data,
+        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      },
+    };
   }
-  return {
-    props: {
-      subreddit: subredditInfo.data,
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-    },
-  };
-}
+);
