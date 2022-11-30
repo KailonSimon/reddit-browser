@@ -41,8 +41,7 @@ const mergePages = (pages) => {
   for (let i = 0; i < pages.length; i++) {
     mergedPages.push(...pages[i].data.children);
   }
-  const mergedPagesRemovedDuplicates = [...new Set(mergedPages)];
-  return mergedPagesRemovedDuplicates;
+  return mergedPages;
 };
 const getNestedCommentClass = (depth) => {
   return depth % 5;

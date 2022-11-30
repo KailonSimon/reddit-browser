@@ -87,7 +87,7 @@ export default function Home() {
   }, [state.sorting, refetch, demoUser.subscribedSubreddits]);
 
   return status === "loading" ? (
-    <LoadingScreen />
+    <LoadingScreen /> || !data
   ) : status === "error" ? (
     <Text>Error: {error.message}</Text>
   ) : (
