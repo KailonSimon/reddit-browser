@@ -68,7 +68,7 @@ export default function Home() {
     hasNextPage,
   } = useInfiniteQuery(
     ["posts"],
-    ({ pageParam = "" }) =>
+    ({ pageParam }) =>
       fetchPosts(
         state.sorting,
         demoUser.subscribedSubreddits.join("+"),
@@ -140,7 +140,13 @@ export const getServerSideProps = wrapper.getServerSideProps(
     try {
       await queryClient.prefetchInfiniteQuery(
         ["posts"],
-        ({ pageParam = "" }) => fetchPosts("hot", "all", 10, pageParam),
+        ({ pageParam }) =>
+          fetchPosts(
+            "hot",
+            store.getState().demoUser.subscribedSubreddits.join("+"),
+            10,
+            pageParam
+          ),
         {
           getNextPageParam: (lastPage, pages) => {
             return lastPage.data.after;
