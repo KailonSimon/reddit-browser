@@ -1,11 +1,19 @@
-import { Button, createStyles, Textarea } from "@mantine/core";
-import { openModal, closeModal } from "@mantine/modals";
+import {
+  Button,
+  createStyles,
+  Textarea,
+  Text,
+  Anchor,
+  Loader,
+} from "@mantine/core";
+import { showNotification, updateNotification } from "@mantine/notifications";
 import { useSession } from "next-auth/react";
-import React, { useId, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectAuthentication } from "../../../store/AuthSlice";
 import { getNestedCommentClass } from "../../../utils";
-import SignInButton from "../Authentication/SignInButton";
+import Link from "next/link";
+import { Check } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   modalContainer: {
@@ -15,31 +23,93 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function CommentReplyArea({ replyAreaOpen, setReplyAreaOpen, depth }) {
+function CommentReplyArea({
+  replyAreaOpen,
+  setReplyAreaOpen,
+  depth,
+  replyType,
+}) {
   const { classes } = useStyles();
   const { data: session } = useSession();
   const [input, setInput] = useState("");
-  const modalId = useId();
+  const [isLoading, setIsLoading] = useState(false);
   const authentication = useSelector(selectAuthentication);
 
   const handleSubmit = () => {
-    if (!session && authentication.status !== "demo") {
-      openModal({
-        modalId,
-        title: "You must be signed in to vote.",
-        centered: true,
-        children: (
-          <div className={classes.modalContainer}>
-            <Button color="gray" onClick={() => closeModal(modalId)}>
-              Cancel
-            </Button>
-            <SignInButton />
-          </div>
-        ),
-        withCloseButton: false,
+    showNotification({
+      id: "send-comment",
+      title: "Posting comment",
+      loading: true,
+      autoClose: false,
+      disallowClose: true,
+    });
+
+    setIsLoading(true);
+
+    setTimeout(() => {
+      updateNotification({
+        id: "send-comment",
+        title: "Success!",
+        message: "Your comment has been posted successfully",
+        icon: <Check size={16} />,
+        autoClose: 3000,
       });
-    }
+      setInput("");
+      if (replyType !== "link") {
+        setReplyAreaOpen(false);
+      }
+      setIsLoading(false);
+    }, 3000);
   };
+
+  if (replyType === "link") {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          padding: "0 8px 8px",
+          gap: "0.5rem",
+        }}
+      >
+        <Textarea
+          label={
+            <Text>
+              Comment as{" "}
+              <Link
+                href={
+                  authentication.status === "demo"
+                    ? `/user/demoUserID`
+                    : `/user/${session.user.name}`
+                }
+                passHref
+              >
+                <Anchor>
+                  {authentication.status === "demo"
+                    ? "DemoUser"
+                    : session.user.name}
+                </Anchor>
+              </Link>
+            </Text>
+          }
+          value={input}
+          onChange={(e) => setInput(e.currentTarget.value)}
+          spellCheck="false"
+          disabled={isLoading}
+        />
+        <Button
+          size="xs"
+          sx={{ alignSelf: "end" }}
+          disabled={!input || isLoading}
+          onClick={handleSubmit}
+        >
+          {isLoading ? <Loader size="xs" color="brand" /> : "Comment"}
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -66,6 +136,8 @@ function CommentReplyArea({ replyAreaOpen, setReplyAreaOpen, depth }) {
           value={input}
           onChange={(e) => setInput(e.currentTarget.value)}
           styles={{ root: { marginLeft: 12 } }}
+          spellCheck="false"
+          disabled={isLoading}
         />
         <div
           style={{
@@ -81,11 +153,16 @@ function CommentReplyArea({ replyAreaOpen, setReplyAreaOpen, depth }) {
             size="xs"
             variant="outline"
             onClick={() => setReplyAreaOpen(false)}
+            disabled={isLoading}
           >
             Cancel
           </Button>
-          <Button size="xs" disabled={!input} onClick={handleSubmit}>
-            Comment
+          <Button
+            size="xs"
+            disabled={!input || isLoading}
+            onClick={handleSubmit}
+          >
+            {isLoading ? <Loader size="xs" color="brand" /> : "Comment"}
           </Button>
         </div>
       </div>

@@ -14,7 +14,7 @@ function FlairContainer({ submission, type }) {
           root: { padding: "0 4px", width: "min-content" },
         }}
       >
-        {submission.author_flair_richtext?.map((item) => {
+        {submission.author_flair_richtext?.map((item, i) => {
           if ("t" in item) {
             return item.t;
           } else if ("u" in item) {
