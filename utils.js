@@ -48,18 +48,6 @@ const getNestedCommentClass = (depth) => {
   return depth % 5;
 };
 
-const fetchPosts = async (
-  sorting = "hot",
-  subreddit = "all",
-  limit = 5,
-  pageParam = ""
-) => {
-  const res = await fetch(
-    `/api/posts/${subreddit}?sorting=${sorting}&limit=${limit}&pageParam=${pageParam}`
-  );
-  return await res.json();
-};
-
 const fetchComments = async (postId, sorting, commentId) => {
   if (!!commentId) {
     const res = await fetch(
@@ -187,6 +175,32 @@ const getApplicationAccessToken = async () => {
     return await res.json();
   } catch (error) {
     console.error(error);
+  }
+};
+
+const fetchPosts = async (
+  sorting = "hot",
+  subreddit = "all",
+  limit = 5,
+  pageParam = ""
+) => {
+  try {
+    const data = await fetch("/api/auth/accessToken");
+    const access_token = data.json();
+    if (!access_token) {
+      throw Error("No access token");
+    }
+    const res = await fetch(
+      `https://oauth.reddit.com/r/${subreddit}/${sorting}.json?limit=${limit}&after=${pageParam}&raw_json=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${await access_token}`,
+        },
+      }
+    );
+    return await res.json();
+  } catch (error) {
+    console.log(error);
   }
 };
 
