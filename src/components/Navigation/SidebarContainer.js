@@ -1,6 +1,7 @@
 import { Children } from "react";
 import { createStyles } from "@mantine/core";
 import InfoCard from "../InfoCard";
+import ErrorBoundary from "../ErrorBoundary";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -20,11 +21,13 @@ function SidebarContainer({ children }) {
   const childrenArray = Children.toArray(children);
 
   return (
-    <div className={classes.container}>
-      {childrenArray.map((child, i) => {
-        return <InfoCard key={i}>{child}</InfoCard>;
-      })}
-    </div>
+    <ErrorBoundary>
+      <div className={classes.container}>
+        {childrenArray.map((child, i) => {
+          return <InfoCard key={i}>{child}</InfoCard>;
+        })}
+      </div>
+    </ErrorBoundary>
   );
 }
 

@@ -7,6 +7,7 @@ import { openContextModal, closeAllModals } from "@mantine/modals";
 import { useRouter } from "next/router";
 import { useAppDispatch } from "../../../store/store";
 import { visitPost } from "../../../store/DemoUserSlice";
+import ErrorBoundary from "../ErrorBoundary";
 
 const useStyles = createStyles((theme) => ({
   posts: {
@@ -89,7 +90,7 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
   }, [events]);
 
   return (
-    <>
+    <ErrorBoundary>
       {openPost && (
         <Head>
           <title>{openPost.title}</title>
@@ -136,7 +137,7 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
           )}
         </div>
       </div>
-    </>
+    </ErrorBoundary>
   );
 }
 

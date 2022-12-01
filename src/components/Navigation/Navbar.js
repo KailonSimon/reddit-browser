@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import { useSelector } from "react-redux";
 import { selectAuthentication } from "../../../store/AuthSlice";
 import { selectDemoUser } from "../../../store/DemoUserSlice";
+import ErrorBoundary from "../ErrorBoundary";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -76,51 +77,53 @@ function Navbar() {
   const demoUser = useSelector(selectDemoUser);
 
   return (
-    <header className={classes.header}>
-      <nav className={classes.nav}>
-        <Link href="/" passHref>
-          <Anchor
-            color="brand"
-            variant="text"
-            size={24}
-            weight={700}
-            className={classes.title}
+    <ErrorBoundary>
+      <header className={classes.header}>
+        <nav className={classes.nav}>
+          <Link href="/" passHref>
+            <Anchor
+              color="brand"
+              variant="text"
+              size={24}
+              weight={700}
+              className={classes.title}
+            >
+              Reddit<span>B</span>rowser
+            </Anchor>
+          </Link>
+          <div
+            style={{
+              position: "relative",
+              flex: 1,
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              gap: "1.5rem",
+              paddingLeft: "1rem",
+            }}
           >
-            Reddit<span>B</span>rowser
-          </Anchor>
-        </Link>
-        <div
-          style={{
-            position: "relative",
-            flex: 1,
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            gap: "1.5rem",
-            paddingLeft: "1rem",
-          }}
-        >
-          <div className={classes.searchBar}>
-            <SubredditSearch />
-          </div>
+            <div className={classes.searchBar}>
+              <SubredditSearch />
+            </div>
 
-          <div className={classes.drawer}>
-            <NavigationDrawer user={user?.data || demoUser} />
+            <div className={classes.drawer}>
+              <NavigationDrawer user={user?.data || demoUser} />
+            </div>
+            <div className={classes.userControls}>
+              {isLoading && isError ? (
+                <Loader size="xs" />
+              ) : !!user ? (
+                <UserMenu user={user?.data} />
+              ) : authentication.status === "demo" ? (
+                <UserMenu user={demoUser} />
+              ) : (
+                <SignInButton />
+              )}
+            </div>
           </div>
-          <div className={classes.userControls}>
-            {isLoading && isError ? (
-              <Loader size="xs" />
-            ) : !!user ? (
-              <UserMenu user={user?.data} />
-            ) : authentication.status === "demo" ? (
-              <UserMenu user={demoUser} />
-            ) : (
-              <SignInButton />
-            )}
-          </div>
-        </div>
-      </nav>
-    </header>
+        </nav>
+      </header>
+    </ErrorBoundary>
   );
 }
 
