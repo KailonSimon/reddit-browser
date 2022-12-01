@@ -13,7 +13,6 @@ import FlairContainer from "../FlairContainer";
 const useStyles = createStyles((theme) => ({
   container: {
     background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
-
     display: "flex",
     justifyContent: "flex-start",
     position: "relative",
@@ -117,7 +116,9 @@ function PostTile({ post, handlePostTileClick, variant }) {
               size={variant === "condensed" ? 14 : 16}
               onClick={() => handlePostTileClick(post)}
             >
-              {post.title}
+              {variant === "condensed" && post.title.length > 60
+                ? `${post.title.substring(0, 60).trim()}...`
+                : post.title}
             </Text>
             {post.over_18 && (
               <Badge mr={8} variant="filled" radius={4} color="red">
