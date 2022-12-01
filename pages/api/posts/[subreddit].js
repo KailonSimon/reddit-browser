@@ -5,6 +5,7 @@ export default async function handler(req, res) {
   const { subreddit, sorting = "hot", limit = 5, pageParam } = req.query;
   const token = await getToken({ req });
   let redditRes;
+
   if (token) {
     try {
       redditRes = await fetch(
@@ -33,7 +34,7 @@ export default async function handler(req, res) {
           },
         }
       );
-      res.status(200).json(await redditRes.json());
+      res.status(redditRes.status).json(await redditRes.json());
     } catch (error) {
       console.log(error);
       res.status(500).end();
