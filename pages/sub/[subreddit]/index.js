@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  dehydrate,
-  QueryClient,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import { createStyles, Box, Text } from "@mantine/core";
 import { mergePages, fetchPosts, getSubredditInfo } from "../../../utils";
@@ -17,6 +13,8 @@ import SidebarContainer from "../../../src/components/Navigation/SidebarContaine
 import SubredditRules from "../../../src/components/Subreddit/SubredditRules";
 import ContentWarningModal from "../../../src/components/Modals/ContentWarningModal";
 import { wrapper } from "../../../store/store";
+import { useSelector } from "react-redux";
+import { selectAuthentication } from "../../../store/AuthSlice";
 
 const useStyles = createStyles((theme) => ({
   content: {
@@ -37,6 +35,7 @@ function Subreddit({ subreddit }) {
   const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
     subreddit.over18
   );
+  const authentication = useSelector(selectAuthentication);
 
   const {
     status,
@@ -52,6 +51,7 @@ function Subreddit({ subreddit }) {
     ({ pageParam }) =>
       fetchPosts(sorting, subreddit.display_name, 10, pageParam),
     {
+      enabled: authentication.status !== "unauthenticated",
       getNextPageParam: (lastPage, pages) => {
         return lastPage.data.after;
       },
