@@ -133,34 +133,3 @@ export default function Home() {
     </>
   );
 }
-
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    const queryClient = new QueryClient();
-    try {
-      await queryClient.prefetchInfiniteQuery(
-        ["posts"],
-        ({ pageParam }) =>
-          fetchPosts(
-            "hot",
-            store.getState().demoUser.subscribedSubreddits.join("+"),
-            10,
-            pageParam
-          ),
-        {
-          getNextPageParam: (lastPage, pages) => {
-            return lastPage.data.after;
-          },
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-
-    return {
-      props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-      },
-    };
-  }
-);

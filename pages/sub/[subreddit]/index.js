@@ -122,32 +122,3 @@ function Subreddit({ subreddit }) {
 }
 
 export default Subreddit;
-
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async (context) => {
-    const { subreddit } = context.query;
-    const subredditInfo = await getSubredditInfo(subreddit);
-
-    const queryClient = new QueryClient();
-
-    try {
-      await queryClient.prefetchInfiniteQuery(
-        ["posts", { subreddit }],
-        ({ pageParam }) => fetchPosts("hot", subreddit[0], 5, pageParam),
-        {
-          getNextPageParam: (lastPage, pages) => {
-            return lastPage.data.after;
-          },
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-    return {
-      props: {
-        subreddit: subredditInfo.data,
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-      },
-    };
-  }
-);
