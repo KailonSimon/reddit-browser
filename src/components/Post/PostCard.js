@@ -185,14 +185,7 @@ function PostCard({ post }) {
           <FlairContainer submission={post} type="link" />
         </Box>
 
-        {post.post_hint === "self" && post?.preview?.images[0]?.source?.url ? (
-          <Image
-            src={post?.preview?.images[0]?.source?.url}
-            alt={post.title}
-            classNames={{ root: classes.imageRoot, image: classes.image }}
-            fit="contain"
-          />
-        ) : post.post_hint == "image" ? (
+        {post.is_self ? null : post.post_hint == "image" ? (
           <Image
             src={post.url}
             alt={post.title}

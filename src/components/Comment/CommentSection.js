@@ -1,20 +1,9 @@
-import {
-  createStyles,
-  Text,
-  Textarea,
-  Anchor,
-  Button,
-  Skeleton,
-} from "@mantine/core";
+import { createStyles, Text, Skeleton } from "@mantine/core";
 import { useReducer } from "react";
 import CommentTile from "./CommentTile";
 import { useQuery } from "@tanstack/react-query";
 import { fetchComments } from "../../../utils";
 import CommentSectionControls from "./CommentSectionControls";
-import { useSession } from "next-auth/react";
-import { selectAuthentication } from "../../../store/AuthSlice";
-import { useSelector } from "react-redux";
-import Link from "next/link";
 import ErrorBoundary from "../ErrorBoundary";
 import CommentReplyArea from "./CommentReplyArea";
 
@@ -47,8 +36,6 @@ function reducer(state, action) {
   switch (action.type) {
     case "SET_COMMENT_SORTING":
       return { ...state, commentSorting: action.payload };
-    case "SET_COMMENT_INPUT":
-      return { ...state, commentInput: action.payload };
     default:
       return initialState;
   }
@@ -60,9 +47,8 @@ function CommentSection({ post, commentId }) {
     commentSorting: post.suggested_sort || "confidence",
     ...initialState,
   });
-  const { data: session } = useSession();
 
-  const { isLoading, isFetching, isRefetching, data, refetch } = useQuery(
+  const { isLoading, isFetching, isRefetching, data } = useQuery(
     ["comments", state.commentSorting],
     () => fetchComments(post.id, state.commentSorting, commentId),
     { enabled: !!post.id, initialData: [] }
