@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import { demoUserInitialData } from "../demoData/demoUser";
 
@@ -32,11 +32,15 @@ export const demoUserSlice = createSlice({
       state.visitedPosts = [];
     },
 
-    extraReducers(builder) {
-      builder.addCase(HYDRATE, (state, { payload }) => ({
-        ...state,
-        ...payload,
-      }));
+    extraReducers: {
+      [HYDRATE]: (state, action) => {
+        console.log("HYDRATE", action.payload);
+        if (!action.payload.demoUser.name) {
+          // IMPORTANT - for not overriding data on client side
+          return state;
+        }
+        state = action.payload.demoUser;
+      },
     },
   },
 });

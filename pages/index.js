@@ -1,10 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { Text, createStyles } from "@mantine/core";
-import {
-  dehydrate,
-  QueryClient,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import Feed from "../src/components/Feed/Feed";
 import FeedControls from "../src/components/Feed/FeedControls";
 import Layout from "../src/components/Layout";
@@ -13,14 +9,8 @@ import { fetchPosts, mergePages } from "../utils";
 import LoadingScreen from "../src/components/LoadingScreen";
 import TrendingSubsCard from "../src/components/TrendingSubsCard";
 import SidebarContainer from "../src/components/Navigation/SidebarContainer";
-
 import { useSelector } from "react-redux";
-
-import { useAppDispatch, wrapper } from "../store/store";
-import {
-  setAuthenticationStatus,
-  selectAuthentication,
-} from "../store/AuthSlice";
+import { selectAuthentication } from "../store/AuthSlice";
 import { selectDemoUser, selectVisitedPosts } from "../store/DemoUserSlice";
 import RecentlyVisitedCard from "../src/components/Sidebar/RecentlyVisitedCard";
 
@@ -56,6 +46,7 @@ export default function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const recentVisits = useSelector(selectVisitedPosts);
   const demoUser = useSelector(selectDemoUser);
+  const authentication = useSelector(selectAuthentication);
 
   const {
     status,
@@ -68,7 +59,7 @@ export default function Home() {
     hasNextPage,
   } = useInfiniteQuery(
     ["posts"],
-    ({ pageParam = "" }) =>
+    ({ pageParam }) =>
       fetchPosts(
         state.sorting,
         demoUser.subscribedSubreddits.join("+"),
@@ -76,6 +67,7 @@ export default function Home() {
         pageParam
       ),
     {
+      enabled: authentication.status !== "unauthenticated",
       getNextPageParam: (lastPage, pages) => {
         return lastPage.data.after;
       },
@@ -86,8 +78,8 @@ export default function Home() {
     refetch();
   }, [state.sorting, refetch, demoUser.subscribedSubreddits]);
 
-  return status === "loading" ? (
-    <LoadingScreen />
+  return status === "loading" && !data ? (
+    <LoadingScreen /> || !data
   ) : status === "error" ? (
     <Text>Error: {error.message}</Text>
   ) : (
@@ -133,34 +125,3 @@ export default function Home() {
     </>
   );
 }
-
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    const queryClient = new QueryClient();
-    try {
-      await queryClient.prefetchInfiniteQuery(
-        ["posts"],
-        ({ pageParam = "" }) =>
-          fetchPosts(
-            "hot",
-            store.getState().demoUser.subscribedSubreddits.join("+"),
-            5,
-            pageParam
-          ),
-        {
-          getNextPageParam: (lastPage, pages) => {
-            return lastPage.data.after;
-          },
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
-
-    return {
-      props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-      },
-    };
-  }
-);

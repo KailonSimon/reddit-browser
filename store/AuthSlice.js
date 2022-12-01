@@ -13,11 +13,15 @@ export const authSlice = createSlice({
       state.status = action.payload;
     },
 
-    extraReducers(builder) {
-      builder.addCase(HYDRATE, (state, { payload }) => ({
-        ...state,
-        ...payload,
-      }));
+    extraReducers: {
+      [HYDRATE]: (state, action) => {
+        console.log("HYDRATE", action.payload);
+        if (!action.payload.auth.status) {
+          // IMPORTANT - for not overriding data on client side
+          return state;
+        }
+        state = action.payload.auth;
+      },
     },
   },
 });

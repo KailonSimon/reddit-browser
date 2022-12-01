@@ -5,7 +5,8 @@ export default async function handler(req, res) {
   const { subreddit, sorting = "hot", limit = 5, pageParam } = req.query;
   const token = await getToken({ req });
   let redditRes;
-  if (token) {
+
+  if (token?.accessToken) {
     try {
       redditRes = await fetch(
         `https://oauth.reddit.com/r/${subreddit}/${sorting}.json?limit=${limit}${
@@ -25,6 +26,7 @@ export default async function handler(req, res) {
   } else {
     try {
       const { access_token } = await getApplicationAccessToken();
+
       redditRes = await fetch(
         `https://oauth.reddit.com/r/${subreddit}/${sorting}.json?limit=${limit}&after=${pageParam}&raw_json=1`,
         {
@@ -33,7 +35,8 @@ export default async function handler(req, res) {
           },
         }
       );
-      res.status(200).json(await redditRes.json());
+
+      res.status(redditRes.status).json(await redditRes.json());
     } catch (error) {
       console.log(error);
       res.status(500).end();

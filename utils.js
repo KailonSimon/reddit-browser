@@ -1,5 +1,6 @@
 import Color from "color";
 import dayjs from "dayjs";
+import absoluteUrl from "next-absolute-url";
 
 const relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
@@ -41,28 +42,10 @@ const mergePages = (pages) => {
   for (let i = 0; i < pages.length; i++) {
     mergedPages.push(...pages[i].data.children);
   }
-  const mergedPagesRemovedDuplicates = [...new Set(mergedPages)];
-  return mergedPagesRemovedDuplicates;
+  return mergedPages;
 };
 const getNestedCommentClass = (depth) => {
   return depth % 5;
-};
-
-const dev = process.env.NODE_ENV !== "production";
-const server = dev
-  ? "http://localhost:3000"
-  : "https://reddit-browser.vercel.app";
-
-const fetchPosts = async (
-  sorting = "hot",
-  subreddit = "all",
-  limit = 5,
-  pageParam = ""
-) => {
-  const res = await fetch(
-    `${server}/api/posts/${subreddit}?sorting=${sorting}&limit=${limit}&pageParam=${pageParam}`
-  );
-  return await res.json();
 };
 
 const fetchComments = async (postId, sorting, commentId) => {
@@ -192,6 +175,32 @@ const getApplicationAccessToken = async () => {
     return await res.json();
   } catch (error) {
     console.error(error);
+  }
+};
+
+const fetchPosts = async (
+  sorting = "hot",
+  subreddit = "all",
+  limit = 5,
+  pageParam = ""
+) => {
+  try {
+    const data = await fetch("/api/auth/accessToken");
+    const access_token = data.json();
+    if (!access_token) {
+      throw Error("No access token");
+    }
+    const res = await fetch(
+      `https://oauth.reddit.com/r/${subreddit}/${sorting}.json?limit=${limit}&after=${pageParam}&raw_json=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${await access_token}`,
+        },
+      }
+    );
+    return await res.json();
+  } catch (error) {
+    console.log(error);
   }
 };
 

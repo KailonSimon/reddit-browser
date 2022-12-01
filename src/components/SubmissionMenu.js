@@ -5,7 +5,6 @@ import { showNotification } from "@mantine/notifications";
 
 export default function SubmissionMenu({ type, submission }) {
   const clipboard = useClipboard({ timeout: 500 });
-  const { colorScheme } = useMantineColorScheme();
   const handleCopy = (text) => {
     const maxLength = 20;
     clipboard.copy(text);
@@ -22,7 +21,7 @@ export default function SubmissionMenu({ type, submission }) {
       <Menu.Target>
         {type === "post" ? (
           <ActionIcon>
-            <Dots color={colorScheme == "dark" ? "#818384" : "#000"} />
+            <Dots color={"#818384"} />
           </ActionIcon>
         ) : (
           <Button

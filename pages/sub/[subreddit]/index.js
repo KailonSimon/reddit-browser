@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  dehydrate,
-  QueryClient,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import { createStyles, Box, Text } from "@mantine/core";
 import { mergePages, fetchPosts, getSubredditInfo } from "../../../utils";
@@ -16,7 +12,7 @@ import SubredditSidebar from "../../../src/components/SubredditSidebar";
 import SidebarContainer from "../../../src/components/Navigation/SidebarContainer";
 import SubredditRules from "../../../src/components/Subreddit/SubredditRules";
 import ContentWarningModal from "../../../src/components/Modals/ContentWarningModal";
-
+import { wrapper } from "../../../store/store";
 import { useSelector } from "react-redux";
 import { selectAuthentication } from "../../../store/AuthSlice";
 
@@ -39,7 +35,6 @@ function Subreddit({ subreddit }) {
   const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
     subreddit.over18
   );
-
   const authentication = useSelector(selectAuthentication);
 
   const {
@@ -53,10 +48,10 @@ function Subreddit({ subreddit }) {
     hasNextPage,
   } = useInfiniteQuery(
     ["posts", { subreddit }],
-    ({ pageParam = "" }) =>
+    ({ pageParam }) =>
       fetchPosts(sorting, subreddit.display_name, 10, pageParam),
     {
-      refetchOnMount: false,
+      enabled: authentication.status !== "unauthenticated",
       getNextPageParam: (lastPage, pages) => {
         return lastPage.data.after;
       },
@@ -127,29 +122,15 @@ function Subreddit({ subreddit }) {
 
 export default Subreddit;
 
-export async function getServerSideProps(context) {
-  const { subreddit } = context.query;
-  const subredditInfo = await getSubredditInfo(subreddit);
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) => async (context) => {
+    const { subreddit } = context.query;
+    const subredditInfo = await getSubredditInfo(subreddit);
 
-  const queryClient = new QueryClient();
-
-  try {
-    await queryClient.prefetchInfiniteQuery(
-      ["posts", { subreddit: subreddit[0] }],
-      ({ pageParam = "" }) => fetchPosts("hot", subreddit[0], 5, pageParam),
-      {
-        getNextPageParam: (lastPage, pages) => {
-          return lastPage.data.after;
-        },
-      }
-    );
-  } catch (error) {
-    console.log(error);
+    return {
+      props: {
+        subreddit: subredditInfo.data,
+      },
+    };
   }
-  return {
-    props: {
-      subreddit: subredditInfo.data,
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-    },
-  };
-}
+);
