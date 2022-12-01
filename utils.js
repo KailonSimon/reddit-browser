@@ -1,5 +1,6 @@
 import Color from "color";
 import dayjs from "dayjs";
+import absoluteUrl from "next-absolute-url";
 
 const relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
@@ -47,11 +48,6 @@ const getNestedCommentClass = (depth) => {
   return depth % 5;
 };
 
-const dev = process.env.NODE_ENV !== "production";
-const server = dev
-  ? "http://localhost:3000"
-  : "https://reddit-browser-dev.vercel.app";
-
 const fetchPosts = async (
   sorting = "hot",
   subreddit = "all",
@@ -59,7 +55,7 @@ const fetchPosts = async (
   pageParam = ""
 ) => {
   const res = await fetch(
-    `${server}/api/posts/${subreddit}?sorting=${sorting}&limit=${limit}&pageParam=${pageParam}`
+    `/api/posts/${subreddit}?sorting=${sorting}&limit=${limit}&pageParam=${pageParam}`
   );
   return await res.json();
 };

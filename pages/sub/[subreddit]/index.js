@@ -49,10 +49,9 @@ function Subreddit({ subreddit }) {
     hasNextPage,
   } = useInfiniteQuery(
     ["posts", { subreddit }],
-    ({ pageParam = "" }) =>
+    ({ pageParam }) =>
       fetchPosts(sorting, subreddit.display_name, 10, pageParam),
     {
-      refetchOnMount: false,
       getNextPageParam: (lastPage, pages) => {
         return lastPage.data.after;
       },
@@ -122,3 +121,16 @@ function Subreddit({ subreddit }) {
 }
 
 export default Subreddit;
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) => async (context) => {
+    const { subreddit } = context.query;
+    const subredditInfo = await getSubredditInfo(subreddit);
+
+    return {
+      props: {
+        subreddit: subredditInfo.data,
+      },
+    };
+  }
+);
