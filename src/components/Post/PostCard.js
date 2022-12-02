@@ -47,7 +47,7 @@ const useStyles = createStyles((theme) => ({
   image: {
     objectFit: "contain",
     maxWidth: "100%",
-    maxHeight: "35vh",
+    maxHeight: "50vh",
 
     [theme.fn.smallerThan("sm")]: {
       maxHeight: "25vh",
