@@ -29,7 +29,7 @@ export const theme = {
   },
   primaryColor: "brand",
   globalStyles: (theme) => ({
-    a: {
+    "p > a": {
       color: theme.colors.brand,
       ":hover": {
         textDecoration: "underline",

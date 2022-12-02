@@ -97,9 +97,9 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
         </Head>
       )}
       <div className={classes.posts}>
-        {posts.map((post) => (
+        {posts.map((post, i) => (
           <PostTile
-            key={post.data.id}
+            key={`${post.data.id + i}`}
             post={post.data}
             handlePostTileClick={handlePostTileClick}
           />

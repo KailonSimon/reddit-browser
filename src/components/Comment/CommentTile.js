@@ -1,4 +1,4 @@
-import { ActionIcon, Anchor, Badge, Box, Image, Text } from "@mantine/core";
+import { ActionIcon, Box, Text } from "@mantine/core";
 import numeral from "numeral";
 import React, { useEffect, useReducer } from "react";
 import { ArrowUp, ChevronDown, Lock, Pinned } from "tabler-icons-react";
@@ -152,10 +152,8 @@ function CommentTile({ comment, depth = 0 }) {
                   </ActionIcon>
                 )}
                 <Link href={`/user/${comment.author}`} passHref>
-                  <Anchor
-                    rel="noreferrer"
+                  <Text
                     color="inherit"
-                    variant="text"
                     weight={500}
                     sx={(theme) => ({
                       fontSize: 12,
@@ -181,7 +179,7 @@ function CommentTile({ comment, depth = 0 }) {
                       />
                     )}
                     {comment.author}
-                  </Anchor>
+                  </Text>
                 </Link>
                 {comment.is_submitter && (
                   <span

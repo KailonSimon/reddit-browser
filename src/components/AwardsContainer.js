@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Image, Text, Tooltip } from "@mantine/core";
+import { Text, Tooltip } from "@mantine/core";
+import Image from "next/image";
 
 function AwardsContainer({ awards }) {
   const [allAwardsShown, setAllAwardsShown] = useState(false);
+
   return (
     <div
       style={{
@@ -48,7 +50,7 @@ function AwardsContainer({ awards }) {
                   height={award.resized_icons[3].height}
                   width={award.resized_icons[3].width}
                   alt={award.name}
-                  mb={16}
+                  style={{ marginBottom: "1rem" }}
                 />
                 <Text weight={700}>{award.name} Award</Text>
                 <Text size="xs">{award.description}</Text>
@@ -59,8 +61,9 @@ function AwardsContainer({ awards }) {
               <Image
                 src={award.resized_icons[0].url}
                 alt={award.name}
-                ml={4}
-                mr={2}
+                style={{ margin: "0 2px 0 4px" }}
+                height={16}
+                width={16}
               />
               <Text
                 size="xs"

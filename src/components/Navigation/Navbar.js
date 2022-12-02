@@ -1,4 +1,4 @@
-import { createStyles, Anchor, Loader } from "@mantine/core";
+import { createStyles, Loader, Text } from "@mantine/core";
 import Link from "next/link";
 import SubredditSearch from "../SubredditSearch";
 import NavigationDrawer from "./NavigationDrawer";
@@ -81,15 +81,14 @@ function Navbar() {
       <header className={classes.header}>
         <nav className={classes.nav}>
           <Link href="/" passHref>
-            <Anchor
+            <Text
               color="brand"
-              variant="text"
               size={24}
               weight={700}
               className={classes.title}
             >
               Reddit<span>B</span>rowser
-            </Anchor>
+            </Text>
           </Link>
           <div
             style={{

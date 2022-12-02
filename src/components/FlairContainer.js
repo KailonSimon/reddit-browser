@@ -1,11 +1,12 @@
-import { Badge, Image } from "@mantine/core";
+import { Badge } from "@mantine/core";
 import { isColorDark } from "../../utils";
+import Image from "next/image";
 
 function FlairContainer({ submission, type }) {
   if (type === "author" && submission.author_flair_richtext?.length > 0) {
     return (
       <Badge
-        size="sm"
+        size="xs"
         variant="filled"
         color="gray"
         radius={4}
@@ -19,14 +20,7 @@ function FlairContainer({ submission, type }) {
             return item.t;
           } else if ("u" in item) {
             return (
-              <Image
-                height={14}
-                width={14}
-                fit="contain"
-                key={i}
-                src={item.u}
-                alt={item.a}
-              />
+              <Image height={14} width={14} key={i} src={item.u} alt={item.a} />
             );
           }
         })}
@@ -35,6 +29,7 @@ function FlairContainer({ submission, type }) {
   } else if (type === "link" && submission.link_flair_richtext?.length > 0) {
     return (
       <Badge
+        size="xs"
         radius={20}
         onClick={() => console.log(submission)}
         styles={(theme) => ({
@@ -56,14 +51,7 @@ function FlairContainer({ submission, type }) {
             return <span key={i}>{item.t}</span>;
           } else if ("u" in item) {
             return (
-              <Image
-                height={14}
-                width={14}
-                fit="contain"
-                key={i}
-                src={item.u}
-                alt={item.a}
-              />
+              <Image height={12} width={12} key={i} src={item.u} alt={item.a} />
             );
           }
         })}

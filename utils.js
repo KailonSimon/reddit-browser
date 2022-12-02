@@ -1,6 +1,5 @@
 import Color from "color";
 import dayjs from "dayjs";
-import absoluteUrl from "next-absolute-url";
 
 const relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
@@ -47,6 +46,25 @@ const mergePages = (pages) => {
 const getNestedCommentClass = (depth) => {
   return depth % 5;
 };
+
+const createImageBlurData = (w, h) => `
+<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="g">
+      <stop stop-color="#333" offset="20%" />
+      <stop stop-color="#222" offset="50%" />
+      <stop stop-color="#333" offset="70%" />
+    </linearGradient>
+  </defs>
+  <rect width="${w}" height="${h}" fill="#333" />
+  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
+  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
+</svg>`;
+
+const toBase64 = (str) =>
+  typeof window === "undefined"
+    ? Buffer.from(str).toString("base64")
+    : window.btoa(str);
 
 const fetchComments = async (postId, sorting, commentId) => {
   if (!!commentId) {
@@ -213,6 +231,8 @@ export {
   getRelativeTime,
   getDate,
   getCondensedDate,
+  createImageBlurData,
+  toBase64,
   mergePages,
   getNestedCommentClass,
   fetchPosts,

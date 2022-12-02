@@ -1,11 +1,4 @@
-import {
-  Button,
-  createStyles,
-  Textarea,
-  Text,
-  Anchor,
-  Loader,
-} from "@mantine/core";
+import { Button, createStyles, Textarea, Text, Loader } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
@@ -29,7 +22,6 @@ function CommentReplyArea({
   depth,
   replyType,
 }) {
-  const { classes } = useStyles();
   const { data: session } = useSession();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -75,7 +67,7 @@ function CommentReplyArea({
       >
         <Textarea
           label={
-            <Text>
+            <Text sx={{ display: "flex", gap: 3 }}>
               Comment as{" "}
               <Link
                 href={
@@ -85,11 +77,11 @@ function CommentReplyArea({
                 }
                 passHref
               >
-                <Anchor>
+                <Text color="brand">
                   {authentication.status === "demo"
                     ? "DemoUser"
                     : session.user.name}
-                </Anchor>
+                </Text>
               </Link>
             </Text>
           }

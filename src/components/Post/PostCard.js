@@ -1,16 +1,9 @@
-import {
-  createStyles,
-  Title,
-  Text,
-  Anchor,
-  Image,
-  Badge,
-  Box,
-} from "@mantine/core";
+import { createStyles, Title, Text, Anchor, Badge, Box } from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
+import Image from "next/image";
 import React from "react";
 import Video from "../Video";
-import { getRelativeTime } from "../../../utils";
+import { createImageBlurData, getRelativeTime, toBase64 } from "../../../utils";
 import SubmissionMenu from "../SubmissionMenu";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -46,11 +39,18 @@ const useStyles = createStyles((theme) => ({
     flexFlow: "row wrap",
     margin: "0 0 4px",
   },
-  imageRoot: { marginTop: 8, marginLeft: "auto", marginRight: "auto" },
+  imageWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: 8,
+  },
   image: {
-    maxHeight: "calc(100vh - 20rem)",
-    [theme.fn.smallerThan("xs")]: {
-      maxHeight: "calc(100vh - 14rem)",
+    objectFit: "contain",
+    maxWidth: "100%",
+    maxHeight: "35vh",
+
+    [theme.fn.smallerThan("sm")]: {
+      maxHeight: "25vh",
     },
   },
 }));
@@ -84,9 +84,8 @@ function PostCard({ post }) {
             {router.pathname === "/" && (
               <>
                 <Link href={`/sub/${post.subreddit}`} passHref>
-                  <Anchor
+                  <Text
                     size="xs"
-                    variant="text"
                     weight="bold"
                     color="#D7DADC"
                     sx={(theme) => ({
@@ -101,7 +100,7 @@ function PostCard({ post }) {
                     })}
                   >
                     r/{post.subreddit}
-                  </Anchor>
+                  </Text>
                 </Link>
                 <span style={{ margin: "0 4px", fontSize: 8 }}>•</span>
               </>
@@ -110,15 +109,15 @@ function PostCard({ post }) {
               size="xs"
               sx={(theme) => ({
                 color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
-                whiteSpace: "nowrap",
+                display: "flex",
+                gap: 2,
               })}
             >
               Posted by{" "}
               <Link href={`/user/${post.author}`} passHref>
-                <Anchor
+                <Text
                   rel="noreferrer"
                   color="inherit"
-                  variant="text"
                   sx={(theme) => ({
                     color:
                       post.distinguished === "moderator"
@@ -141,7 +140,7 @@ function PostCard({ post }) {
                     />
                   )}
                   {post.author}
-                </Anchor>
+                </Text>
               </Link>
             </Text>
 
@@ -168,7 +167,7 @@ function PostCard({ post }) {
             color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
           })}
         >
-          <Title order={1} mr={8} mb={8} size={20} weight={700} variant="text">
+          <Title order={1} mr={8} size={20} mb={8} weight={700} variant="text">
             {post.title}
           </Title>
           {post.over_18 && (
@@ -186,28 +185,60 @@ function PostCard({ post }) {
         </Box>
 
         {post.is_self ? null : post.post_hint == "image" ? (
-          <Image
-            src={post.url}
-            alt={post.title}
-            classNames={{ root: classes.imageRoot, image: classes.image }}
-            fit="contain"
-          />
+          <div className={classes.imageWrapper}>
+            <Image
+              src={post.url}
+              alt={post.title}
+              className={classes.image}
+              width={post.preview.images[0].source.width}
+              height={post.preview.images[0].source.height}
+              placeholder="blur"
+              blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                createImageBlurData(
+                  post.preview.images[0].source.width,
+                  post.preview.images[0].source.height
+                )
+              )}`}
+              priority
+            />
+          </div>
         ) : post.post_hint === "rich:video" ? (
           <Video type="external" content={post.secure_media_embed?.content} />
         ) : post.post_hint === "hosted:video" ? (
           <Video type="hosted" content={post.media.reddit_video.fallback_url} />
         ) : post.preview?.images[0]?.source.url ? (
-          <Image
-            src={post.preview.images[0]?.source.url}
-            alt={post.title}
-            classNames={{ root: classes.imageRoot, image: classes.image }}
-            fit="contain"
-            caption={
+          <>
+            <div className={classes.imageWrapper}>
+              <Image
+                src={post.preview.images[0]?.source.url}
+                alt={post.title}
+                className={classes.image}
+                width={post.preview.images[0].source.width}
+                height={post.preview.images[0].source.height}
+                placeholder="blur"
+                blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                  createImageBlurData(
+                    post.preview.images[0].source.width,
+                    post.preview.images[0].source.height
+                  )
+                )}`}
+                priority
+              />
+            </div>
+
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginTop: 8,
+              }}
+            >
               <Anchor href={post.url} target="_blank">
                 {post.domain}
               </Anchor>
-            }
-          />
+            </div>
+          </>
         ) : (
           <div
             style={{

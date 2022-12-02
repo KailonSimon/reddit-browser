@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
-import { Image, createStyles, Text, Anchor, Badge, Box } from "@mantine/core";
+import { createStyles, Text, Badge, Box } from "@mantine/core";
+import Image from "next/image";
 import React from "react";
-import { ClockHour3, Messages, Pinned, Speakerphone } from "tabler-icons-react";
+import { Messages, Pinned, Speakerphone } from "tabler-icons-react";
 import numeral from "numeral";
 import Link from "next/link";
 import { getCondensedDate, getRelativeTime } from "../../../utils";
@@ -52,17 +53,25 @@ function PostTile({ post, handlePostTileClick, variant }) {
         <SubmissionVotingControls type="post" submission={post} />
       ) : null}
       {post.preview?.images[0]?.source.url && (
-        <Image
-          withPlaceholder
-          src={post.preview.images[0]?.source.url}
-          alt={post.title}
-          height={variant === "condensed" ? 48 : 72}
-          width={variant === "condensed" ? 64 : 96}
-          radius={4}
-          styles={{
-            placeholder: { background: "#1A1A1B" },
+        <div
+          style={{
+            position: "relative",
+            height: variant === "condensed" ? 48 : 72,
+            minHeight: variant === "condensed" ? 48 : 72,
+            width: variant === "condensed" ? 48 : 72,
+            minWidth: variant === "condensed" ? 48 : 72,
+            borderRadius: 4,
+            overflow: "hidden",
           }}
-        />
+        >
+          <Image
+            src={post.preview.images[0]?.source.url}
+            alt={post.title}
+            fill
+            sizes="100%"
+            style={{ objectFit: "cover" }}
+          />
+        </div>
       )}
       <div
         style={{
@@ -121,7 +130,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
                 : post.title}
             </Text>
             {post.over_18 && (
-              <Badge mr={8} variant="filled" radius={4} color="red">
+              <Badge size="xs" mr={8} variant="filled" radius={4} color="red">
                 NSFW
               </Badge>
             )}
@@ -144,9 +153,8 @@ function PostTile({ post, handlePostTileClick, variant }) {
           {router.pathname === "/" && variant !== "condensed" && (
             <>
               <Link href={`/sub/${post.subreddit}`} passHref>
-                <Anchor
+                <Text
                   size="sm"
-                  variant="text"
                   weight={700}
                   sx={(theme) => ({
                     whiteSpace: "nowrap",
@@ -160,7 +168,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
                   })}
                 >
                   r/{post.subreddit}
-                </Anchor>
+                </Text>
               </Link>
               <span
                 style={{
@@ -179,12 +187,13 @@ function PostTile({ post, handlePostTileClick, variant }) {
                 size="xs"
                 sx={(theme) => ({
                   color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+                  display: "flex",
+                  gap: 2,
                 })}
               >
                 Posted by{" "}
                 <Link href={`/user/${post.author}`} passHref>
-                  <Anchor
-                    rel="noreferrer"
+                  <Text
                     sx={(theme) => ({
                       color:
                         post.distinguished === "moderator"
@@ -207,7 +216,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
                       />
                     )}
                     {post.author}
-                  </Anchor>
+                  </Text>
                 </Link>
               </Text>
 
@@ -221,8 +230,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
                   color: "inherit",
                 }}
               >
-                <ClockHour3 size={10} />
-                <Text>{getRelativeTime(post.created)}</Text>
+                <Text>{getRelativeTime(post.created)} ago</Text>
                 <AwardsContainer awards={post.all_awardings} />
               </span>
             </>

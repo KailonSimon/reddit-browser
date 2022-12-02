@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, createStyles } from "@mantine/core";
 import { BrandReddit, TestPipe } from "tabler-icons-react";
 import { useRouter } from "next/router";
@@ -29,7 +29,7 @@ export default function SignIn({ providers }) {
 
   const handleDemoSignIn = () => {
     reduxDispatch(setAuthenticationStatus("demo"));
-    router.push("/", null, { shallow: true });
+    router.back();
   };
 
   return (
