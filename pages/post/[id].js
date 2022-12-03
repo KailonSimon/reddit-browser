@@ -23,6 +23,11 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan(800)]: {
       minWidth: 300,
     },
+    background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
+    border: `1px solid ${
+      theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
+    }`,
+    borderRadius: 4,
   },
   controlsWrapper: {
     width: "100%",
@@ -66,7 +71,7 @@ function Post({ post, subreddit }) {
 
         <div className={classes.controlsWrapper}>
           <Link href={`/sub/${subreddit.display_name}`} passHref>
-            <Button component="a" variant="subtle" leftIcon={<ArrowLeft />}>
+            <Button variant="subtle" leftIcon={<ArrowLeft />}>
               Go to {subreddit.display_name_prefixed}
             </Button>
           </Link>

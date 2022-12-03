@@ -5,11 +5,11 @@ import { ArrowLeft } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    border: "1px solid red",
     background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
     border: `1px solid ${
       theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
     }`,
+    borderRadius: 4,
   },
 }));
 
