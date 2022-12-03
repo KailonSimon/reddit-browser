@@ -1,7 +1,15 @@
-import { createStyles, Title, Text, Anchor, Badge, Box } from "@mantine/core";
+import {
+  createStyles,
+  Title,
+  Text,
+  Anchor,
+  Badge,
+  Box,
+  Button,
+} from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Video from "../Video";
 import { createImageBlurData, getRelativeTime, toBase64 } from "../../../utils";
 import SubmissionMenu from "../SubmissionMenu";
@@ -41,6 +49,7 @@ const useStyles = createStyles((theme) => ({
     justifyContent: "center",
     marginTop: 8,
     background: "#000",
+    position: "relative",
   },
   image: {
     objectFit: "contain",
@@ -51,10 +60,20 @@ const useStyles = createStyles((theme) => ({
       maxHeight: "25vh",
     },
   },
+  spoilerOverlay: {
+    position: "absolute",
+    height: "100%",
+    width: "100%",
+    backdropFilter: "blur(50px)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 }));
 
 function PostCard({ post }) {
   const { classes } = useStyles();
+  const [spoilerOverlayShown, setSpoilerOverlayShown] = useState(post.spoiler);
   const router = useRouter();
 
   function createMarkup() {
@@ -206,6 +225,17 @@ function PostCard({ post }) {
 
           {post.is_self ? null : post.post_hint == "image" ? (
             <div className={classes.imageWrapper}>
+              {spoilerOverlayShown ? (
+                <div className={classes.spoilerOverlay}>
+                  <Button
+                    onClick={() => {
+                      setSpoilerOverlayShown(false);
+                    }}
+                  >
+                    CLICK TO SEE SPOILER
+                  </Button>
+                </div>
+              ) : null}
               <Image
                 src={post.url}
                 alt={post.title}
@@ -232,6 +262,17 @@ function PostCard({ post }) {
           ) : post.preview?.images[0]?.source.url ? (
             <>
               <div className={classes.imageWrapper}>
+                {spoilerOverlayShown ? (
+                  <div className={classes.spoilerOverlay}>
+                    <Button
+                      onClick={() => {
+                        setSpoilerOverlayShown(false);
+                      }}
+                    >
+                      CLICK TO SEE SPOILER
+                    </Button>
+                  </div>
+                ) : null}
                 <Image
                   src={post.preview.images[0]?.source.url}
                   alt={post.title}

@@ -77,7 +77,10 @@ function PostTile({ post, handlePostTileClick, variant }) {
             alt={post.title}
             fill
             sizes="100%"
-            style={{ objectFit: "cover" }}
+            style={{
+              objectFit: "cover",
+              filter: post.spoiler ? "blur(25px)" : "",
+            }}
           />
         </div>
       )}
@@ -144,8 +147,16 @@ function PostTile({ post, handlePostTileClick, variant }) {
               </Badge>
             )}
             {variant !== "condensed" ? (
-              <FlairContainer submission={post} type="link" />
+              <div style={{ display: "inline-flex", marginRight: 8 }}>
+                <FlairContainer submission={post} type="link" />
+              </div>
             ) : null}
+
+            {post.spoiler && (
+              <Badge size="xs" mr={8} variant="outline" radius={4} color="gray">
+                spoiler
+              </Badge>
+            )}
           </div>
         </div>
         <Box
