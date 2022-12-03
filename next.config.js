@@ -10,6 +10,8 @@ const nextConfig = {
       "i.redd.it",
       "emoji.redditmedia.com",
       "www.redditstatic.com",
+      "b.thumbs.redditmedia.com",
+      "styles.redditmedia.com",
     ],
   },
   async redirects() {

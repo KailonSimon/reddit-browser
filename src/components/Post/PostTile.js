@@ -104,7 +104,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
               paddingRight: "0.5rem",
             }}
           >
-            {post.stickied && (
+            {post.stickied && variant !== "condensed" && (
               <Pinned
                 color="#59ba12ff"
                 size={20}

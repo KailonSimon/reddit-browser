@@ -16,7 +16,8 @@ const useStyles = createStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     gap: "0.5rem",
-    padding: "1rem 0.5rem",
+    padding: "0.5rem",
+    paddingTop: 0,
     [theme.fn.smallerThan(800)]: {
       minWidth: 300,
     },

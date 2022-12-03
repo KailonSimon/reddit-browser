@@ -1,5 +1,6 @@
 import { Button, createStyles, Textarea, Text, Loader } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
+import { useMediaQuery } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -21,6 +22,7 @@ function CommentReplyArea({ replyAreaOpen, setReplyAreaOpen, depth, variant }) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const authentication = useSelector(selectAuthentication);
+  const isMobile = useMediaQuery("(max-width: 700px)");
 
   const handleSubmit = () => {
     showNotification({
@@ -56,7 +58,7 @@ function CommentReplyArea({ replyAreaOpen, setReplyAreaOpen, depth, variant }) {
           display: "flex",
           flexDirection: "column",
           width: "100%",
-          padding: "0 8px 8px",
+          padding: isMobile ? "0 8px" : "0 2rem",
           gap: "0.5rem",
         }}
       >

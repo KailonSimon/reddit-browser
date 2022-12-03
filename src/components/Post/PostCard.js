@@ -6,12 +6,18 @@ import {
   Badge,
   Box,
   Button,
+  Tooltip,
 } from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Video from "../Video";
-import { createImageBlurData, getRelativeTime, toBase64 } from "../../../utils";
+import {
+  createImageBlurData,
+  getRelativeTime,
+  getSubredditInfo,
+  toBase64,
+} from "../../../utils";
 import SubmissionMenu from "../SubmissionMenu";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -21,6 +27,7 @@ import { markdown } from "snudown-js";
 import AwardsContainer from "../AwardsContainer";
 import FlairContainer from "../FlairContainer";
 import { useMediaQuery } from "@mantine/hooks";
+import SubredditSidebar from "../SubredditSidebar";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -75,12 +82,18 @@ const useStyles = createStyles((theme) => ({
 function PostCard({ post }) {
   const { classes } = useStyles();
   const [spoilerOverlayShown, setSpoilerOverlayShown] = useState(post.spoiler);
-  const router = useRouter();
+  const [subreddit, setSubreddit] = useState(null);
   const isMobile = useMediaQuery("(max-width: 700px)");
 
   function createMarkup() {
     return { __html: markdown(post.selftext, { target: "_blank" }) };
   }
+
+  useEffect(() => {
+    getSubredditInfo(post.subreddit).then((res) => {
+      setSubreddit(res.data);
+    });
+  }, [post]);
 
   return (
     <Box className={classes.container}>
@@ -117,33 +130,69 @@ function PostCard({ post }) {
               justifyContent: "space-between",
             }}
           >
-            <div className={classes.details}>
-              {router.pathname === "/" && (
-                <>
-                  <Link href={`/sub/${post.subreddit}`} passHref>
-                    <Text
-                      size="xs"
-                      weight="bold"
-                      color="#D7DADC"
-                      sx={(theme) => ({
-                        whiteSpace: "nowrap",
-                        color:
-                          theme.colorScheme === "dark"
-                            ? "#D7DADC"
-                            : theme.black,
-                        ":hover": {
-                          cursor: "pointer",
-                          textDecoration: "underline",
-                          color: theme.colors.brand,
+            <div
+              className={classes.details}
+              style={{ paddingTop: isMobile ? "0.25rem" : 0 }}
+            >
+              <>
+                <Link href={`/sub/${post.subreddit}`} passHref>
+                  <div style={{ display: "flex" }}>
+                    {subreddit?.community_icon || subreddit?.icon_img ? (
+                      <Image
+                        src={subreddit.community_icon || subreddit.icon_img}
+                        alt={subreddit.title}
+                        height={20}
+                        width={20}
+                        style={{
+                          marginRight: 4,
+                          background: subreddit.primary_color || "transparent",
+                          borderRadius: "100%",
+                        }}
+                      />
+                    ) : null}
+                    <Tooltip
+                      color="dark"
+                      position="bottom"
+                      styles={{
+                        tooltip: {
+                          padding: "1rem",
+                          borderRadius: 4,
+                          maxWidth: 400,
+                          filter: "drop-shadow(0 0.2rem 0.25rem #000)",
+                          zIndex: 98,
                         },
-                      })}
+                      }}
+                      label={
+                        <SubredditSidebar
+                          subreddit={subreddit}
+                          variant="hover"
+                        />
+                      }
                     >
-                      r/{post.subreddit}
-                    </Text>
-                  </Link>
-                  <span style={{ margin: "0 4px", fontSize: 8 }}>•</span>
-                </>
-              )}
+                      <Text
+                        size="xs"
+                        weight="bold"
+                        color="#D7DADC"
+                        sx={(theme) => ({
+                          whiteSpace: "nowrap",
+                          color:
+                            theme.colorScheme === "dark"
+                              ? "#D7DADC"
+                              : theme.black,
+                          ":hover": {
+                            cursor: "pointer",
+                            textDecoration: "underline",
+                            color: theme.colors.brand,
+                          },
+                        })}
+                      >
+                        r/{post.subreddit}
+                      </Text>
+                    </Tooltip>
+                  </div>
+                </Link>
+                <span style={{ margin: "0 4px", fontSize: 8 }}>•</span>
+              </>
               <Text
                 size="xs"
                 sx={(theme) => ({
@@ -182,7 +231,6 @@ function PostCard({ post }) {
                   </Text>
                 </Link>
               </Text>
-
               <Text
                 size="xs"
                 ml={4}
@@ -341,7 +389,7 @@ function PostCard({ post }) {
               {<div dangerouslySetInnerHTML={createMarkup()} />}
             </Text>
           )}
-          <div style={{ paddingTop: "0.75rem" }}>
+          <div>
             <SubmissionMenu
               type="post"
               submission={post}
