@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Video from "../Video";
 import { createImageBlurData, getRelativeTime, toBase64 } from "../../../utils";
 import SubmissionMenu from "../SubmissionMenu";
@@ -20,6 +20,7 @@ import { Speakerphone } from "tabler-icons-react";
 import { markdown } from "snudown-js";
 import AwardsContainer from "../AwardsContainer";
 import FlairContainer from "../FlairContainer";
+import { useMediaQuery } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -75,6 +76,7 @@ function PostCard({ post }) {
   const { classes } = useStyles();
   const [spoilerOverlayShown, setSpoilerOverlayShown] = useState(post.spoiler);
   const router = useRouter();
+  const isMobile = useMediaQuery("(max-width: 700px)");
 
   function createMarkup() {
     return { __html: markdown(post.selftext, { target: "_blank" }) };
@@ -90,21 +92,23 @@ function PostCard({ post }) {
           flex: 1,
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            zIndex: 99,
-          }}
-        >
-          <SubmissionVotingControls variant="vertical" submission={post} />
-        </div>
+        {!isMobile ? (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              zIndex: 99,
+            }}
+          >
+            <SubmissionVotingControls variant="vertical" submission={post} />
+          </div>
+        ) : null}
         <div
           style={{
             width: "100%",
             position: "relative",
-            paddingLeft: "2rem",
+            paddingLeft: isMobile ? 0 : "2rem",
           }}
         >
           <div
