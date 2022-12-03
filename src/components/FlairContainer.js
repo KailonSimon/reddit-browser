@@ -3,7 +3,7 @@ import { isColorDark } from "../../utils";
 import Image from "next/image";
 
 function FlairContainer({ submission, type }) {
-  if (type === "author" && submission.author_flair_richtext?.length > 0) {
+  if (type === "author" && submission.author_flair_richtext?.length) {
     return (
       <Badge
         size="xs"
@@ -26,10 +26,10 @@ function FlairContainer({ submission, type }) {
         })}
       </Badge>
     );
-  } else if (type === "link" && submission.link_flair_richtext?.length > 0) {
+  } else if (type === "link" && submission.link_flair_richtext?.length) {
     return (
       <Badge
-        size="xs"
+        size="md"
         radius={20}
         onClick={() => console.log(submission)}
         styles={(theme) => ({
@@ -51,7 +51,7 @@ function FlairContainer({ submission, type }) {
             return <span key={i}>{item.t}</span>;
           } else if ("u" in item) {
             return (
-              <Image height={12} width={12} key={i} src={item.u} alt={item.a} />
+              <Image height={16} width={16} key={i} src={item.u} alt={item.a} />
             );
           }
         })}

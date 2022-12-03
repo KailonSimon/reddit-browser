@@ -24,7 +24,11 @@ function Video({ type, content }) {
         controls
         autoPlay
         muted
-        style={{ marginTop: 8, maxHeight: "calc(100vh - 16rem)" }}
+        style={{
+          marginTop: 8,
+          maxHeight: "calc(100vh - 16rem)",
+          background: "#000",
+        }}
       >
         <source src={content} type="video/mp4" />
       </video>
@@ -37,6 +41,7 @@ function Video({ type, content }) {
         style={{
           marginTop: 8,
           maxHeight: "calc(100vh - 16rem)",
+          background: "#000",
         }}
         dangerouslySetInnerHTML={{ __html: parse(content) }}
       />
@@ -45,7 +50,11 @@ function Video({ type, content }) {
   return (
     <div
       className="videoWrapper"
-      style={{ marginTop: 8, maxHeight: "calc(100vh - 16rem)" }}
+      style={{
+        marginTop: 8,
+        maxHeight: "calc(100vh - 16rem)",
+        background: "#000",
+      }}
       dangerouslySetInnerHTML={createMarkup()}
     />
   );

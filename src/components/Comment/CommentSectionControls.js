@@ -20,6 +20,7 @@ function CommentSectionControls({
             flexDirection: "column",
             gap: "0.5rem",
             marginBottom: "0.5rem",
+            alignItems: "center",
           }}
         >
           <Text color="brand" weight="bold">

@@ -17,11 +17,6 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
     gap: "0.5rem",
     padding: "1rem 0.5rem",
-    border: `1px solid ${
-      theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
-    }`,
-    background: theme.colorScheme === "dark" ? "#1A1A1B" : "#fff",
-    borderRadius: 4,
     [theme.fn.smallerThan(800)]: {
       minWidth: 300,
     },
@@ -41,7 +36,7 @@ function reducer(state, action) {
   }
 }
 
-function CommentSection({ post, commentId }) {
+function CommentSection({ post, commentId, variant = "full" }) {
   const { classes } = useStyles();
   const [state, dispatch] = useReducer(reducer, {
     commentSorting: post.suggested_sort || "confidence",
@@ -60,44 +55,46 @@ function CommentSection({ post, commentId }) {
 
   return (
     <ErrorBoundary>
-      <div className={classes.container}>
-        <>
-          <CommentReplyArea replyType="link" />
-          <CommentSectionControls
-            post={post}
-            isLoading={isLoading}
-            isFetching={isFetching}
-            isRefetching={isRefetching}
-            commentSorting={state.commentSorting}
-            handleChangeCommentSort={handleChangeCommentSort}
-            commentId={commentId}
-          />
-          {isLoading || isFetching || isRefetching ? (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-              }}
-            >
-              {[...Array(8)].map((x, i) => (
-                <Skeleton height={75} width="100%" mb="xs" key={i} />
-              ))}
-            </div>
-          ) : data[1]?.data.children?.length ? (
-            <>
-              {data[1].data.children.map((comment) => {
-                return (
-                  <CommentTile comment={comment.data} key={comment.data.id} />
-                );
-              })}
-            </>
-          ) : (
-            <Text color="dimmed" py={24}>
-              No Comments
-            </Text>
-          )}
-        </>
+      <div className={classes.container} id="#comments">
+        {variant === "full" ? <CommentReplyArea variant="link" /> : null}
+        <CommentSectionControls
+          post={post}
+          isLoading={isLoading}
+          isFetching={isFetching}
+          isRefetching={isRefetching}
+          commentSorting={state.commentSorting}
+          handleChangeCommentSort={handleChangeCommentSort}
+          commentId={commentId}
+        />
+        {isLoading || isFetching || isRefetching ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+            }}
+          >
+            {[...Array(8)].map((x, i) => (
+              <Skeleton height={75} width="100%" mb="xs" key={i} />
+            ))}
+          </div>
+        ) : data[1]?.data.children?.length ? (
+          <>
+            {data[1].data.children.map((comment) => {
+              return (
+                <CommentTile
+                  comment={comment.data}
+                  key={comment.data.id}
+                  variant="full"
+                />
+              );
+            })}
+          </>
+        ) : (
+          <Text color="dimmed" py={24}>
+            No Comments
+          </Text>
+        )}
       </div>
     </ErrorBoundary>
   );

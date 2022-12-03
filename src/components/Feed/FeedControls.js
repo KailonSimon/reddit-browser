@@ -14,7 +14,6 @@ function FeedControls({ sorting, setSorting, isRefetching }) {
           theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
         }`,
         borderRadius: 4,
-        padding: "1rem",
         display: "flex",
         flexDirection: "column",
         gap: "0.5rem",
@@ -23,6 +22,7 @@ function FeedControls({ sorting, setSorting, isRefetching }) {
       <SegmentedControl
         fullWidth
         color="brand"
+        size="md"
         radius={4}
         label={
           <Text color="#D7DADC" mb={4}>
@@ -72,7 +72,9 @@ function FeedControls({ sorting, setSorting, isRefetching }) {
         styles={(theme) => ({
           root: {
             backgroundColor:
-              theme.colorScheme === "dark" ? "#121212" : theme.colors.gray[1],
+              theme.colorScheme === "dark"
+                ? "transparent"
+                : theme.colors.gray[1],
           },
         })}
         variant="default"

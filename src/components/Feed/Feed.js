@@ -6,15 +6,20 @@ import Head from "next/head";
 import { openContextModal, closeAllModals } from "@mantine/modals";
 import { useRouter } from "next/router";
 import { useAppDispatch } from "../../../store/store";
-import { visitPost } from "../../../store/DemoUserSlice";
+import {
+  selectHiddenSubmissions,
+  visitPost,
+} from "../../../store/DemoUserSlice";
+import CommentTile from "../Comment/CommentTile";
 import ErrorBoundary from "../ErrorBoundary";
+import { useSelector } from "react-redux";
 
 const useStyles = createStyles((theme) => ({
-  posts: {
+  submissions: {
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    maxWidth: "100%",
+    maxWidth: "100vw",
     gap: 8,
     height: "100%",
     padding: "0 0 2rem",
@@ -40,11 +45,18 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Feed({ posts, fetchNextPage, hasNextPage }) {
+function Feed({
+  submissions,
+  fetchNextPage,
+  hasNextPage,
+  hiddenShown = false,
+  variant = "full",
+}) {
   const { classes } = useStyles();
   const ref = useRef();
   const isInView = useInView(ref);
   const [openPost, setOpenPost] = useState(null);
+  const hiddenSubmissions = useSelector(selectHiddenSubmissions);
   const dispatch = useAppDispatch();
 
   const { events } = useRouter();
@@ -96,14 +108,31 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
           <title>{openPost.title}</title>
         </Head>
       )}
-      <div className={classes.posts}>
-        {posts.map((post, i) => (
-          <PostTile
-            key={`${post.data.id + i}`}
-            post={post.data}
-            handlePostTileClick={handlePostTileClick}
-          />
-        ))}
+      <div className={classes.submissions}>
+        {submissions.map((post, i) => {
+          if (
+            hiddenSubmissions.some(
+              (hiddenSubmission) => post.id === hiddenSubmission.id
+            ) &&
+            !hiddenShown
+          ) {
+            return null;
+          }
+
+          if (post.name.substring(0, 2) === "t1") {
+            return (
+              <CommentTile key={post.name} comment={post} variant="single" />
+            );
+          }
+
+          return (
+            <PostTile
+              key={`${post.id + i}`}
+              post={post}
+              handlePostTileClick={handlePostTileClick}
+            />
+          );
+        })}
         <div
           ref={ref}
           style={{
@@ -132,9 +161,11 @@ function Feed({ posts, fetchNextPage, hasNextPage }) {
                 />
               ))}
             </div>
-          ) : (
-            <Text color="dimmed">No more posts to show...</Text>
-          )}
+          ) : variant === "full" ? (
+            <Text color="dimmed" my={16}>
+              {"There's nothing here..."}
+            </Text>
+          ) : null}
         </div>
       </div>
     </ErrorBoundary>

@@ -30,12 +30,14 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const initialState = { sorting: "hot" };
+const initialState = { sorting: "hot", recentlyVisitedPosts: [] };
 
 function reducer(state, action) {
   switch (action.type) {
     case "SET_SORTING":
       return { ...state, sorting: action.payload };
+    case "SET_RECENTLY_VISITED_POSTS":
+      return { ...state, recentlyVisitedPosts: action.payload };
     default:
       return initialState;
   }
@@ -44,7 +46,7 @@ function reducer(state, action) {
 export default function Home() {
   const { classes } = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const recentVisits = useSelector(selectVisitedPosts);
+  const visitedPosts = useSelector(selectVisitedPosts);
   const demoUser = useSelector(selectDemoUser);
   const authentication = useSelector(selectAuthentication);
 
@@ -78,6 +80,13 @@ export default function Home() {
     refetch();
   }, [state.sorting, refetch, demoUser.subscribedSubreddits]);
 
+  useEffect(() => {
+    dispatch({
+      type: "SET_RECENTLY_VISITED_POSTS",
+      payload: visitedPosts.slice(0, 5),
+    });
+  }, [visitedPosts]);
+
   return status === "loading" && !data ? (
     <LoadingScreen /> || !data
   ) : status === "error" ? (
@@ -93,8 +102,13 @@ export default function Home() {
         <div className={classes.main}>
           <SidebarContainer>
             <TrendingSubsCard />
-            {recentVisits.length > 0 ? (
-              <RecentlyVisitedCard posts={recentVisits} />
+            {state.recentlyVisitedPosts.length ? (
+              <RecentlyVisitedCard
+                posts={state.recentlyVisitedPosts}
+                handleClearPosts={() =>
+                  dispatch({ type: "SET_RECENTLY_VISITED_POSTS", payload: [] })
+                }
+              />
             ) : null}
           </SidebarContainer>
           <div
@@ -114,7 +128,7 @@ export default function Home() {
 
             <Feed
               key={mergePages(data.pages)}
-              posts={mergePages(data.pages)}
+              submissions={mergePages(data.pages)}
               fetchNextPage={fetchNextPage}
               hasNextPage={hasNextPage}
               isFetchingNextPage={isFetchingNextPage}

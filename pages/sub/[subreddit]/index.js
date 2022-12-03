@@ -103,7 +103,7 @@ function Subreddit({ subreddit }) {
 
               <Feed
                 key={mergePages(data.pages)}
-                posts={mergePages(data.pages)}
+                submissions={mergePages(data.pages)}
                 fetchNextPage={fetchNextPage}
                 hasNextPage={hasNextPage}
                 isFetchingNextPage={isFetchingNextPage}

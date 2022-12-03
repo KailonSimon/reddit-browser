@@ -25,7 +25,6 @@ function AwardsContainer({ awards }) {
                 padding: "1rem",
                 borderRadius: 4,
                 maxWidth: 200,
-
                 filter: "drop-shadow(0 0.2rem 0.25rem #000)",
                 background:
                   "linear-gradient(to bottom, #59ba12 50px, #1A1A1B 50px)",
@@ -57,11 +56,12 @@ function AwardsContainer({ awards }) {
               </div>
             }
           >
-            <span style={{ display: "flex", cursor: "pointer" }}>
+            <span
+              style={{ display: "flex", cursor: "pointer", marginRight: 4 }}
+            >
               <Image
                 src={award.resized_icons[0].url}
                 alt={award.name}
-                style={{ margin: "0 2px 0 4px" }}
                 height={16}
                 width={16}
               />
@@ -70,6 +70,7 @@ function AwardsContainer({ awards }) {
                 color="dimmed"
                 weight={300}
                 sx={{ whiteSpace: "nowrap" }}
+                ml={2}
               >
                 {award.count > 1 ? award.count : ""}
               </Text>
@@ -81,7 +82,6 @@ function AwardsContainer({ awards }) {
         <Text
           color="dimmed"
           size="xs"
-          ml={4}
           variant="link"
           sx={{ cursor: "pointer" }}
           onClick={() => setAllAwardsShown(true)}

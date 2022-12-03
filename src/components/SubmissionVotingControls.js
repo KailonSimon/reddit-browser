@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createStyles, Text, Button, ActionIcon } from "@mantine/core";
 import numeral from "numeral";
 import { useSession } from "next-auth/react";
@@ -15,16 +15,22 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { selectAuthentication } from "../../store/AuthSlice";
+import { selectDemoUser } from "../../store/DemoUserSlice";
+import { useAppDispatch } from "../../store/store";
+import {
+  upvoteSubmission,
+  downvoteSubmission,
+} from "../../store/DemoUserSlice";
 
 const useStyles = createStyles((theme) => ({
-  postContainer: {
+  verticalContainer: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     width: 30,
     minWidth: 30,
   },
-  commentContainer: {
+  horizontalContainer: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -42,19 +48,28 @@ const useStyles = createStyles((theme) => ({
     "&:hover": { color: theme.colors.accent, cursor: "pointer" },
   },
 }));
-function SubmissionVotingControls({ type, submission }) {
+function SubmissionVotingControls({ variant, submission }) {
   const { classes } = useStyles();
   const { data: session } = useSession();
   const authentication = useSelector(selectAuthentication);
   const modalId = useId();
   const queryClient = useQueryClient();
-  const [liked, setLiked] = useState(submission.likes);
+  const dispatch = useAppDispatch();
+
+  const { upvotedSubmissions, downvotedSubmissions } =
+    useSelector(selectDemoUser);
+
+  const isUpvoted = upvotedSubmissions.some(
+    (upvotedSubmission) => submission.id === upvotedSubmission.id
+  );
+  const isDownvoted = downvotedSubmissions.some(
+    (downvotedSubmission) => submission.id === downvotedSubmission.id
+  );
 
   const { mutate } = useMutation(
     ({ id, direction }) => voteOnSubmission(id, direction),
     {
       onSuccess: async (updatedSubmission) => {
-        setLiked(updatedSubmission.likes);
         queryClient.invalidateQueries();
       },
     }
@@ -77,16 +92,13 @@ function SubmissionVotingControls({ type, submission }) {
         withCloseButton: false,
       });
     } else if (authentication.status === "demo") {
-      setLiked(() => {
-        switch (direction) {
-          case "up":
-            return true;
-          case "down":
-            return false;
-          case "unvote":
-            return null;
-        }
-      });
+      switch (direction) {
+        case "up":
+          dispatch(upvoteSubmission(submission));
+          break;
+        case "down":
+          dispatch(downvoteSubmission(submission));
+      }
     } else {
       mutate({ id: submission.name, direction });
     }
@@ -94,39 +106,44 @@ function SubmissionVotingControls({ type, submission }) {
   return (
     <div
       className={
-        type == "post" ? classes.postContainer : classes.commentContainer
+        variant == "vertical"
+          ? classes.verticalContainer
+          : classes.horizontalContainer
       }
     >
       <ActionIcon
         variant="transparent"
-        onClick={() => handleVoteClick(liked ? "unvote" : "up")}
+        onClick={() => handleVoteClick("up")}
         className={classes.upArrow}
       >
-        {liked === true ? (
-          <TiArrowUpThick size={28} color="#59ba12" />
+        {isUpvoted ? (
+          <TiArrowUpThick size={24} color="#59ba12" />
         ) : (
-          <TiArrowUpOutline size={24} color="#ADB5BD" />
+          <TiArrowUpOutline size={20} color="#909296" />
         )}
       </ActionIcon>
       <Text
         sx={(theme) => ({
-          color:
-            theme.colorScheme === "dark" ? "rgb(215, 218, 220)" : theme.black,
+          color: isUpvoted ? "#59ba12" : isDownvoted ? "#7312ba" : "#fff",
           fontSize: 12,
           fontWeight: 700,
         })}
       >
-        {numeral(submission.score).format("0a")}
+        {isUpvoted
+          ? numeral(submission.score + 1).format("0a")
+          : isDownvoted
+          ? numeral(submission.score - 1).format("0a")
+          : numeral(submission.score).format("0a")}
       </Text>
       <ActionIcon
         variant="transparent"
-        onClick={() => handleVoteClick(liked === false ? "unvote" : "down")}
+        onClick={() => handleVoteClick("down")}
         className={classes.downArrow}
       >
-        {liked === false ? (
-          <TiArrowDownThick size={28} color="#7312ba" />
+        {isDownvoted ? (
+          <TiArrowDownThick size={24} color="#7312ba" />
         ) : (
-          <TiArrowDownOutline size={24} color="#ADB5BD" />
+          <TiArrowDownOutline size={20} color="#909296" />
         )}
       </ActionIcon>
     </div>

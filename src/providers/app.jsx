@@ -25,7 +25,9 @@ export const AppProvider = ({ children, reduxProps, reduxStore }) => {
                       post: PostModal,
                     }}
                   >
-                    <NotificationsProvider>{children}</NotificationsProvider>
+                    <NotificationsProvider position="bottom-center">
+                      {children}
+                    </NotificationsProvider>
                   </ModalsProvider>
                 </MantineProvider>
               </Hydrate>

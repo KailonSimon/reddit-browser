@@ -1,4 +1,4 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import { demoUserInitialData } from "../demoData/demoUser";
 
@@ -26,15 +26,91 @@ export const demoUserSlice = createSlice({
       state.visitedPosts = [
         action.payload,
         ...state.visitedPosts.filter((post) => post.id !== action.payload.id),
-      ].slice(0, 5);
+      ];
     },
     clearVisitedPosts(state) {
       state.visitedPosts = [];
     },
+    upvoteSubmission(state, action) {
+      if (
+        state.upvotedSubmissions.some(
+          (submission) => submission.id === action.payload.id
+        )
+      ) {
+        state.upvotedSubmissions = state.upvotedSubmissions.filter(
+          (submission) => submission.id !== action.payload.id
+        );
+      } else {
+        state.upvotedSubmissions = [
+          ...state.upvotedSubmissions,
+          action.payload,
+        ];
+        if (
+          state.downvotedSubmissions.some(
+            (submission) => submission.id === action.payload.id
+          )
+        ) {
+          state.downvotedSubmissions = state.downvotedSubmissions.filter(
+            (submission) => submission.id !== action.payload.id
+          );
+        }
+      }
+    },
+    downvoteSubmission(state, action) {
+      if (
+        state.downvotedSubmissions.some(
+          (submission) => submission.id === action.payload.id
+        )
+      ) {
+        state.downvotedSubmissions = state.downvotedSubmissions.filter(
+          (submission) => submission.id !== action.payload.id
+        );
+      } else {
+        state.downvotedSubmissions = [
+          ...state.downvotedSubmissions,
+          action.payload,
+        ];
+        if (
+          state.upvotedSubmissions.some(
+            (submission) => submission.id === action.payload.id
+          )
+        ) {
+          state.upvotedSubmissions = state.upvotedSubmissions.filter(
+            (submission) => submission.id !== action.payload.id
+          );
+        }
+      }
+    },
+    saveSubmission(state, action) {
+      if (
+        state.savedSubmissions.some(
+          (submission) => submission.id === action.payload.id
+        )
+      ) {
+        state.savedSubmissions = state.savedSubmissions.filter(
+          (submission) => submission.id !== action.payload.id
+        );
+      } else {
+        state.savedSubmissions = [...state.savedSubmissions, action.payload];
+      }
+    },
+
+    hideSubmission(state, action) {
+      if (
+        state.hiddenSubmissions.some(
+          (submission) => submission.id === action.payload.id
+        )
+      ) {
+        state.hiddenSubmissions = state.hiddenSubmissions.filter(
+          (submission) => submission.id !== action.payload.id
+        );
+      } else {
+        state.hiddenSubmissions = [...state.hiddenSubmissions, action.payload];
+      }
+    },
 
     extraReducers: {
       [HYDRATE]: (state, action) => {
-        console.log("HYDRATE", action.payload);
         if (!action.payload.demoUser.name) {
           // IMPORTANT - for not overriding data on client side
           return state;
@@ -51,10 +127,16 @@ export const {
   unsubscribeFromSubreddit,
   visitPost,
   clearVisitedPosts,
+  upvoteSubmission,
+  downvoteSubmission,
+  saveSubmission,
+  hideSubmission,
 } = demoUserSlice.actions;
 
 export const selectDemoUser = (state) => state[demoUserSlice.name];
 export const selectVisitedPosts = (state) =>
   state[demoUserSlice.name].visitedPosts;
+export const selectHiddenSubmissions = (state) =>
+  state[demoUserSlice.name].hiddenSubmissions;
 
 export default demoUserSlice;

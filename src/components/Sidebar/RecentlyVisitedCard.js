@@ -3,6 +3,7 @@ import { clearVisitedPosts, visitPost } from "../../../store/DemoUserSlice";
 import { useAppDispatch } from "../../../store/store";
 import PostTile from "../Post/PostTile";
 import { openContextModal } from "@mantine/modals";
+import { useEffect, useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   posts: {
@@ -35,7 +36,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function RecentlyVisitedCard({ posts }) {
+function RecentlyVisitedCard({ posts, handleClearPosts }) {
   const dispatch = useAppDispatch();
   const { classes } = useStyles();
 
@@ -59,6 +60,7 @@ function RecentlyVisitedCard({ posts }) {
       overlayBlur: 3,
     });
   };
+
   return (
     <>
       <Title color="dimmed" order={2} size={14} sx={{ padding: "0.75rem 0" }}>
@@ -90,7 +92,7 @@ function RecentlyVisitedCard({ posts }) {
         underline={false}
         size={12}
         sx={{ color: "#818384" }}
-        onClick={() => dispatch(clearVisitedPosts())}
+        onClick={handleClearPosts}
       >
         Clear
       </Anchor>

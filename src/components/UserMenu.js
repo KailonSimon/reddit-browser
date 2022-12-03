@@ -104,10 +104,10 @@ function UserMenu({ user }) {
       </Menu.Target>
       <Menu.Dropdown>
         <Link
-          href={user.is_demo ? `/user/demoUserID` : `/user/${user.name}`}
+          href={user.is_demo ? `/user/DemoUser` : `/user/${user.name}`}
           passHref
         >
-          <Menu.Item component="a">Profile</Menu.Item>
+          <Menu.Item>Profile</Menu.Item>
         </Link>
         <Menu.Divider />
         <Menu.Item

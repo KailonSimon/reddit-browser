@@ -72,7 +72,11 @@ function Comment({ commentId, post, subreddit }) {
           </SidebarContainer>
           <div className={classes.container}>
             <PostCard post={post} />
-            <CommentSection post={post} commentId={commentId} />
+            <CommentSection
+              post={post}
+              commentId={commentId}
+              variant="single"
+            />
           </div>
         </div>
       </Layout>

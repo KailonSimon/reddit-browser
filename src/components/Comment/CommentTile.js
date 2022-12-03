@@ -17,7 +17,7 @@ import Link from "next/link";
 
 const initialState = {
   isCollapsed: false,
-  isReplyAreaOpen: false,
+  replyAreaOpen: false,
   isLoading: false,
   moreChildrenLoaded: false,
   replies: [],
@@ -27,8 +27,8 @@ function reducer(state, action) {
   switch (action.type) {
     case "SET_IS_COLLAPSED":
       return { ...state, isCollapsed: action.payload };
-    case "SET_IS_REPLY_AREA_OPEN":
-      return { ...state, isReplyAreaOpen: action.payload };
+    case "SET_REPLY_AREA_OPEN":
+      return { ...state, replyAreaOpen: action.payload };
     case "SET_IS_LOADING":
       return { ...state, isLoading: action.payload };
     case "SET_MORE_CHILDREN_LOADED":
@@ -40,7 +40,7 @@ function reducer(state, action) {
   }
 }
 
-function CommentTile({ comment, depth = 0 }) {
+function CommentTile({ comment, depth = 0, variant = "full" }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -112,7 +112,10 @@ function CommentTile({ comment, depth = 0 }) {
           className={`comment-depth-${getNestedCommentClass(
             comment.depth || depth
           )} comment-collapse-button`}
-          style={{ display: state.isCollapsed ? "none" : "block" }}
+          style={{
+            display:
+              state.isCollapsed || variant === "single" ? "none" : "block",
+          }}
           onClick={() => dispatch({ type: "SET_IS_COLLAPSED", payload: true })}
         />
         <Box
@@ -129,7 +132,6 @@ function CommentTile({ comment, depth = 0 }) {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              marginBottom: state.isCollapsed ? 0 : 6,
             }}
           >
             <div style={{ display: "flex", flexDirection: "column" }}>
@@ -220,11 +222,19 @@ function CommentTile({ comment, depth = 0 }) {
                 >
                   &#8226;
                 </span>
-                <Text size="sm" color="#818384" sx={{ whiteSpace: "nowrap" }}>
+                <Text
+                  size="sm"
+                  color="#818384"
+                  sx={{ whiteSpace: "nowrap", marginRight: 4 }}
+                >
                   {getRelativeTime(comment.created_utc)}
                 </Text>
                 {comment.locked && (
-                  <Lock color="#59ba12ff" size={16} style={{ marginLeft: 4 }} />
+                  <Lock
+                    color="#59ba12ff"
+                    size={16}
+                    style={{ marginRight: 4 }}
+                  />
                 )}
                 <AwardsContainer awards={comment.all_awardings} />
               </div>
@@ -240,44 +250,48 @@ function CommentTile({ comment, depth = 0 }) {
 
               <CommentTileControls
                 comment={comment}
-                replyAreaOpen={state.isReplyAreaOpen}
+                replyAreaOpen={state.replyAreaOpen}
                 setReplyAreaOpen={(value) =>
-                  dispatch({ type: "SET_IS_REPLY_AREA_OPEN", payload: value })
+                  dispatch({ type: "SET_REPLY_AREA_OPEN", payload: value })
                 }
+                variant={variant}
               />
               <CommentReplyArea
                 depth={comment.depth || depth}
                 comment={comment}
-                replyAreaOpen={state.isReplyAreaOpen}
+                replyAreaOpen={state.replyAreaOpen}
                 setReplyAreaOpen={(value) =>
-                  dispatch({ type: "SET_IS_REPLY_AREA_OPEN", payload: value })
+                  dispatch({ type: "SET_REPLY_AREA_OPEN", payload: value })
                 }
               />
             </>
           )}
         </Box>
-        {state.replies?.length > 0 && !state.isCollapsed && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              padding: "0 0 0 0.75rem",
-              gap: "0.25rem",
-            }}
-          >
-            {state.replies.map((reply, i) => (
-              <CommentTile
-                comment={reply}
-                key={reply.id}
-                depth={comment.depth + 1}
-              />
-            ))}
-          </div>
-        )}
+        {state.replies?.length > 0 &&
+          !state.isCollapsed &&
+          variant !== "single" && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                padding: "0 0 0 0.75rem",
+                gap: "0.25rem",
+              }}
+            >
+              {state.replies.map((reply, i) => (
+                <CommentTile
+                  comment={reply}
+                  key={reply.id}
+                  depth={comment.depth + 1}
+                />
+              ))}
+            </div>
+          )}
         {hiddenReplies &&
           hiddenReplies.children?.length > 0 &&
           !state.isCollapsed &&
-          !state.moreChildrenLoaded && (
+          !state.moreChildrenLoaded &&
+          variant !== "single" && (
             <Text
               align="left"
               size="sm"

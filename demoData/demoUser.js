@@ -23,4 +23,8 @@ export const demoUserInitialData = {
     "UpliftingNews",
   ],
   visitedPosts: [],
+  upvotedSubmissions: [],
+  downvotedSubmissions: [],
+  savedSubmissions: [],
+  hiddenSubmissions: [],
 };

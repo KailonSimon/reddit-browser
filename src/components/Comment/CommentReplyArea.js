@@ -16,12 +16,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function CommentReplyArea({
-  replyAreaOpen,
-  setReplyAreaOpen,
-  depth,
-  replyType,
-}) {
+function CommentReplyArea({ replyAreaOpen, setReplyAreaOpen, depth, variant }) {
   const { data: session } = useSession();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +49,7 @@ function CommentReplyArea({
     }, 3000);
   };
 
-  if (replyType === "link") {
+  if (variant === "link") {
     return (
       <div
         style={{
