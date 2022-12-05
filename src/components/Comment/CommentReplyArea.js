@@ -2,27 +2,27 @@ import { Button, createStyles, Textarea, Text, Loader } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { useMediaQuery } from "@mantine/hooks";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectAuthentication } from "../../../store/AuthSlice";
-import { getNestedCommentClass } from "../../../utils";
+import { createDemoComment, getNestedCommentClass } from "../../../utils";
 import Link from "next/link";
 import { Check } from "tabler-icons-react";
 
-const useStyles = createStyles((theme) => ({
-  modalContainer: {
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: 16,
-  },
-}));
-
-function CommentReplyArea({ replyAreaOpen, setReplyAreaOpen, depth, variant }) {
+function CommentReplyArea({
+  replyAreaOpen,
+  setReplyAreaOpen,
+  depth,
+  variant,
+  handlePostComment,
+  parent,
+}) {
   const { data: session } = useSession();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const authentication = useSelector(selectAuthentication);
   const isMobile = useMediaQuery("(max-width: 700px)");
+  const { subreddit_id, subreddit } = parent;
 
   const handleSubmit = () => {
     showNotification({
@@ -43,8 +43,13 @@ function CommentReplyArea({ replyAreaOpen, setReplyAreaOpen, depth, variant }) {
         icon: <Check size={16} />,
         autoClose: 3000,
       });
+      if (handlePostComment) {
+        handlePostComment(
+          createDemoComment(subreddit_id, subreddit, input, depth)
+        );
+      }
       setInput("");
-      if (replyType !== "link") {
+      if (variant !== "link") {
         setReplyAreaOpen(false);
       }
       setIsLoading(false);

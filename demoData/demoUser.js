@@ -27,4 +27,5 @@ export const demoUserInitialData = {
   downvotedSubmissions: [],
   savedSubmissions: [],
   hiddenSubmissions: [],
+  postedComments: [],
 };

@@ -1,7 +1,6 @@
 import { ActionIcon, Box, Text } from "@mantine/core";
-import numeral from "numeral";
 import React, { useEffect, useReducer } from "react";
-import { ArrowUp, ChevronDown, Lock, Pinned } from "tabler-icons-react";
+import { ChevronDown, Lock, Pinned } from "tabler-icons-react";
 import {
   fetchMoreChildrenComments,
   getNestedCommentClass,
@@ -14,6 +13,9 @@ import { markdown } from "snudown-js";
 import AwardsContainer from "../AwardsContainer";
 import FlairContainer from "../FlairContainer";
 import Link from "next/link";
+import { useAppDispatch } from "../../../store/store";
+import { postComment, selectDemoUser } from "../../../store/DemoUserSlice";
+import { useSelector } from "react-redux";
 
 const initialState = {
   isCollapsed: false,
@@ -195,22 +197,6 @@ function CommentTile({ comment, depth = 0, variant = "full" }) {
                     OP
                   </span>
                 )}
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    whiteSpace: "nowrap",
-                    marginLeft: 4,
-                  }}
-                >
-                  <ArrowUp size={16} color="#818384" />
-                  <Text size="sm" color="#818384">
-                    {comment.score_hidden
-                      ? "—"
-                      : numeral(comment.score).format("0.[0]a")}
-                  </Text>
-                </div>
                 <span
                   style={{
                     flex: "0 0 auto",
@@ -258,11 +244,24 @@ function CommentTile({ comment, depth = 0, variant = "full" }) {
               />
               <CommentReplyArea
                 depth={comment.depth || depth}
-                comment={comment}
+                parent={comment}
                 replyAreaOpen={state.replyAreaOpen}
                 setReplyAreaOpen={(value) =>
                   dispatch({ type: "SET_REPLY_AREA_OPEN", payload: value })
                 }
+                handlePostComment={(value) => {
+                  if (state?.replies?.length) {
+                    dispatch({
+                      type: "SET_REPLIES",
+                      payload: [...state.replies, value],
+                    });
+                  } else {
+                    dispatch({
+                      type: "SET_REPLIES",
+                      payload: [value],
+                    });
+                  }
+                }}
               />
             </>
           )}

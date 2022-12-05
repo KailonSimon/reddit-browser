@@ -52,6 +52,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
           borderBottom:
             variant === "condensed" ? `2px solid ${theme.colors.gray[8]}` : "",
         },
+        gap: "0.5rem",
       })}
     >
       {variant !== "condensed" && !isMobile ? (
@@ -165,6 +166,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
             alignItems: "center",
             flexFlow: "row wrap",
             color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
+            marginTop: variant === "condensed" ? 0 : 4,
           })}
         >
           {router.pathname === "/" && variant !== "condensed" && (

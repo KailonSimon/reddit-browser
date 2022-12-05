@@ -94,7 +94,6 @@ export const demoUserSlice = createSlice({
         state.savedSubmissions = [...state.savedSubmissions, action.payload];
       }
     },
-
     hideSubmission(state, action) {
       if (
         state.hiddenSubmissions.some(
@@ -107,6 +106,9 @@ export const demoUserSlice = createSlice({
       } else {
         state.hiddenSubmissions = [...state.hiddenSubmissions, action.payload];
       }
+    },
+    postComment(state, action) {
+      state.postedComments = [...state.postedComments, action.payload];
     },
 
     extraReducers: {
@@ -131,6 +133,7 @@ export const {
   downvoteSubmission,
   saveSubmission,
   hideSubmission,
+  postComment,
 } = demoUserSlice.actions;
 
 export const selectDemoUser = (state) => state[demoUserSlice.name];

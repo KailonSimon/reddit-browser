@@ -124,16 +124,22 @@ function SubmissionVotingControls({ variant, submission }) {
       </ActionIcon>
       <Text
         sx={(theme) => ({
-          color: isUpvoted ? "#59ba12" : isDownvoted ? "#7312ba" : "#fff",
+          color: isUpvoted
+            ? "#59ba12"
+            : isDownvoted
+            ? "#7312ba"
+            : theme.colorScheme === "dark"
+            ? "#D7DADC"
+            : theme.black,
           fontSize: 12,
           fontWeight: 700,
         })}
       >
         {isUpvoted
-          ? numeral(submission.score + 1).format("0a")
+          ? numeral(submission.score + 1).format("0.[0]a")
           : isDownvoted
-          ? numeral(submission.score - 1).format("0a")
-          : numeral(submission.score).format("0a")}
+          ? numeral(submission.score - 1).format("0.[0]a")
+          : numeral(submission.score).format("0.[0]a")}
       </Text>
       <ActionIcon
         variant="transparent"

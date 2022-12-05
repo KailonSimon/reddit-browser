@@ -1,11 +1,7 @@
 import { configureStore, combineReducers, createSlice } from "@reduxjs/toolkit";
 import authSlice from "./AuthSlice";
 import demoUserSlice from "./DemoUserSlice";
-import {
-  nextReduxCookieMiddleware,
-  wrapMakeStore,
-} from "next-redux-cookie-wrapper";
-import { HYDRATE, createWrapper } from "next-redux-wrapper";
+import { createWrapper } from "next-redux-wrapper";
 import { useDispatch } from "react-redux";
 
 const makeStore = () =>

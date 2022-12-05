@@ -57,7 +57,9 @@ function CommentSection({ post, commentId, variant = "full" }) {
   return (
     <ErrorBoundary>
       <div className={classes.container} id="#comments">
-        {variant === "full" ? <CommentReplyArea variant="link" /> : null}
+        {variant === "full" ? (
+          <CommentReplyArea variant="link" parent={post} />
+        ) : null}
         <CommentSectionControls
           post={post}
           isLoading={isLoading}
