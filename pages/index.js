@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Text, createStyles } from "@mantine/core";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Feed from "../src/components/Feed/Feed";
@@ -13,6 +13,8 @@ import { useSelector } from "react-redux";
 import { selectAuthentication } from "../store/AuthSlice";
 import { selectDemoUser, selectVisitedPosts } from "../store/DemoUserSlice";
 import RecentlyVisitedCard from "../src/components/Sidebar/RecentlyVisitedCard";
+import { useSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
 
 const useStyles = createStyles((theme) => ({
   main: {
@@ -43,12 +45,40 @@ function reducer(state, action) {
   }
 }
 
-export default function Home() {
+export async function getServerSideProps({ req }) {
+  const token = await getToken({ req });
+  let subscribedSubreddits;
+
+  if (token?.accessToken) {
+    try {
+      const redditRes = await fetch(
+        `https://oauth.reddit.com/subreddits/mine/subscriber?limit=100`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.accessToken}`,
+          },
+        }
+      );
+      subscribedSubreddits = await redditRes.json();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return {
+    props: {
+      subscribedSubreddits: subscribedSubreddits.data.children,
+    },
+  };
+}
+
+export default function Home({ subscribedSubreddits }) {
   const { classes } = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
   const visitedPosts = useSelector(selectVisitedPosts);
   const demoUser = useSelector(selectDemoUser);
   const authentication = useSelector(selectAuthentication);
+  const { data: session } = useSession();
 
   const {
     status,
@@ -63,8 +93,8 @@ export default function Home() {
     ["posts"],
     ({ pageParam }) =>
       fetchPosts(
+        session ? null : demoUser.subscribedSubreddits.join("+"),
         state.sorting,
-        demoUser.subscribedSubreddits.join("+"),
         10,
         pageParam
       ),

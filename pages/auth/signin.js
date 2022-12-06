@@ -26,6 +26,7 @@ export default function SignIn({ providers }) {
   const { classes } = useStyles();
   const router = useRouter();
   const reduxDispatch = useAppDispatch();
+  const { callbackUrl } = useRouter().query;
 
   const handleDemoSignIn = () => {
     reduxDispatch(setAuthenticationStatus("demo"));
@@ -52,8 +53,7 @@ export default function SignIn({ providers }) {
           Demo Sign in
         </Button>
 
-        {false &&
-          providers &&
+        {providers &&
           Object.values(providers).map((provider) => (
             <Button
               leftIcon={<BrandReddit size={32} />}

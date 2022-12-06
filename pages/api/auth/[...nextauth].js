@@ -8,7 +8,8 @@ export const authOptions = {
       clientSecret: process.env.REDDIT_CLIENT_SECRET,
       authorization: {
         params: {
-          scope: "identity vote read edit save submit subscribe history",
+          scope:
+            "identity vote read edit save submit subscribe history mysubreddits",
           duration: "permanent",
         },
       },

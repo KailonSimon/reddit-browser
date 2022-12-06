@@ -57,6 +57,7 @@ const useStyles = createStyles((theme) => ({
     justifyContent: "center",
     marginTop: 8,
     background: "#000",
+    border: "1px solid red",
     position: "relative",
   },
   image: {
@@ -121,7 +122,7 @@ function PostCard({ post }) {
           style={{
             width: "100%",
             position: "relative",
-            paddingLeft: isMobile ? 0 : "2rem",
+            paddingLeft: isMobile ? 0 : "2.5rem",
           }}
         >
           <div

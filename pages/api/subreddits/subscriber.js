@@ -1,26 +1,22 @@
 import { getToken } from "next-auth/jwt";
 
 export default async function handler(req, res) {
-  const { sorting, limit, pageParam } = req.query;
   const token = await getToken({ req });
-  let redditRes;
-
-  if (token?.accessToken) {
+  if (token.accessToken) {
     try {
-      redditRes = await fetch(
-        `https://oauth.reddit.com/${sorting}?limit=${limit}&after=${pageParam}&raw_json=1`,
+      const redditRes = await fetch(
+        `https://oauth.reddit.com/subreddits/mine/subscriber`,
         {
           headers: {
             Authorization: `Bearer ${token.accessToken}`,
           },
         }
       );
+      console.log(await redditRes.json());
       res.status(200).json(await redditRes.json());
     } catch (error) {
       console.log(error);
       res.status(500).end();
     }
-  } else {
-    res.status(403).end();
   }
 }

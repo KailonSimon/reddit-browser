@@ -6,6 +6,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
@@ -50,6 +51,7 @@ function SubredditBanner({ subreddit }) {
   const demoUser = useSelector(selectDemoUser);
   const [subscribeButtonHovered, setSubscribeButtonHovered] = useState(false);
   const dispatch = useAppDispatch();
+  const { data: session } = useSession();
 
   return (
     <div className={classes.container}>
@@ -112,7 +114,9 @@ function SubredditBanner({ subreddit }) {
           </Text>
         </div>
         <div style={{ padding: "0.5rem 0" }}>
-          {demoUser.subscribedSubreddits.includes(subreddit.display_name) ? (
+          {subreddit.user_is_subscriber ||
+          (!session &&
+            demoUser.subscribedSubreddits.includes(subreddit.display_name)) ? (
             <Button
               size="xs"
               radius={99}

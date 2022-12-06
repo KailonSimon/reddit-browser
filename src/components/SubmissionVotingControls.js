@@ -27,7 +27,7 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: 30,
+    width: "min-content",
     minWidth: 30,
   },
   horizontalContainer: {

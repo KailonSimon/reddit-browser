@@ -15,6 +15,7 @@ import ContentWarningModal from "../../../src/components/Modals/ContentWarningMo
 import { wrapper } from "../../../store/store";
 import { useSelector } from "react-redux";
 import { selectAuthentication } from "../../../store/AuthSlice";
+import { getToken } from "next-auth/jwt";
 
 const useStyles = createStyles((theme) => ({
   content: {
@@ -28,6 +29,36 @@ const useStyles = createStyles((theme) => ({
     },
   },
 }));
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ req, query }) => {
+      const { subreddit } = query;
+      const token = await getToken({ req });
+      let res;
+      if (token.accessToken) {
+        res = await fetch(
+          `https://oauth.reddit.com/r/${subreddit}/about.json?raw_json=1`,
+          {
+            headers: {
+              Authorization: `Bearer ${token.accessToken}`,
+            },
+          }
+        );
+      } else {
+        res = await fetch(
+          `https://www.reddit.com/r/${subreddit}/about.json?raw_json=1`
+        );
+      }
+      const subredditInfo = await res.json();
+      console.log(subredditInfo);
+      return {
+        props: {
+          subreddit: subredditInfo.data,
+        },
+      };
+    }
+);
 
 function Subreddit({ subreddit }) {
   const { classes } = useStyles();
@@ -49,7 +80,7 @@ function Subreddit({ subreddit }) {
   } = useInfiniteQuery(
     ["posts", { subreddit }],
     ({ pageParam }) =>
-      fetchPosts(sorting, subreddit.display_name, 10, pageParam),
+      fetchPosts(subreddit.display_name, sorting, 10, pageParam),
     {
       enabled: authentication.status !== "unauthenticated",
       getNextPageParam: (lastPage, pages) => {
@@ -121,16 +152,3 @@ function Subreddit({ subreddit }) {
 }
 
 export default Subreddit;
-
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async (context) => {
-    const { subreddit } = context.query;
-    const subredditInfo = await getSubredditInfo(subreddit);
-
-    return {
-      props: {
-        subreddit: subredditInfo.data,
-      },
-    };
-  }
-);

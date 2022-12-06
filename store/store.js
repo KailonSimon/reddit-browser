@@ -15,6 +15,5 @@ const makeStore = () =>
 export const useAppDispatch = () => useDispatch();
 
 export const wrapper = createWrapper(makeStore, {
-  debug:
-    (false && !process.env.NODE_ENV) || process.env.NODE_ENV === "development",
+  debug: false, //!process.env.NODE_ENV || process.env.NODE_ENV === "development",
 });

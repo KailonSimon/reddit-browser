@@ -200,8 +200,8 @@ const getApplicationAccessToken = async () => {
 };
 
 const fetchPosts = async (
+  subreddit,
   sorting = "hot",
-  subreddit = "all",
   limit = 5,
   pageParam = ""
 ) => {
@@ -211,15 +211,26 @@ const fetchPosts = async (
     if (!access_token) {
       throw Error("No access token");
     }
-    const res = await fetch(
-      `https://oauth.reddit.com/r/${subreddit}/${sorting}.json?limit=${limit}&after=${pageParam}&raw_json=1`,
-      {
-        headers: {
-          Authorization: `Bearer ${await access_token}`,
-        },
-      }
-    );
+    let res;
+    if (!!subreddit) {
+      res = await fetch(
+        `/api/posts/${subreddit}?sorting=${sorting}&limit=${limit}&pageParam=${pageParam}&raw_json=1`
+      );
+    } else {
+      res = await fetch(
+        `/api/posts?sorting=${sorting}&limit=${limit}&pageParam=${pageParam}&raw_json=1`
+      );
+    }
     return await res.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getSubscribedSubreddits = async () => {
+  try {
+    const res = fetch("/api/subreddits/subscriber");
+    return res.json();
   } catch (error) {
     console.log(error);
   }
@@ -294,6 +305,7 @@ export {
   getSubredditWikiPages,
   getSubredditWikiPage,
   getTrendingSubreddits,
+  getSubscribedSubreddits,
   getApplicationAccessToken,
   voteOnSubmission,
   getOverlayColor,
