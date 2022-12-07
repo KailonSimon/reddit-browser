@@ -69,20 +69,44 @@ const toBase64 = (str) =>
     ? Buffer.from(str).toString("base64")
     : window.btoa(str);
 
-const fetchComments = async (postId, sorting, commentId) => {
+/* SERVER SIDE */
+const fetchComments = async ({ postId, commentId, sorting, accessToken }) => {
   if (!!commentId) {
     const res = await fetch(
-      `https://www.reddit.com/comments/${postId}.json?comment=${commentId}&limit=100&depth=10&sort=${sorting}&raw_json=1`
+      `https://oauth.reddit.com/comments/${postId}.json?comment=${commentId}&limit=100&depth=10&sort=${sorting}&raw_json=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${
+            accessToken || (await getApplicationAccessToken()).access_token
+          }`,
+        },
+      }
     );
     return await res.json();
   } else {
     const res = await fetch(
-      `https://www.reddit.com/comments/${postId}.json?limit=100&depth=5&sort=${sorting}&raw_json=1`
+      `https://oauth.reddit.com/comments/${postId}.json?limit=100&depth=5&sort=${sorting}&raw_json=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${
+            accessToken || (await getApplicationAccessToken()).access_token
+          }`,
+        },
+      }
     );
     return await res.json();
   }
 };
 
+/* CLIENT SIDE */
+const getComments = async ({ postId, commentId, sorting }) => {
+  const res = await fetch(
+    `/api/comments/${postId}?commentId=${commentId}&sorting=${sorting}`
+  );
+  return await res.json();
+};
+
+/* CLIENT SIDE */
 const fetchMoreChildrenComments = async (childrenIds) => {
   const res = await fetch(
     `https://api.pushshift.io/reddit/comment/search?ids=${childrenIds}`
@@ -90,6 +114,7 @@ const fetchMoreChildrenComments = async (childrenIds) => {
   return await res.json();
 };
 
+/* CLIENT SIDE */
 const fetchSubreddits = async (searchValue) => {
   const res = await fetch(
     `https://www.reddit.com/api/subreddit_autocomplete_v2.json?query=${searchValue}&include_profiles=false&limit=3`
@@ -97,8 +122,24 @@ const fetchSubreddits = async (searchValue) => {
   return await res.json();
 };
 
-const fetchAuthenticatedUserData = async (accessToken) => {
-  const res = await fetch(`https://oauth.reddit.com/api/v1/me.json`, {
+/* SERVER SIDE */
+const getUserData = async (username, accessToken) => {
+  const res = await fetch(
+    `https://oauth.reddit.com/user/${username}/about.json`,
+    {
+      headers: {
+        Authorization: `Bearer ${
+          accessToken || (await getApplicationAccessToken()).access_token
+        }`,
+      },
+    }
+  );
+  return await res.json();
+};
+
+/* SERVER SIDE */
+const getCurrentUserData = async (accessToken) => {
+  const res = await fetch(`https://oauth.reddit.com/api/me?raw_json=1`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -106,23 +147,43 @@ const fetchAuthenticatedUserData = async (accessToken) => {
   return await res.json();
 };
 
-const getUserData = async (username) => {
-  const res = await fetch(`https://www.reddit.com/user/${username}/about.json`);
-  return await res.json();
+/* SERVER SIDE */
+const getSubredditInfo = async (subreddit, accessToken) => {
+  try {
+    const res = await fetch(
+      `https://oauth.reddit.com/r/${subreddit}/about.json?raw_json=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${
+            accessToken || (await getApplicationAccessToken()).access_token
+          }`,
+        },
+      }
+    );
+    return await res.json();
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-const getCurrentUserData = async () => {
-  const res = await fetch("/api/user");
-  return await res.json();
+/* SERVER SIDE */
+const getSubredditFlair = async (subreddit, accessToken) => {
+  try {
+    const res = await fetch(
+      `https://oauth.reddit.com/r/${subreddit}/about.json?raw_json=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return await res.json();
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-const getSubredditInfo = async (subreddit) => {
-  const res = await fetch(
-    `https://www.reddit.com/r/${subreddit}/about.json?raw_json=1`
-  );
-  return await res.json();
-};
-
+/* CLIENT SIDE */
 const getSubredditRules = async (subreddit) => {
   const res = await fetch(
     `https://api.reddit.com/r/${subreddit}/about/rules.json`
@@ -130,11 +191,13 @@ const getSubredditRules = async (subreddit) => {
   return await res.json();
 };
 
+/* CLIENT SIDE */
 const getSubredditWikiPages = async (subreddit) => {
   const res = await fetch(`https://api.reddit.com/r/${subreddit}/wiki/pages`);
   return await res.json();
 };
 
+/* CLIENT SIDE */
 const getSubredditWikiPage = async (subreddit, page) => {
   const res = await fetch(
     `https://api.reddit.com/r/${subreddit}/wiki/${page}.json`
@@ -142,11 +205,42 @@ const getSubredditWikiPage = async (subreddit, page) => {
   return await res.json();
 };
 
-const getTrendingSubreddits = async (limit) => {
-  const res = await fetch(
-    `https://www.reddit.com/subreddits/popular.json?limit=${limit}&raw_json=1`
-  );
-  return await res.json();
+/* SERVER SIDE */
+const getTrendingSubreddits = async (accessToken) => {
+  try {
+    const res = await fetch(
+      `https://oauth.reddit.com/subreddits/popular.json?limit=5&raw_json=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${
+            accessToken || (await getApplicationAccessToken()).access_token
+          }`,
+        },
+      }
+    );
+    return await res.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/* SERVER SIDE */
+const getPostInfo = async (submissionId, accessToken) => {
+  try {
+    const res = await fetch(
+      `https://oauth.reddit.com/api/info.json?id=t3_${submissionId}&raw_json=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${
+            accessToken || (await getApplicationAccessToken()).access_token
+          }`,
+        },
+      }
+    );
+    return await res.json();
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const voteOnSubmission = async (id, direction) => {
@@ -179,6 +273,7 @@ const getOverlayColor = (awards) => {
   }
 };
 
+/* SERVER SIDE */
 const getApplicationAccessToken = async () => {
   try {
     const params = new URLSearchParams();
@@ -199,6 +294,7 @@ const getApplicationAccessToken = async () => {
   }
 };
 
+/* CLIENT SIDE */
 const fetchPosts = async (
   subreddit,
   sorting = "hot",
@@ -227,10 +323,19 @@ const fetchPosts = async (
   }
 };
 
-const getSubscribedSubreddits = async () => {
+/* SERVER SIDE */
+const getSubscribedSubreddits = async (accessToken) => {
   try {
-    const res = fetch("/api/subreddits/subscriber");
-    return res.json();
+    const res = await fetch(
+      `https://oauth.reddit.com/subreddits/mine/subscriber?limit=100`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    return await res.json();
   } catch (error) {
     console.log(error);
   }
@@ -295,11 +400,12 @@ export {
   getNestedCommentClass,
   fetchPosts,
   fetchComments,
+  getComments,
   fetchMoreChildrenComments,
   fetchSubreddits,
-  fetchAuthenticatedUserData,
   getUserData,
   getCurrentUserData,
+  getSubredditFlair,
   getSubredditInfo,
   getSubredditRules,
   getSubredditWikiPages,
@@ -307,6 +413,7 @@ export {
   getTrendingSubreddits,
   getSubscribedSubreddits,
   getApplicationAccessToken,
+  getPostInfo,
   voteOnSubmission,
   getOverlayColor,
   isColorDark,

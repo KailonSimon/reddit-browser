@@ -2,7 +2,7 @@ import { createStyles, Text, Skeleton } from "@mantine/core";
 import { useReducer } from "react";
 import CommentTile from "./CommentTile";
 import { useQuery } from "@tanstack/react-query";
-import { fetchComments } from "../../../utils";
+import { fetchComments, getComments } from "../../../utils";
 import CommentSectionControls from "./CommentSectionControls";
 import ErrorBoundary from "../ErrorBoundary";
 import CommentReplyArea from "./CommentReplyArea";
@@ -46,7 +46,12 @@ function CommentSection({ post, commentId, variant = "full" }) {
 
   const { isLoading, isFetching, isRefetching, data } = useQuery(
     ["comments", state.commentSorting],
-    () => fetchComments(post.id, state.commentSorting, commentId),
+    () =>
+      getComments({
+        postId: post.id,
+        commentId,
+        sorting: state.commentSorting,
+      }),
     { enabled: !!post.id, initialData: [] }
   );
 

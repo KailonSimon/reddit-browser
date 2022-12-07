@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { ChevronDown, Logout } from "tabler-icons-react";
 import { Avatar, Text, Menu, UnstyledButton } from "@mantine/core";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { openConfirmModal } from "@mantine/modals";
 import numeral from "numeral";
 import { useAppDispatch } from "../../store/store";
@@ -74,6 +74,7 @@ UserButton.displayName = "UserButton";
 
 function UserMenu({ user }) {
   const reduxDispatch = useAppDispatch();
+  const { data: session } = useSession();
 
   const openSignOutModal = () =>
     openConfirmModal({
@@ -81,7 +82,7 @@ function UserMenu({ user }) {
       centered: true,
       labels: { confirm: "Sign out", cancel: "Cancel" },
       confirmProps: { color: "red" },
-      onConfirm: user.is_demo
+      onConfirm: !session
         ? () => reduxDispatch(setAuthenticationStatus("unauthenticated"))
         : () => signOut(),
     });
@@ -104,7 +105,7 @@ function UserMenu({ user }) {
       </Menu.Target>
       <Menu.Dropdown>
         <Link
-          href={user.is_demo ? `/user/DemoUser` : `/user/${user.name}`}
+          href={!session ? `/user/DemoUser` : `/user/${user.name}`}
           passHref
         >
           <Menu.Item>Profile</Menu.Item>

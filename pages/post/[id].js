@@ -11,7 +11,9 @@ import SubredditRules from "../../src/components/Subreddit/SubredditRules";
 import SubredditSidebar from "../../src/components/SubredditSidebar";
 import SubredditBanner from "../../src/components/SubredditBanner";
 import ContentWarningModal from "../../src/components/Modals/ContentWarningModal";
-import { getSubredditInfo } from "../../utils";
+import { getCurrentUserData, getPostInfo, getSubredditInfo } from "../../utils";
+import { wrapper } from "../../store/store";
+import { getToken } from "next-auth/jwt";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -46,7 +48,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Post({ post, subreddit }) {
+function Post({ post, subreddit, currentUser }) {
   const { classes } = useStyles();
   const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
     post.over_18
@@ -66,7 +68,7 @@ function Post({ post, subreddit }) {
           <meta property="og:image" content={post.url} />
         )}
       </Head>
-      <Layout>
+      <Layout currentUser={currentUser}>
         <SubredditBanner subreddit={subreddit} />
 
         <div className={classes.controlsWrapper}>
@@ -97,17 +99,32 @@ function Post({ post, subreddit }) {
 
 export default Post;
 
-export async function getServerSideProps(context) {
-  const { id } = context.query;
-  const res = await fetch(
-    `https://www.reddit.com/api/info.json?id=t3_${id}&raw_json=1`
-  );
-  const post = await res.json();
-  const subreddit = await getSubredditInfo(
-    post.data.children[0].data.subreddit
-  );
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ req, query }) => {
+      const { id } = query;
+      const token = await getToken({ req });
 
-  return {
-    props: { post: post.data.children[0].data, subreddit: subreddit.data },
-  };
-}
+      const post = (await getPostInfo(id, token?.accessToken)).data;
+      const subreddit = (
+        await getSubredditInfo(
+          post.children[0].data.subreddit,
+          token?.accessToken
+        )
+      ).data;
+
+      let currentUser;
+
+      if (token?.accessToken) {
+        currentUser = (await getCurrentUserData(token.accessToken)).data;
+      }
+
+      return {
+        props: {
+          post: post.children[0].data,
+          subreddit,
+          currentUser: currentUser || store.getState().demoUser,
+        },
+      };
+    }
+);

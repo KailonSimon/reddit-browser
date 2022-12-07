@@ -21,7 +21,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Layout({ children }) {
+function Layout({ currentUser, children }) {
   const { classes } = useStyles();
   const [scrollPosition, setScrollPosition] = useState(0);
   const router = useRouter();
@@ -41,7 +41,7 @@ function Layout({ children }) {
 
   return (
     <>
-      <Navbar />
+      <Navbar currentUser={currentUser} />
       <div className={classes.container}>
         <main
           className={classes.contentWrapper}

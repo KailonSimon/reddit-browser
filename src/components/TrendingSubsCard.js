@@ -15,7 +15,7 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     width: "100%",
-    padding: "1rem",
+    padding: "1rem 0.5rem",
     display: "flex",
     color: "#fff",
     borderRadius: 4,

@@ -90,9 +90,9 @@ function PostCard({ post }) {
   }
 
   useEffect(() => {
-    getSubredditInfo(post.subreddit).then((res) => {
-      setSubreddit(res.data);
-    });
+    fetch(`/api/subreddit/${post.subreddit}/about`)
+      .then((res) => res.json())
+      .then((subreddit) => setSubreddit(subreddit.data));
   }, [post]);
 
   return (

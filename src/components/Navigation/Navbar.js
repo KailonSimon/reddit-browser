@@ -59,21 +59,8 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Navbar() {
+function Navbar({ currentUser }) {
   const { classes } = useStyles();
-  const { data: session } = useSession();
-  const {
-    data: user,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["currentUserData", session],
-    queryFn: () => getUserData(session.user.name),
-    enabled: !!session,
-  });
-
-  const authentication = useSelector(selectAuthentication);
   const demoUser = useSelector(selectDemoUser);
 
   return (
@@ -106,18 +93,10 @@ function Navbar() {
             </div>
 
             <div className={classes.drawer}>
-              <NavigationDrawer user={user?.data || demoUser} />
+              <NavigationDrawer user={currentUser} />
             </div>
             <div className={classes.userControls}>
-              {isLoading && isError ? (
-                <Loader size="xs" />
-              ) : !!user ? (
-                <UserMenu user={user?.data} />
-              ) : authentication.status === "demo" ? (
-                <UserMenu user={demoUser} />
-              ) : (
-                <SignInButton />
-              )}
+              <UserMenu user={currentUser} />
             </div>
           </div>
         </nav>

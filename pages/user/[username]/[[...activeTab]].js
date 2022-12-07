@@ -1,14 +1,15 @@
 import React from "react";
 import Layout from "../../../src/components/Layout";
-import { getUserData } from "../../../utils";
+import { getCurrentUserData, getUserData } from "../../../utils";
 import { wrapper } from "../../../store/store";
 import { useSelector } from "react-redux";
 import { selectDemoUser } from "../../../store/DemoUserSlice";
 import Head from "next/head";
 import ProfileFeed from "../../../src/components/User/ProfileFeed";
 import UserCard from "../../../src/components/User/UserCard";
+import { getToken } from "next-auth/jwt";
 
-function User({ user }) {
+function User({ user, currentUser }) {
   const demoUser = useSelector(selectDemoUser);
 
   return (
@@ -23,7 +24,7 @@ function User({ user }) {
           <title>User not found</title>
         )}
       </Head>
-      <Layout>
+      <Layout currentUser={currentUser}>
         {!user ? (
           <div>Error: User not found</div>
         ) : (
@@ -35,7 +36,7 @@ function User({ user }) {
               gap: "2rem",
             }}
           >
-            {user.name === demoUser.name ? (
+            {false && user.name === demoUser.name ? (
               <ProfileFeed user={user} />
             ) : (
               <div style={{ marginTop: "1rem" }}>
@@ -51,17 +52,30 @@ function User({ user }) {
 
 export default User;
 export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async (context) => {
-    const { username } = context.query;
-    const user = await getUserData(username);
-    const demoUser = store.getState().demoUser;
+  (store) =>
+    async ({ req, query }) => {
+      const { username } = query;
+      const token = await getToken({ req });
 
-    if (username === "DemoUser") {
-      return { props: { user: demoUser } };
-    } else {
+      let user;
+      let currentUser;
+      if (token) {
+        currentUser = (await getCurrentUserData(token.accessToken)).data;
+        if (token.name === username) {
+          user = currentUser;
+        } else {
+          user = (await getUserData(username, token.accessToken)).data;
+        }
+      } else {
+        if (username === "DemoUser") {
+          user = store.getState().demoUser;
+        } else {
+          user = (await getUserData(username)).data;
+        }
+      }
+
       return {
-        props: { user: user.data || null },
+        props: { user, currentUser: currentUser || store.getState().demoUser },
       };
     }
-  }
 );

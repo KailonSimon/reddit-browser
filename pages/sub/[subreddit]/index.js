@@ -2,7 +2,13 @@ import { useEffect, useState, useReducer } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import { createStyles, Box, Text } from "@mantine/core";
-import { mergePages, fetchPosts } from "../../../utils";
+import {
+  mergePages,
+  fetchPosts,
+  getSubredditInfo,
+  getSubredditFlair,
+  getCurrentUserData,
+} from "../../../utils";
 import LoadingScreen from "../../../src/components/LoadingScreen";
 import Feed from "../../../src/components/Feed/Feed";
 import FeedControls from "../../../src/components/Feed/FeedControls";
@@ -44,7 +50,7 @@ function reducer(state, action) {
   }
 }
 
-function Subreddit({ subreddit, flairList }) {
+function Subreddit({ subreddit, flairList, currentUser }) {
   const { classes } = useStyles();
   const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
     subreddit.over18
@@ -96,12 +102,12 @@ function Subreddit({ subreddit, flairList }) {
         <meta property="og:title" content={subreddit.display_name_prefixed} />
       </Head>
       <>
-        <Layout>
+        <Layout currentUser={currentUser}>
           <SubredditBanner subreddit={subreddit} />
           <Box className={classes.content}>
             <SidebarContainer>
               <SubredditSidebar subreddit={subreddit} />
-              {flairList.length ? (
+              {flairList?.length ? (
                 <SubredditFlairFilter
                   flairList={flairList}
                   setFlairFilter={(values) =>
@@ -130,7 +136,7 @@ function Subreddit({ subreddit, flairList }) {
               <Feed
                 key={mergePages(data.pages)}
                 submissions={
-                  flairList.length && state.shownFlair.length
+                  flairList?.length && state.shownFlair?.length
                     ? mergePages(data.pages).filter((post) =>
                         state.shownFlair.includes(post.link_flair_text)
                       )
@@ -160,40 +166,24 @@ export const getServerSideProps = wrapper.getServerSideProps(
       const { subreddit } = query;
       const token = await getToken({ req });
 
-      let subredditInfoRes;
-      let flairRes;
-      if (token?.accessToken) {
-        [subredditInfoRes, flairRes] = await Promise.all([
-          fetch(
-            `https://oauth.reddit.com/r/${subreddit}/about.json?raw_json=1`,
-            {
-              headers: {
-                Authorization: `Bearer ${token.accessToken}`,
-              },
-            }
-          ),
-          fetch(
-            `https://oauth.reddit.com/r/${subreddit}/api/link_flair_v2?raw_json=1`,
-            {
-              headers: {
-                Authorization: `Bearer ${token.accessToken}`,
-              },
-            }
-          ),
-        ]);
-      } else {
-        subredditInfoRes = await fetch(
-          `https://www.reddit.com/r/${subreddit}/about.json?raw_json=1`
-        );
-      }
-      const subredditInfo = await subredditInfoRes.json();
-      const flairList = await flairRes?.json();
+      const subredditInfo = (
+        await getSubredditInfo(subreddit, token?.accessToken)
+      ).data;
 
-      console.log(subredditInfo);
+      let flairList;
+      let currentUser;
+
+      if (token?.accessToken) {
+        flairList = (await getSubredditFlair(subreddit, token.accessToken))
+          .data;
+        currentUser = (await getCurrentUserData(token.accessToken)).data;
+      }
+
       return {
         props: {
-          subreddit: subredditInfo.data,
+          subreddit: subredditInfo,
           flairList: flairList || null,
+          currentUser: currentUser || store.getState().demoUser,
         },
       };
     }

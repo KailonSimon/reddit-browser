@@ -5,7 +5,14 @@ import Feed from "../src/components/Feed/Feed";
 import FeedControls from "../src/components/Feed/FeedControls";
 import Layout from "../src/components/Layout";
 import Head from "next/head";
-import { fetchPosts, getApplicationAccessToken, mergePages } from "../utils";
+import {
+  fetchPosts,
+  getApplicationAccessToken,
+  getCurrentUserData,
+  getSubscribedSubreddits,
+  getTrendingSubreddits,
+  mergePages,
+} from "../utils";
 import LoadingScreen from "../src/components/LoadingScreen";
 import TrendingSubsCard from "../src/components/TrendingSubsCard";
 import SidebarContainer from "../src/components/Navigation/SidebarContainer";
@@ -15,6 +22,7 @@ import { selectDemoUser, selectVisitedPosts } from "../store/DemoUserSlice";
 import RecentlyVisitedCard from "../src/components/Sidebar/RecentlyVisitedCard";
 import { useSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
+import { wrapper } from "../store/store";
 
 const useStyles = createStyles((theme) => ({
   main: {
@@ -45,7 +53,11 @@ function reducer(state, action) {
   }
 }
 
-export default function Home({ subscribedSubreddits, trendingSubreddits }) {
+export default function Home({
+  subscribedSubreddits,
+  trendingSubreddits,
+  currentUser,
+}) {
   const { classes } = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
   const visitedPosts = useSelector(selectVisitedPosts);
@@ -101,7 +113,7 @@ export default function Home({ subscribedSubreddits, trendingSubreddits }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta property="og:title" content="Reddit Browser | Home" />
       </Head>
-      <Layout>
+      <Layout currentUser={currentUser}>
         <div className={classes.main}>
           <SidebarContainer>
             {trendingSubreddits?.length ? (
@@ -148,54 +160,30 @@ export default function Home({ subscribedSubreddits, trendingSubreddits }) {
   );
 }
 
-export async function getServerSideProps({ req }) {
-  const token = await getToken({ req });
-  let subscribedRes;
-  let trendingRes;
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ req }) => {
+      const token = await getToken({ req });
+      let subscribedSubreddits;
+      let currentUser;
 
-  if (token?.accessToken) {
-    [subscribedRes, trendingRes] = await Promise.all([
-      fetch(`https://oauth.reddit.com/subreddits/mine/subscriber?limit=100`, {
-        headers: {
-          Authorization: `Bearer ${token.accessToken}`,
-        },
-      }),
-      fetch(
-        `https://oauth.reddit.com/subreddits/popular.json?limit=5&raw_json=1`,
-        {
-          headers: {
-            Authorization: `Bearer ${token.accessToken}`,
-          },
-        }
-      ),
-    ]);
-  } else {
-    trendingRes = await fetch(
-      `https://oauth.reddit.com/subreddits/popular.json?limit=5&raw_json=1`,
-      {
-        headers: {
-          Authorization: `Bearer ${
-            (
-              await getApplicationAccessToken()
-            ).access_token
-          }`,
-        },
+      if (token?.accessToken) {
+        currentUser = (await getCurrentUserData(token.accessToken)).data;
+        subscribedSubreddits = (
+          await getSubscribedSubreddits(token.accessToken)
+        ).data.children?.map((subreddit) => subreddit.data.display_name);
       }
-    );
-  }
 
-  const subscribedSubreddits = await subscribedRes?.json();
-  const trendingSubreddits = await trendingRes?.json();
+      const trendingSubreddits = (
+        await getTrendingSubreddits(token?.accessToken)
+      ).data?.children.map((subreddit) => subreddit.data);
 
-  return {
-    props: {
-      subscribedSubreddits:
-        subscribedSubreddits?.data?.children.map(
-          (subreddit) => subreddit.data.display_name
-        ) || null,
-      trendingSubreddits:
-        trendingSubreddits?.data?.children.map((subreddit) => subreddit.data) ||
-        null,
-    },
-  };
-}
+      return {
+        props: {
+          subscribedSubreddits: subscribedSubreddits || null,
+          trendingSubreddits: trendingSubreddits || null,
+          currentUser: currentUser || store.getState().demoUser,
+        },
+      };
+    }
+);
