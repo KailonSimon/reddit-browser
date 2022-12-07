@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { selectVisitedPosts } from "src/store/DemoUserSlice";
 import { Pinned, Speakerphone } from "tabler-icons-react";
-import numeral from "numeral";
 import SubmissionMenu from "../SubmissionMenu";
 import SubmissionVotingControls from "../SubmissionVotingControls";
 import AwardsContainer from "../AwardsContainer";
@@ -13,6 +12,7 @@ import FlairContainer from "../FlairContainer";
 import { createStyles, Text, Badge, Box } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { getCondensedDate, getRelativeTime } from "src/services/Format/Date";
+import { condenseNumber } from "src/services/Format/API";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -264,9 +264,9 @@ function PostTile({ post, handlePostTileClick, variant }) {
               color: theme.colorScheme === "dark" ? "#818384" : theme.black,
             })}
           >
-            <span>{numeral(post.score).format("0a")} points</span>
+            <span>{condenseNumber(post.score)} points</span>
             <span className={classes.condensedDetailsItem}>
-              {numeral(post.num_comments).format("0.[0]a")} comment
+              {condenseNumber(post.num_comments)} comment
               {post.num_comments === 1 ? "" : "s"}
             </span>
             <span className={classes.condensedDetailsItem}>

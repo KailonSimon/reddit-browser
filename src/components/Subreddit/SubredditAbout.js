@@ -1,16 +1,11 @@
 import React from "react";
 import Image from "next/image";
 import { Divider, Text, Title } from "@mantine/core";
-import numeral from "numeral";
-import { markdown } from "snudown-js";
 import { Cake } from "tabler-icons-react";
 import { getDate } from "src/services/Format/Date";
+import { condenseNumber, createMarkup } from "src/services/Format/API";
 
 function SubredditAbout({ subreddit, variant = "full" }) {
-  const createMarkup = (text) => {
-    return { __html: markdown(text, { target: "_blank" }) };
-  };
-
   if (variant === "hover") {
     return (
       <div
@@ -53,7 +48,7 @@ function SubredditAbout({ subreddit, variant = "full" }) {
             }}
           >
             <Text color="white" size={16} sx={{ lineHeight: 0.75 }}>
-              {numeral(subreddit.subscribers).format("0.[0]a")}
+              {condenseNumber(subreddit.subscribers)}
             </Text>
             <Text color="dimmed" size={12}>
               Members
@@ -67,7 +62,7 @@ function SubredditAbout({ subreddit, variant = "full" }) {
                 lineHeight: 0.75,
               }}
             >
-              {numeral(subreddit.active_user_count).format("0.[0]a")}
+              {condenseNumber(subreddit.active_user_count)}
             </Text>
             <Text color="dimmed" size={12}>
               Online
@@ -109,7 +104,7 @@ function SubredditAbout({ subreddit, variant = "full" }) {
           }}
         >
           <Text color="white" size={16} sx={{ lineHeight: 0.75 }}>
-            {numeral(subreddit.subscribers).format("0.[0]a")}
+            {condenseNumber(subreddit.subscribers)}
           </Text>
           <Text color="dimmed" size={12}>
             Members
@@ -124,7 +119,7 @@ function SubredditAbout({ subreddit, variant = "full" }) {
               ":before": { content: '"●"', marginRight: 4, color: "#46d160" },
             }}
           >
-            {numeral(subreddit.active_user_count).format("0.[0]a")}
+            {condenseNumber(subreddit.active_user_count)}
           </Text>
           <Text color="dimmed" size={12}>
             Online

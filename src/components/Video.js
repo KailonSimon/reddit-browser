@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import parse from "html-react-parser";
 import { Loader } from "@mantine/core";
+import { createMarkup } from "src/services/Format/API";
 
 function Video({ type, content }) {
   const [pathname, setPathname] = useState("");
-  function createMarkup() {
-    return { __html: content };
-  }
   const videoRef = useRef(null);
   useEffect(() => {
     setPathname(window.location.pathname.split("/")[1]);
@@ -55,7 +53,7 @@ function Video({ type, content }) {
         maxHeight: "calc(100vh - 16rem)",
         background: "#000",
       }}
-      dangerouslySetInnerHTML={createMarkup()}
+      dangerouslySetInnerHTML={createMarkup(content)}
     />
   );
 }

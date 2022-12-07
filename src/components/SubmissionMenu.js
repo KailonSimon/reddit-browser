@@ -1,5 +1,4 @@
 import { Box, Menu, Button, createStyles, ActionIcon } from "@mantine/core";
-import numeral from "numeral";
 import { useClipboard, useMediaQuery } from "@mantine/hooks";
 import {
   BookmarkOff,
@@ -16,6 +15,7 @@ import { saveSubmission, hideSubmission } from "src/store/DemoUserSlice";
 import { useSelector } from "react-redux";
 import { selectDemoUser } from "src/store/DemoUserSlice";
 import SubmissionVotingControls from "./SubmissionVotingControls";
+import { condenseNumber } from "src/services/Format/API";
 
 const useStyles = createStyles((theme) => ({
   button: {
@@ -99,7 +99,7 @@ export default function SubmissionMenu({
           leftIcon={<Messages size={20} />}
           onClick={handleCommentButtonClick}
         >
-          {numeral(submission.num_comments).format("0.[0]a")}{" "}
+          {condenseNumber(submission.num_comments)}{" "}
           {`comment${submission.num_comments === 1 ? "" : "s"}`}
         </Button>
 

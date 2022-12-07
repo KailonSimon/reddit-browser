@@ -20,9 +20,9 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { Speakerphone } from "tabler-icons-react";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
-import { markdown } from "snudown-js";
 import { createImageBlurData, toBase64 } from "src/services/Format/Color";
 import { getRelativeTime } from "src/services/Format/Date";
+import { createMarkup } from "src/services/Format/API";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -79,10 +79,6 @@ function PostCard({ post }) {
   const [spoilerOverlayShown, setSpoilerOverlayShown] = useState(post.spoiler);
   const [subreddit, setSubreddit] = useState(null);
   const isMobile = useMediaQuery("(max-width: 700px)");
-
-  function createMarkup() {
-    return { __html: markdown(post.selftext, { target: "_blank" }) };
-  }
 
   useEffect(() => {
     fetch(`/api/subreddit/${post.subreddit}/about`)
@@ -381,7 +377,7 @@ function PostCard({ post }) {
                 color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
               })}
             >
-              {<div dangerouslySetInnerHTML={createMarkup()} />}
+              {<div dangerouslySetInnerHTML={createMarkup(post.selftext)} />}
             </Text>
           )}
           <div>

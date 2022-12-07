@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { selectAuthentication } from "src/store/AuthSlice";
 import { selectDemoUser } from "src/store/DemoUserSlice";
 import { createStyles, Image, Text, Title } from "@mantine/core";
-import moment from "moment";
+import { getRelativeTime, getDate } from "src/services/Format/Date";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -62,8 +62,7 @@ function UserCard({ user }) {
             : ""}
         </Title>
         <Text size="xs" color="dimmed">
-          Member since {moment.unix(user.created).format("MMMM Do, YYYY")} (
-          {moment.unix(user.created).fromNow()})
+          Member since {getDate(user.created)} ({getRelativeTime(user.created)})
         </Text>
         <Text>Post Karma: {user.link_karma}</Text>
         <Text>Comment Karma: {user.comment_karma}</Text>

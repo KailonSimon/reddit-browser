@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Accordion, Text, Title } from "@mantine/core";
 import { getSubredditRules } from "src/services/Subreddit/client";
-import { markdown } from "snudown-js";
+import { createMarkup } from "src/services/Format/API";
 
 function SubredditRules({ subreddit }) {
   const [rules, setRules] = useState(null);
@@ -14,7 +14,6 @@ function SubredditRules({ subreddit }) {
     } catch (error) {
       console.log(error);
     }
-    console.log(subreddit);
   }, [subreddit]);
 
   if (!rules) {
@@ -40,9 +39,6 @@ function SubredditRules({ subreddit }) {
       >
         {rules.length ? (
           rules.map((rule, i) => {
-            const createMarkup = (text) => {
-              return { __html: markdown(text, { target: "_blank" }) };
-            };
             return (
               <Accordion.Item value={rule.short_name} key={rule.short_name}>
                 <Accordion.Control>

@@ -19,8 +19,8 @@ import {
   TiArrowDownOutline,
   TiArrowDownThick,
 } from "react-icons/ti";
-import numeral from "numeral";
 import { voteOnSubmission } from "src/services/Posts/client";
+import { condenseNumber } from "src/services/Format/API";
 
 const useStyles = createStyles((theme) => ({
   verticalContainer: {
@@ -136,10 +136,10 @@ function SubmissionVotingControls({ variant, submission }) {
         })}
       >
         {isUpvoted
-          ? numeral(submission.score + 1).format("0.[0]a")
+          ? condenseNumber(submission.score + 1)
           : isDownvoted
-          ? numeral(submission.score - 1).format("0.[0]a")
-          : numeral(submission.score).format("0.[0]a")}
+          ? condenseNumber(submission.score - 1)
+          : condenseNumber(submission.score)}
       </Text>
       <ActionIcon
         variant="transparent"

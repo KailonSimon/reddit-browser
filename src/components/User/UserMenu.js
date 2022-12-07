@@ -3,10 +3,10 @@ import { ChevronDown, Logout } from "tabler-icons-react";
 import { Avatar, Text, Menu, UnstyledButton } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
 import { openConfirmModal } from "@mantine/modals";
-import numeral from "numeral";
 import { useAppDispatch } from "src/store/store";
 import { setAuthenticationStatus } from "src/store/AuthSlice";
 import Link from "next/link";
+import { condenseNumber } from "src/services/Format/API";
 
 const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
   <UnstyledButton
@@ -54,7 +54,7 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
         </Text>
 
         <Text color="dimmed" size="xs">
-          {numeral(user.total_karma).format("0a")} karma
+          {condenseNumber(user.total_karma)} karma
         </Text>
       </div>
       <div

@@ -5,7 +5,6 @@ import CommentReplyArea from "./CommentReplyArea";
 import CommentTileControls from "./CommentTileControls";
 import AwardsContainer from "../AwardsContainer";
 import FlairContainer from "../FlairContainer";
-import { markdown } from "snudown-js";
 import { ChevronDown, Lock, Pinned } from "tabler-icons-react";
 import {
   fetchMoreChildrenComments,
@@ -13,6 +12,7 @@ import {
 } from "src/services/Comments/client";
 import { getOverlayColor } from "src/services/Format/Color";
 import { getRelativeTime } from "src/services/Format/Date";
+import { createMarkup } from "src/services/Format/API";
 
 const initialState = {
   isCollapsed: false,
@@ -57,10 +57,6 @@ function CommentTile({ comment, depth = 0, variant = "full" }) {
   const hiddenReplies = comment?.replies?.data?.children?.filter(
     (reply) => reply.kind === "more"
   )[0]?.data;
-
-  function createMarkup() {
-    return { __html: markdown(comment.body, { target: "_blank" }) };
-  }
 
   if (!comment.body || comment.body === "[removed]") {
     return null;
@@ -228,7 +224,7 @@ function CommentTile({ comment, depth = 0, variant = "full" }) {
             <>
               <div
                 className="comment-body"
-                dangerouslySetInnerHTML={createMarkup()}
+                dangerouslySetInnerHTML={createMarkup(comment.body)}
               />
 
               <CommentTileControls
