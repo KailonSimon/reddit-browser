@@ -37,7 +37,6 @@ function NavigationDrawer({ user }) {
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           {user ? <UserMenu user={user} /> : null}
           <SubredditSearch />
-          {user ? null : <SignOutButton />}
         </div>
       </Drawer>
     </>

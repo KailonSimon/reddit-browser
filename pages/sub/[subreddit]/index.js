@@ -191,7 +191,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       return {
         props: {
           subreddit: subredditInfo.data,
-          flairList,
+          flairList: flairList || null,
         },
       };
     }

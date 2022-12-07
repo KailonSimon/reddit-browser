@@ -26,7 +26,6 @@ export default function SignIn({ providers }) {
   const { classes } = useStyles();
   const router = useRouter();
   const reduxDispatch = useAppDispatch();
-  const { callbackUrl } = useRouter().query;
 
   const handleDemoSignIn = () => {
     reduxDispatch(setAuthenticationStatus("demo"));
@@ -67,7 +66,7 @@ export default function SignIn({ providers }) {
                 },
               }}
               key={provider.id}
-              onClick={() => signIn(provider.id, { callbackUrl })}
+              onClick={() => signIn(provider.id, { callbackUrl: "/" })}
             >
               Sign in with {provider.name}
             </Button>

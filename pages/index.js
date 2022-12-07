@@ -67,7 +67,7 @@ export async function getServerSideProps({ req }) {
 
   return {
     props: {
-      subscribedSubreddits: subscribedSubreddits.data.children,
+      subscribedSubreddits: subscribedSubreddits?.data?.children || null,
     },
   };
 }
