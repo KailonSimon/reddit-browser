@@ -1,8 +1,8 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import LoadingScreen from "../components/LoadingScreen";
 import { useSelector } from "react-redux";
-import { selectAuthentication } from "../../store/AuthSlice";
+import { selectAuthentication } from "src/store/AuthSlice";
+import LoadingScreen from "src/components/LoadingScreen";
 
 function Auth({ children }) {
   const router = useRouter();

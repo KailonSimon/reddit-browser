@@ -1,3 +1,12 @@
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import Video from "../Video";
+import SubmissionMenu from "../SubmissionMenu";
+import SubmissionVotingControls from "../SubmissionVotingControls";
+import AwardsContainer from "../AwardsContainer";
+import FlairContainer from "../FlairContainer";
+import SubredditSidebar from "../Subreddit/SubredditAbout";
 import {
   createStyles,
   Title,
@@ -8,20 +17,12 @@ import {
   Button,
   Tooltip,
 } from "@mantine/core";
-import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import Video from "../Video";
-import { createImageBlurData, getRelativeTime, toBase64 } from "../../../utils";
-import SubmissionMenu from "../SubmissionMenu";
-import Link from "next/link";
-import SubmissionVotingControls from "../SubmissionVotingControls";
-import { Speakerphone } from "tabler-icons-react";
-import { markdown } from "snudown-js";
-import AwardsContainer from "../AwardsContainer";
-import FlairContainer from "../FlairContainer";
 import { useMediaQuery } from "@mantine/hooks";
-import SubredditSidebar from "../SubredditSidebar";
+import { Speakerphone } from "tabler-icons-react";
+import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
+import { markdown } from "snudown-js";
+import { createImageBlurData, toBase64 } from "src/services/Format/Color";
+import { getRelativeTime } from "src/services/Format/Date";
 
 const useStyles = createStyles((theme) => ({
   container: {

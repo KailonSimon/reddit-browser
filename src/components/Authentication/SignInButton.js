@@ -1,5 +1,5 @@
-import { Button } from "@mantine/core";
 import { signIn } from "next-auth/react";
+import { Button } from "@mantine/core";
 import { BrandReddit } from "tabler-icons-react";
 
 function SignInButton() {

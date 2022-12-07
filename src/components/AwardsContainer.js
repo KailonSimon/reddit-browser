@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Text, Tooltip } from "@mantine/core";
 import Image from "next/image";
+import { Text, Tooltip } from "@mantine/core";
 
 function AwardsContainer({ awards }) {
   const [allAwardsShown, setAllAwardsShown] = useState(false);

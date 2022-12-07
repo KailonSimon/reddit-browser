@@ -1,7 +1,7 @@
-import { Button } from "@mantine/core";
 import { signOut } from "next-auth/react";
-import { Logout } from "tabler-icons-react";
+import { Button } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
+import { Logout } from "tabler-icons-react";
 
 function SignOutButton() {
   const openSignOutModal = () =>

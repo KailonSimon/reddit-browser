@@ -1,6 +1,6 @@
-import { createStyles, Text, Modal, Button } from "@mantine/core";
 import React from "react";
 import Link from "next/link";
+import { createStyles, Text, Modal, Button } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
   modal: {

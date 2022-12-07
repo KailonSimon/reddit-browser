@@ -1,11 +1,11 @@
-import { createStyles, Text, Skeleton } from "@mantine/core";
 import { useReducer } from "react";
-import CommentTile from "./CommentTile";
 import { useQuery } from "@tanstack/react-query";
-import { fetchComments } from "../../../utils";
+import CommentTile from "./CommentTile";
 import CommentSectionControls from "./CommentSectionControls";
 import ErrorBoundary from "../ErrorBoundary";
 import CommentReplyArea from "./CommentReplyArea";
+import { createStyles, Text, Skeleton } from "@mantine/core";
+import { fetchComments } from "src/services/Comments/client";
 
 const useStyles = createStyles((theme) => ({
   container: {

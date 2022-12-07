@@ -1,6 +1,6 @@
-import { Button, createStyles } from "@mantine/core";
 import PostCard from "./PostCard";
 import CommentSection from "../Comment/CommentSection";
+import { Button, createStyles } from "@mantine/core";
 import { ArrowLeft } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({

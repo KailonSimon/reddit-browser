@@ -1,21 +1,18 @@
-import { ActionIcon, Box, Text } from "@mantine/core";
 import React, { useEffect, useReducer } from "react";
+import Link from "next/link";
+import { ActionIcon, Box, Text } from "@mantine/core";
+import CommentReplyArea from "./CommentReplyArea";
+import CommentTileControls from "./CommentTileControls";
+import AwardsContainer from "../AwardsContainer";
+import FlairContainer from "../FlairContainer";
+import { markdown } from "snudown-js";
 import { ChevronDown, Lock, Pinned } from "tabler-icons-react";
 import {
   fetchMoreChildrenComments,
   getNestedCommentClass,
-  getOverlayColor,
-  getRelativeTime,
-} from "../../../utils";
-import CommentReplyArea from "./CommentReplyArea";
-import CommentTileControls from "./CommentTileControls";
-import { markdown } from "snudown-js";
-import AwardsContainer from "../AwardsContainer";
-import FlairContainer from "../FlairContainer";
-import Link from "next/link";
-import { useAppDispatch } from "../../../store/store";
-import { postComment, selectDemoUser } from "../../../store/DemoUserSlice";
-import { useSelector } from "react-redux";
+} from "src/services/Comments/client";
+import { getOverlayColor } from "src/services/Format/Color";
+import { getRelativeTime } from "src/services/Format/Date";
 
 const initialState = {
   isCollapsed: false,

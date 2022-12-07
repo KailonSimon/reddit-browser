@@ -11,10 +11,10 @@ import {
 } from "tabler-icons-react";
 import { showNotification } from "@mantine/notifications";
 import { Messages, Share, Bookmark } from "tabler-icons-react";
-import { useAppDispatch } from "../../store/store";
-import { saveSubmission, hideSubmission } from "../../store/DemoUserSlice";
+import { useAppDispatch } from "src/store/store";
+import { saveSubmission, hideSubmission } from "src/store/DemoUserSlice";
 import { useSelector } from "react-redux";
-import { selectDemoUser } from "../../store/DemoUserSlice";
+import { selectDemoUser } from "src/store/DemoUserSlice";
 import SubmissionVotingControls from "./SubmissionVotingControls";
 
 const useStyles = createStyles((theme) => ({

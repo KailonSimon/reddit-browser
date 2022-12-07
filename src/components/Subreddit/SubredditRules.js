@@ -1,6 +1,6 @@
-import { Accordion, Text, Title } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { getSubredditRules } from "../../../utils";
+import { Accordion, Text, Title } from "@mantine/core";
+import { getSubredditRules } from "src/services/Subreddit/client";
 import { markdown } from "snudown-js";
 
 function SubredditRules({ subreddit }) {
@@ -14,6 +14,7 @@ function SubredditRules({ subreddit }) {
     } catch (error) {
       console.log(error);
     }
+    console.log(subreddit);
   }, [subreddit]);
 
   if (!rules) {
@@ -37,25 +38,29 @@ function SubredditRules({ subreddit }) {
           },
         })}
       >
-        {rules.map((rule, i) => {
-          const createMarkup = (text) => {
-            return { __html: markdown(text, { target: "_blank" }) };
-          };
-          return (
-            <Accordion.Item value={rule.short_name} key={rule.short_name}>
-              <Accordion.Control>
-                <Text weight="bold">{`${i + 1}. ${rule.short_name}`}</Text>
-              </Accordion.Control>
-              <Accordion.Panel>
-                {
-                  <div
-                    dangerouslySetInnerHTML={createMarkup(rule.description)}
-                  />
-                }
-              </Accordion.Panel>
-            </Accordion.Item>
-          );
-        })}
+        {rules.length ? (
+          rules.map((rule, i) => {
+            const createMarkup = (text) => {
+              return { __html: markdown(text, { target: "_blank" }) };
+            };
+            return (
+              <Accordion.Item value={rule.short_name} key={rule.short_name}>
+                <Accordion.Control>
+                  <Text weight="bold">{`${i + 1}. ${rule.short_name}`}</Text>
+                </Accordion.Control>
+                <Accordion.Panel>
+                  {
+                    <div
+                      dangerouslySetInnerHTML={createMarkup(rule.description)}
+                    />
+                  }
+                </Accordion.Panel>
+              </Accordion.Item>
+            );
+          })
+        ) : (
+          <Text color="dimmed">{"There's nothing here..."}</Text>
+        )}
       </Accordion>
     </>
   );

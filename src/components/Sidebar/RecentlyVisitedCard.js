@@ -1,6 +1,6 @@
 import { createStyles, Anchor, Title } from "@mantine/core";
-import { visitPost } from "../../../store/DemoUserSlice";
-import { useAppDispatch } from "../../../store/store";
+import { visitPost } from "src/store/DemoUserSlice";
+import { useAppDispatch } from "src/store/store";
 import PostTile from "../Post/PostTile";
 import { openContextModal } from "@mantine/modals";
 

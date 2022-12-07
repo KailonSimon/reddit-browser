@@ -1,6 +1,6 @@
-import { Badge } from "@mantine/core";
-import { isColorDark } from "../../utils";
 import Image from "next/image";
+import { Badge } from "@mantine/core";
+import { isColorDark } from "src/services/Format/Color";
 
 function FlairContainer({ submission, type }) {
   if (type === "author" && submission.author_flair_richtext?.length) {

@@ -1,10 +1,10 @@
 import React from "react";
-import { createStyles, Image, Text, Title } from "@mantine/core";
-import moment from "moment";
 import { useSession } from "next-auth/react";
 import { useSelector } from "react-redux";
-import { selectAuthentication } from "../../../store/AuthSlice";
-import { selectDemoUser } from "../../../store/DemoUserSlice";
+import { selectAuthentication } from "src/store/AuthSlice";
+import { selectDemoUser } from "src/store/DemoUserSlice";
+import { createStyles, Image, Text, Title } from "@mantine/core";
+import moment from "moment";
 
 const useStyles = createStyles((theme) => ({
   card: {

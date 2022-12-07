@@ -1,9 +1,9 @@
-import { Button } from "@mantine/core";
-import { useRouter } from "next/router";
 import React from "react";
-import { Message } from "tabler-icons-react";
+import { useRouter } from "next/router";
 import SubmissionMenu from "../SubmissionMenu";
 import SubmissionVotingControls from "../SubmissionVotingControls";
+import { Button } from "@mantine/core";
+import { Message } from "tabler-icons-react";
 
 function CommentTileControls({
   comment,

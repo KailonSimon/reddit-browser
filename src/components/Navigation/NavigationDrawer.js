@@ -1,10 +1,7 @@
 import { useState } from "react";
+import UserMenu from "../User/UserMenu";
+import SubredditSearch from "./SearchBar";
 import { Burger, Drawer } from "@mantine/core";
-import SubredditSearch from "../SubredditSearch";
-import SignInButton from "../Authentication/SignInButton";
-import { useSession } from "next-auth/react";
-import SignOutButton from "../Authentication/SignOutButton";
-import UserMenu from "../UserMenu";
 
 function NavigationDrawer({ user }) {
   const [opened, setOpened] = useState(false);

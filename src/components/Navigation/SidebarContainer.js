@@ -1,7 +1,7 @@
 import { Children } from "react";
-import { createStyles } from "@mantine/core";
 import InfoCard from "../InfoCard";
 import ErrorBoundary from "../ErrorBoundary";
+import { createStyles } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
   container: {

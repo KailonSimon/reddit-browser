@@ -1,5 +1,5 @@
-import { Chip, Title, Button } from "@mantine/core";
 import { useState } from "react";
+import { Chip, Title, Button } from "@mantine/core";
 
 function SubredditFlairFilter({ flairList, setFlairFilter, shownFlair }) {
   const [visibleFlair, setVisibleFlair] = useState(flairList.slice(0, 5));

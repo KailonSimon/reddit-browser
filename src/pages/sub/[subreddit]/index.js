@@ -1,0 +1,190 @@
+import { useEffect, useState, useReducer } from "react";
+import Head from "next/head";
+import { getToken } from "next-auth/jwt";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { wrapper } from "src/store/store";
+import { selectAuthentication } from "src/store/AuthSlice";
+import LoadingScreen from "src/components/LoadingScreen";
+import { Feed, FeedControls } from "/src/components/Feed";
+import SidebarContainer from "src/components/Navigation/SidebarContainer";
+import Layout from "src/components/Layout";
+import {
+  SubredditBanner,
+  SubredditAbout,
+  SubredditRules,
+  SubredditFlairFilter,
+} from "src/components/Subreddit";
+import ContentWarningModal from "src/components/Modals/ContentWarningModal";
+import { mergePages } from "src/services/Format/API";
+import { createStyles, Box, Text } from "@mantine/core";
+import { fetchPosts } from "src/services/Posts/client";
+import {
+  getSubredditInfo,
+  getSubredditFlair,
+} from "src/services/Subreddit/server";
+import { getCurrentUserData } from "src/services/User/server";
+
+const useStyles = createStyles((theme) => ({
+  content: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: "0 1rem",
+    [theme.fn.smallerThan("md")]: {
+      padding: "0 0.5rem",
+    },
+  },
+}));
+
+const initialState = { sorting: "hot", shownFlair: [] };
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_FLAIR_FILTER":
+      return { ...state, shownFlair: action.payload };
+    case "SET_SORTING":
+      return { ...state, sorting: action.payload };
+    default:
+      throw new Error();
+  }
+}
+
+function Subreddit({ subreddit, flairList, currentUser }) {
+  const { classes } = useStyles();
+  const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
+    subreddit.over18
+  );
+  const authentication = useSelector(selectAuthentication);
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const {
+    status,
+    data,
+    error,
+    refetch,
+    isRefetching,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(
+    ["posts", { subreddit }],
+    ({ pageParam }) =>
+      fetchPosts(subreddit.display_name, state.sorting, 10, pageParam),
+    {
+      enabled: authentication.status !== "unauthenticated",
+      getNextPageParam: (lastPage, pages) => {
+        return lastPage.data.after;
+      },
+    }
+  );
+  const handleCloseModal = () => {
+    setContentWarningModalOpen(false);
+  };
+
+  useEffect(() => {
+    refetch();
+  }, [state.sorting, refetch]);
+
+  return status === "loading" ? (
+    <LoadingScreen />
+  ) : status === "error" ? (
+    <Text>Error: {error.message}</Text>
+  ) : (
+    <Box
+      sx={{
+        width: "100%",
+      }}
+    >
+      <Head>
+        <title>{subreddit.display_name_prefixed}</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta property="og:title" content={subreddit.display_name_prefixed} />
+      </Head>
+      <>
+        <Layout currentUser={currentUser}>
+          <SubredditBanner subreddit={subreddit} />
+          <Box className={classes.content}>
+            <SidebarContainer>
+              <SubredditAbout subreddit={subreddit} />
+              {flairList?.length ? (
+                <SubredditFlairFilter
+                  flairList={flairList}
+                  setFlairFilter={(values) =>
+                    dispatch({ type: "SET_FLAIR_FILTER", payload: values })
+                  }
+                  shownFlair={state.shownFlair}
+                />
+              ) : null}
+              <SubredditRules subreddit={subreddit} />
+            </SidebarContainer>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+              }}
+            >
+              <FeedControls
+                sorting={state.sorting}
+                setSorting={(value) =>
+                  dispatch({ type: "SET_SORTING", payload: value })
+                }
+                isRefetching={isRefetching}
+              />
+
+              <Feed
+                key={mergePages(data.pages)}
+                submissions={
+                  flairList?.length && state.shownFlair?.length
+                    ? mergePages(data.pages).filter((post) =>
+                        state.shownFlair.includes(post.link_flair_text)
+                      )
+                    : mergePages(data.pages)
+                }
+                fetchNextPage={fetchNextPage}
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+              />
+            </Box>
+          </Box>
+        </Layout>
+        <ContentWarningModal
+          open={contentWarningModalOpen}
+          handleCloseModal={handleCloseModal}
+        />
+      </>
+    </Box>
+  );
+}
+
+export default Subreddit;
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ req, query }) => {
+      const { subreddit } = query;
+      const token = await getToken({ req });
+
+      const subredditInfo = (
+        await getSubredditInfo(subreddit, token?.accessToken)
+      ).data;
+
+      let flairList;
+      let currentUser;
+
+      if (token?.accessToken) {
+        flairList = await getSubredditFlair(subreddit, token.accessToken);
+        currentUser = (await getCurrentUserData(token.accessToken)).data;
+      }
+
+      return {
+        props: {
+          subreddit: subredditInfo,
+          flairList: flairList || null,
+          currentUser: currentUser || store.getState().demoUser,
+        },
+      };
+    }
+);

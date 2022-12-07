@@ -1,18 +1,18 @@
-import { useRouter } from "next/router";
-import { createStyles, Text, Badge, Box } from "@mantine/core";
-import Image from "next/image";
 import React from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import Image from "next/image";
+import { useSelector } from "react-redux";
+import { selectVisitedPosts } from "src/store/DemoUserSlice";
 import { Pinned, Speakerphone } from "tabler-icons-react";
 import numeral from "numeral";
-import Link from "next/link";
-import { getCondensedDate, getRelativeTime } from "../../../utils";
 import SubmissionMenu from "../SubmissionMenu";
 import SubmissionVotingControls from "../SubmissionVotingControls";
 import AwardsContainer from "../AwardsContainer";
 import FlairContainer from "../FlairContainer";
+import { createStyles, Text, Badge, Box } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { useSelector } from "react-redux";
-import { selectVisitedPosts } from "../../../store/DemoUserSlice";
+import { getCondensedDate, getRelativeTime } from "src/services/Format/Date";
 
 const useStyles = createStyles((theme) => ({
   container: {

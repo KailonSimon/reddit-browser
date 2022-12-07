@@ -1,6 +1,6 @@
-import { Button, SegmentedControl, Text } from "@mantine/core";
-import Link from "next/link";
 import React from "react";
+import Link from "next/link";
+import { Button, SegmentedControl, Text } from "@mantine/core";
 
 function CommentSectionControls({
   post,

@@ -1,18 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useInView } from "framer-motion";
-import PostTile from "../Post/PostTile";
-import { createStyles, Skeleton, Text } from "@mantine/core";
 import Head from "next/head";
-import { openContextModal, closeAllModals } from "@mantine/modals";
 import { useRouter } from "next/router";
-import { useAppDispatch } from "../../../store/store";
-import {
-  selectHiddenSubmissions,
-  visitPost,
-} from "../../../store/DemoUserSlice";
+import { useInView } from "framer-motion";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "src/store/store";
+import { selectHiddenSubmissions, visitPost } from "src/store/DemoUserSlice";
+import PostTile from "../Post/PostTile";
 import CommentTile from "../Comment/CommentTile";
 import ErrorBoundary from "../ErrorBoundary";
-import { useSelector } from "react-redux";
+import { createStyles, Skeleton, Text } from "@mantine/core";
+import { openContextModal, closeAllModals } from "@mantine/modals";
 
 const useStyles = createStyles((theme) => ({
   submissions: {

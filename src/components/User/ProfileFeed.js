@@ -1,10 +1,10 @@
-import { Tabs, createStyles, Text } from "@mantine/core";
 import React from "react";
+import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import { selectDemoUser } from "../../../store/DemoUserSlice";
+import { selectDemoUser } from "src/store/DemoUserSlice";
 import UserCard from "./UserCard";
 import Feed from "../Feed/Feed";
-import { useRouter } from "next/router";
+import { Tabs, createStyles, Text } from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
   userCardContainer: {

@@ -1,15 +1,10 @@
-import { createStyles, Loader, Text } from "@mantine/core";
+import { createStyles, Text } from "@mantine/core";
 import Link from "next/link";
-import SubredditSearch from "../SubredditSearch";
+import SubredditSearch from "./SearchBar";
 import NavigationDrawer from "./NavigationDrawer";
-import SignInButton from "../Authentication/SignInButton";
-import UserMenu from "../UserMenu";
-import { getUserData } from "../../../utils";
-import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
+import UserMenu from "../User/UserMenu";
 import { useSelector } from "react-redux";
-import { selectAuthentication } from "../../../store/AuthSlice";
-import { selectDemoUser } from "../../../store/DemoUserSlice";
+import { selectDemoUser } from "src/store/DemoUserSlice";
 import ErrorBoundary from "../ErrorBoundary";
 
 const useStyles = createStyles((theme) => ({

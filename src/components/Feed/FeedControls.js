@@ -1,5 +1,4 @@
 import { Box, Center, SegmentedControl, Text } from "@mantine/core";
-
 import { EggCracked, Flame, Medal, TrendingUp } from "tabler-icons-react";
 
 function FeedControls({ sorting, setSorting, isRefetching }) {

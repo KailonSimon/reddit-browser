@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { createStyles, Text, Button, ActionIcon } from "@mantine/core";
-import numeral from "numeral";
+import React from "react";
 import { useSession } from "next-auth/react";
-import { closeModal, openModal } from "@mantine/modals";
-import { useId } from "@mantine/hooks";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "src/store/store";
+import { selectAuthentication } from "src/store/AuthSlice";
+import {
+  selectDemoUser,
+  upvoteSubmission,
+  downvoteSubmission,
+} from "src/store/DemoUserSlice";
 import SignInButton from "./Authentication/SignInButton";
-import { voteOnSubmission } from "../../utils";
+import { useId } from "@mantine/hooks";
+import { createStyles, Text, Button, ActionIcon } from "@mantine/core";
+import { closeModal, openModal } from "@mantine/modals";
 import {
   TiArrowUpOutline,
   TiArrowUpThick,
   TiArrowDownOutline,
   TiArrowDownThick,
 } from "react-icons/ti";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
-import { selectAuthentication } from "../../store/AuthSlice";
-import { selectDemoUser } from "../../store/DemoUserSlice";
-import { useAppDispatch } from "../../store/store";
-import {
-  upvoteSubmission,
-  downvoteSubmission,
-} from "../../store/DemoUserSlice";
+import numeral from "numeral";
+import { voteOnSubmission } from "src/services/Posts/client";
 
 const useStyles = createStyles((theme) => ({
   verticalContainer: {

@@ -1,5 +1,5 @@
-import { Group, Image, Text } from "@mantine/core";
 import { forwardRef } from "react";
+import { Group, Image, Text } from "@mantine/core";
 
 function AutoCompleteItem({ value, title, image, ...others }, ref) {
   return (

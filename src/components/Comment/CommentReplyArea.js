@@ -1,13 +1,16 @@
-import { Button, createStyles, Textarea, Text, Loader } from "@mantine/core";
+import React, { useState } from "react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useSelector } from "react-redux";
+import { selectAuthentication } from "src/store/AuthSlice";
+import { Button, Textarea, Text, Loader } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { useMediaQuery } from "@mantine/hooks";
-import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectAuthentication } from "../../../store/AuthSlice";
-import { createDemoComment, getNestedCommentClass } from "../../../utils";
-import Link from "next/link";
 import { Check } from "tabler-icons-react";
+import {
+  createDemoComment,
+  getNestedCommentClass,
+} from "src/services/Comments/client";
 
 function CommentReplyArea({
   replyAreaOpen,
