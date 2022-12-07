@@ -2,7 +2,7 @@ import { useEffect, useState, useReducer } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import { createStyles, Box, Text } from "@mantine/core";
-import { mergePages, fetchPosts, getSubredditInfo } from "../../../utils";
+import { mergePages, fetchPosts } from "../../../utils";
 import LoadingScreen from "../../../src/components/LoadingScreen";
 import Feed from "../../../src/components/Feed/Feed";
 import FeedControls from "../../../src/components/Feed/FeedControls";
@@ -16,7 +16,6 @@ import { wrapper } from "../../../store/store";
 import { useSelector } from "react-redux";
 import { selectAuthentication } from "../../../store/AuthSlice";
 import { getToken } from "next-auth/jwt";
-import { useSession } from "next-auth/react";
 import SubredditFlairFilter from "../../../src/components/Subreddit/SubredditFlairFilter";
 
 const useStyles = createStyles((theme) => ({
@@ -38,8 +37,8 @@ function reducer(state, action) {
   switch (action.type) {
     case "SET_FLAIR_FILTER":
       return { ...state, shownFlair: action.payload };
-    case "decrement":
-      return { count: state.count - 1 };
+    case "SET_SORTING":
+      return { ...state, sorting: action.payload };
     default:
       throw new Error();
   }
@@ -47,12 +46,10 @@ function reducer(state, action) {
 
 function Subreddit({ subreddit, flairList }) {
   const { classes } = useStyles();
-  const [sorting, setSorting] = useState("hot");
   const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
     subreddit.over18
   );
   const authentication = useSelector(selectAuthentication);
-
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const {
@@ -67,7 +64,7 @@ function Subreddit({ subreddit, flairList }) {
   } = useInfiniteQuery(
     ["posts", { subreddit }],
     ({ pageParam }) =>
-      fetchPosts(subreddit.display_name, sorting, 10, pageParam),
+      fetchPosts(subreddit.display_name, state.sorting, 10, pageParam),
     {
       enabled: authentication.status !== "unauthenticated",
       getNextPageParam: (lastPage, pages) => {
@@ -81,7 +78,7 @@ function Subreddit({ subreddit, flairList }) {
 
   useEffect(() => {
     refetch();
-  }, [sorting, refetch]);
+  }, [state.sorting, refetch]);
 
   return status === "loading" ? (
     <LoadingScreen />
@@ -89,9 +86,9 @@ function Subreddit({ subreddit, flairList }) {
     <Text>Error: {error.message}</Text>
   ) : (
     <Box
-      sx={(theme) => ({
+      sx={{
         width: "100%",
-      })}
+      }}
     >
       <Head>
         <title>{subreddit.display_name_prefixed}</title>
@@ -101,7 +98,7 @@ function Subreddit({ subreddit, flairList }) {
       <>
         <Layout>
           <SubredditBanner subreddit={subreddit} />
-          <div className={classes.content}>
+          <Box className={classes.content}>
             <SidebarContainer>
               <SubredditSidebar subreddit={subreddit} />
               {flairList.length ? (
@@ -115,16 +112,18 @@ function Subreddit({ subreddit, flairList }) {
               ) : null}
               <SubredditRules subreddit={subreddit} />
             </SidebarContainer>
-            <div
-              style={{
+            <Box
+              sx={{
                 display: "flex",
                 flexDirection: "column",
                 flex: 1,
               }}
             >
               <FeedControls
-                sorting={sorting}
-                setSorting={setSorting}
+                sorting={state.sorting}
+                setSorting={(value) =>
+                  dispatch({ type: "SET_SORTING", payload: value })
+                }
                 isRefetching={isRefetching}
               />
 
@@ -141,8 +140,8 @@ function Subreddit({ subreddit, flairList }) {
                 hasNextPage={hasNextPage}
                 isFetchingNextPage={isFetchingNextPage}
               />
-            </div>
-          </div>
+            </Box>
+          </Box>
         </Layout>
         <ContentWarningModal
           open={contentWarningModalOpen}
