@@ -174,8 +174,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       let currentUser;
 
       if (token?.accessToken) {
-        flairList = (await getSubredditFlair(subreddit, token.accessToken))
-          .data;
+        flairList = await getSubredditFlair(subreddit, token.accessToken);
         currentUser = (await getCurrentUserData(token.accessToken)).data;
       }
 

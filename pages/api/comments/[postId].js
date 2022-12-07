@@ -1,11 +1,11 @@
 import { getToken } from "next-auth/jwt";
-import { fetchComments } from "../../../utils";
+import { getComments } from "../../../utils";
 
 export default async function handler(req, res) {
   const token = await getToken({ req });
   const { postId, commentId, sorting } = req.query;
 
-  const comments = await fetchComments({
+  const comments = await getComments({
     postId,
     sorting,
     commentId,

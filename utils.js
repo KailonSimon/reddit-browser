@@ -70,7 +70,7 @@ const toBase64 = (str) =>
     : window.btoa(str);
 
 /* SERVER SIDE */
-const fetchComments = async ({ postId, commentId, sorting, accessToken }) => {
+const getComments = async ({ postId, commentId, sorting, accessToken }) => {
   if (!!commentId) {
     const res = await fetch(
       `https://oauth.reddit.com/comments/${postId}.json?comment=${commentId}&limit=100&depth=10&sort=${sorting}&raw_json=1`,
@@ -99,7 +99,7 @@ const fetchComments = async ({ postId, commentId, sorting, accessToken }) => {
 };
 
 /* CLIENT SIDE */
-const getComments = async ({ postId, commentId, sorting }) => {
+const fetchComments = async ({ postId, commentId, sorting }) => {
   const res = await fetch(
     `/api/comments/${postId}?commentId=${commentId}&sorting=${sorting}`
   );
@@ -170,7 +170,7 @@ const getSubredditInfo = async (subreddit, accessToken) => {
 const getSubredditFlair = async (subreddit, accessToken) => {
   try {
     const res = await fetch(
-      `https://oauth.reddit.com/r/${subreddit}/about.json?raw_json=1`,
+      `https://oauth.reddit.com/r/${subreddit}/api/link_flair_v2`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -399,8 +399,8 @@ export {
   mergePages,
   getNestedCommentClass,
   fetchPosts,
-  fetchComments,
   getComments,
+  fetchComments,
   fetchMoreChildrenComments,
   fetchSubreddits,
   getUserData,
