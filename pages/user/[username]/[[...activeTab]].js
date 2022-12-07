@@ -1,22 +1,12 @@
-import { createStyles } from "@mantine/core";
-import React, { useEffect } from "react";
+import React from "react";
 import Layout from "../../../src/components/Layout";
-import { useSession } from "next-auth/react";
 import { getUserData } from "../../../utils";
 import { wrapper } from "../../../store/store";
 import { useSelector } from "react-redux";
-import { selectAuthentication } from "../../../store/AuthSlice";
 import { selectDemoUser } from "../../../store/DemoUserSlice";
 import Head from "next/head";
 import ProfileFeed from "../../../src/components/User/ProfileFeed";
 import UserCard from "../../../src/components/User/UserCard";
-
-const useStyles = createStyles((theme) => ({
-  image: {
-    background: `#59ba12ff`,
-    padding: 8,
-  },
-}));
 
 function User({ user }) {
   const demoUser = useSelector(selectDemoUser);

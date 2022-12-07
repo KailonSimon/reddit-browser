@@ -5,7 +5,7 @@ import Feed from "../src/components/Feed/Feed";
 import FeedControls from "../src/components/Feed/FeedControls";
 import Layout from "../src/components/Layout";
 import Head from "next/head";
-import { fetchPosts, mergePages } from "../utils";
+import { fetchPosts, getApplicationAccessToken, mergePages } from "../utils";
 import LoadingScreen from "../src/components/LoadingScreen";
 import TrendingSubsCard from "../src/components/TrendingSubsCard";
 import SidebarContainer from "../src/components/Navigation/SidebarContainer";
@@ -45,34 +45,7 @@ function reducer(state, action) {
   }
 }
 
-export async function getServerSideProps({ req }) {
-  const token = await getToken({ req });
-  let subscribedSubreddits;
-
-  if (token?.accessToken) {
-    try {
-      const redditRes = await fetch(
-        `https://oauth.reddit.com/subreddits/mine/subscriber?limit=100`,
-        {
-          headers: {
-            Authorization: `Bearer ${token.accessToken}`,
-          },
-        }
-      );
-      subscribedSubreddits = await redditRes.json();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  return {
-    props: {
-      subscribedSubreddits: subscribedSubreddits?.data?.children || null,
-    },
-  };
-}
-
-export default function Home({ subscribedSubreddits }) {
+export default function Home({ subscribedSubreddits, trendingSubreddits }) {
   const { classes } = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
   const visitedPosts = useSelector(selectVisitedPosts);
@@ -131,7 +104,12 @@ export default function Home({ subscribedSubreddits }) {
       <Layout>
         <div className={classes.main}>
           <SidebarContainer>
-            <TrendingSubsCard />
+            {trendingSubreddits?.length ? (
+              <TrendingSubsCard
+                trendingSubreddits={trendingSubreddits}
+                subscribedSubreddits={subscribedSubreddits}
+              />
+            ) : null}
             {state.recentlyVisitedPosts.length ? (
               <RecentlyVisitedCard
                 posts={state.recentlyVisitedPosts}
@@ -168,4 +146,56 @@ export default function Home({ subscribedSubreddits }) {
       </Layout>
     </>
   );
+}
+
+export async function getServerSideProps({ req }) {
+  const token = await getToken({ req });
+  let subscribedRes;
+  let trendingRes;
+
+  if (token?.accessToken) {
+    [subscribedRes, trendingRes] = await Promise.all([
+      fetch(`https://oauth.reddit.com/subreddits/mine/subscriber?limit=100`, {
+        headers: {
+          Authorization: `Bearer ${token.accessToken}`,
+        },
+      }),
+      fetch(
+        `https://oauth.reddit.com/subreddits/popular.json?limit=5&raw_json=1`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.accessToken}`,
+          },
+        }
+      ),
+    ]);
+  } else {
+    trendingRes = await fetch(
+      `https://oauth.reddit.com/subreddits/popular.json?limit=5&raw_json=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${
+            (
+              await getApplicationAccessToken()
+            ).access_token
+          }`,
+        },
+      }
+    );
+  }
+
+  const subscribedSubreddits = await subscribedRes?.json();
+  const trendingSubreddits = await trendingRes?.json();
+
+  return {
+    props: {
+      subscribedSubreddits:
+        subscribedSubreddits?.data?.children.map(
+          (subreddit) => subreddit.data.display_name
+        ) || null,
+      trendingSubreddits:
+        trendingSubreddits?.data?.children.map((subreddit) => subreddit.data) ||
+        null,
+    },
+  };
 }

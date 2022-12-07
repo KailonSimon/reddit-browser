@@ -1,9 +1,8 @@
 import { createStyles, Anchor, Title } from "@mantine/core";
-import { clearVisitedPosts, visitPost } from "../../../store/DemoUserSlice";
+import { visitPost } from "../../../store/DemoUserSlice";
 import { useAppDispatch } from "../../../store/store";
 import PostTile from "../Post/PostTile";
 import { openContextModal } from "@mantine/modals";
-import { useEffect, useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   posts: {

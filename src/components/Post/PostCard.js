@@ -57,7 +57,6 @@ const useStyles = createStyles((theme) => ({
     justifyContent: "center",
     marginTop: 8,
     background: "#000",
-    border: "1px solid red",
     position: "relative",
   },
   image: {

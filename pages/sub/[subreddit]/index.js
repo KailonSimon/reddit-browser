@@ -188,6 +188,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
       }
       const subredditInfo = await subredditInfoRes.json();
       const flairList = await flairRes?.json();
+
+      console.log(subredditInfo);
       return {
         props: {
           subreddit: subredditInfo.data,

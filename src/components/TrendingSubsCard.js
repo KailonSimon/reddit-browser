@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Avatar,
-  Button,
-  createStyles,
-  Loader,
-  Text,
-  Title,
-} from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
-import { getTrendingSubreddits } from "../../utils";
+import { Avatar, Button, createStyles, Text, Title } from "@mantine/core";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import {
@@ -17,6 +8,7 @@ import {
   unsubscribeFromSubreddit,
 } from "../../store/DemoUserSlice";
 import { useAppDispatch } from "../../store/store";
+import { useSession } from "next-auth/react";
 
 const useStyles = createStyles((theme) => ({
   subredditTile: {
@@ -33,18 +25,9 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function TrendingSubsCard() {
+function TrendingSubsCard({ trendingSubreddits, subscribedSubreddits }) {
   const { classes } = useStyles();
-  const {
-    isLoading,
-    isError,
-    data: subreddits,
-    error,
-  } = useQuery({
-    queryKey: ["trending subreddits"],
-    queryFn: () => getTrendingSubreddits(5),
-  });
-
+  const { data: session } = useSession();
   const demoUser = useSelector(selectDemoUser);
   const dispatch = useAppDispatch();
 
@@ -61,72 +44,70 @@ function TrendingSubsCard() {
           width: "100%",
         }}
       >
-        {isLoading ? (
-          <Loader />
-        ) : isError ? (
-          <Text>Error loading subreddits: {error}</Text>
-        ) : (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-            }}
-          >
-            {subreddits.data.children?.map((subreddit, i) => (
-              <div className={classes.subredditTile} key={subreddit.data.id}>
-                <Link href={`/sub/${subreddit.data.display_name}`} passHref>
-                  <div
-                    style={{
-                      display: "flex",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <span style={{ marginRight: "1rem" }}>{i + 1}.</span>
-                    <Avatar
-                      src={subreddit.data.community_icon}
-                      size="sm"
-                      radius={99}
-                      mr={8}
-                      color="brand"
-                    >
-                      /r
-                    </Avatar>
-                    <Text>{subreddit.data.display_name_prefixed}</Text>
-                  </div>
-                </Link>
-                {demoUser.subscribedSubreddits.includes(
-                  subreddit.data.display_name
-                ) ? (
-                  <Button
-                    size="xs"
-                    variant="outline"
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+          }}
+        >
+          {trendingSubreddits.map((subreddit, i) => (
+            <div className={classes.subredditTile} key={subreddit.id}>
+              <Link href={`/sub/${subreddit.display_name}`} passHref>
+                <div
+                  style={{
+                    display: "flex",
+                    cursor: "pointer",
+                  }}
+                >
+                  <span style={{ marginRight: "1rem" }}>{i + 1}.</span>
+                  <Avatar
+                    src={subreddit.community_icon}
+                    size="sm"
                     radius={99}
-                    onClick={() =>
-                      dispatch(
-                        unsubscribeFromSubreddit(subreddit.data.display_name)
-                      )
-                    }
+                    mr={8}
+                    color="brand"
                   >
-                    Joined
-                  </Button>
-                ) : (
-                  <Button
-                    size="xs"
-                    radius={99}
-                    onClick={() =>
-                      dispatch(
-                        subscribeToSubreddit(subreddit.data.display_name)
-                      )
-                    }
-                  >
-                    Join
-                  </Button>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+                    /r
+                  </Avatar>
+                  <Text size="sm">{subreddit.display_name_prefixed}</Text>
+                </div>
+              </Link>
+              {(session &&
+                subscribedSubreddits?.includes(subreddit.display_name)) ||
+              demoUser.subscribedSubreddits.includes(subreddit.display_name) ? (
+                <Button
+                  size="xs"
+                  variant="outline"
+                  radius={99}
+                  onClick={
+                    session
+                      ? null
+                      : () =>
+                          dispatch(
+                            unsubscribeFromSubreddit(subreddit.display_name)
+                          )
+                  }
+                >
+                  Joined
+                </Button>
+              ) : (
+                <Button
+                  size="xs"
+                  radius={99}
+                  onClick={
+                    session
+                      ? null
+                      : () =>
+                          dispatch(subscribeToSubreddit(subreddit.display_name))
+                  }
+                >
+                  Join
+                </Button>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
