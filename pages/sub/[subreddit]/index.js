@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import { createStyles, Box, Text } from "@mantine/core";
@@ -16,6 +16,8 @@ import { wrapper } from "../../../store/store";
 import { useSelector } from "react-redux";
 import { selectAuthentication } from "../../../store/AuthSlice";
 import { getToken } from "next-auth/jwt";
+import { useSession } from "next-auth/react";
+import SubredditFlairFilter from "../../../src/components/Subreddit/SubredditFlairFilter";
 
 const useStyles = createStyles((theme) => ({
   content: {
@@ -30,43 +32,28 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) =>
-    async ({ req, query }) => {
-      const { subreddit } = query;
-      const token = await getToken({ req });
-      let res;
-      if (token.accessToken) {
-        res = await fetch(
-          `https://oauth.reddit.com/r/${subreddit}/about.json?raw_json=1`,
-          {
-            headers: {
-              Authorization: `Bearer ${token.accessToken}`,
-            },
-          }
-        );
-      } else {
-        res = await fetch(
-          `https://www.reddit.com/r/${subreddit}/about.json?raw_json=1`
-        );
-      }
-      const subredditInfo = await res.json();
-      console.log(subredditInfo);
-      return {
-        props: {
-          subreddit: subredditInfo.data,
-        },
-      };
-    }
-);
+const initialState = { sorting: "hot", shownFlair: [] };
 
-function Subreddit({ subreddit }) {
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_FLAIR_FILTER":
+      return { ...state, shownFlair: action.payload };
+    case "decrement":
+      return { count: state.count - 1 };
+    default:
+      throw new Error();
+  }
+}
+
+function Subreddit({ subreddit, flairList }) {
   const { classes } = useStyles();
   const [sorting, setSorting] = useState("hot");
   const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
     subreddit.over18
   );
   const authentication = useSelector(selectAuthentication);
+
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const {
     status,
@@ -117,6 +104,15 @@ function Subreddit({ subreddit }) {
           <div className={classes.content}>
             <SidebarContainer>
               <SubredditSidebar subreddit={subreddit} />
+              {flairList.length ? (
+                <SubredditFlairFilter
+                  flairList={flairList}
+                  setFlairFilter={(values) =>
+                    dispatch({ type: "SET_FLAIR_FILTER", payload: values })
+                  }
+                  shownFlair={state.shownFlair}
+                />
+              ) : null}
               <SubredditRules subreddit={subreddit} />
             </SidebarContainer>
             <div
@@ -134,7 +130,13 @@ function Subreddit({ subreddit }) {
 
               <Feed
                 key={mergePages(data.pages)}
-                submissions={mergePages(data.pages)}
+                submissions={
+                  flairList.length && state.shownFlair.length
+                    ? mergePages(data.pages).filter((post) =>
+                        state.shownFlair.includes(post.link_flair_text)
+                      )
+                    : mergePages(data.pages)
+                }
                 fetchNextPage={fetchNextPage}
                 hasNextPage={hasNextPage}
                 isFetchingNextPage={isFetchingNextPage}
@@ -152,3 +154,46 @@ function Subreddit({ subreddit }) {
 }
 
 export default Subreddit;
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ req, query }) => {
+      const { subreddit } = query;
+      const token = await getToken({ req });
+
+      let subredditInfoRes;
+      let flairRes;
+      if (token?.accessToken) {
+        [subredditInfoRes, flairRes] = await Promise.all([
+          fetch(
+            `https://oauth.reddit.com/r/${subreddit}/about.json?raw_json=1`,
+            {
+              headers: {
+                Authorization: `Bearer ${token.accessToken}`,
+              },
+            }
+          ),
+          fetch(
+            `https://oauth.reddit.com/r/${subreddit}/api/link_flair_v2?raw_json=1`,
+            {
+              headers: {
+                Authorization: `Bearer ${token.accessToken}`,
+              },
+            }
+          ),
+        ]);
+      } else {
+        subredditInfoRes = await fetch(
+          `https://www.reddit.com/r/${subreddit}/about.json?raw_json=1`
+        );
+      }
+      const subredditInfo = await subredditInfoRes.json();
+      const flairList = await flairRes?.json();
+      return {
+        props: {
+          subreddit: subredditInfo.data,
+          flairList,
+        },
+      };
+    }
+);

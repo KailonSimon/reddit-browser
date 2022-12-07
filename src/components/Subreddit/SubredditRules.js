@@ -23,7 +23,7 @@ function SubredditRules({ subreddit }) {
   return (
     <>
       <Title color="dimmed" order={2} size={14} sx={{ padding: "0.75rem 0" }}>
-        {subreddit.display_name_prefixed} rules
+        {subreddit.display_name_prefixed} Rules
       </Title>
       <Accordion
         styles={(theme) => ({

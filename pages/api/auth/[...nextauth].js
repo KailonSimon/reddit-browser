@@ -9,7 +9,7 @@ export const authOptions = {
       authorization: {
         params: {
           scope:
-            "identity vote read edit save submit subscribe history mysubreddits",
+            "identity vote read edit save submit subscribe history mysubreddits flair",
           duration: "permanent",
         },
       },
