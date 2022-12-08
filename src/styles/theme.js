@@ -108,6 +108,11 @@ export const theme = {
       fontSize: 14,
       wordBreak: "break-word",
     },
+    ".post-body > blockquote": {
+      borderLeft: `2px solid ${theme.colors.brand[7]}`,
+      margin: "4px 4px 8px 8px",
+      paddingLeft: 8,
+    },
     ".comment-body > blockquote": {
       borderLeft: `2px solid ${theme.colors.gray[7]}`,
       margin: "4px 4px 8px 8px",

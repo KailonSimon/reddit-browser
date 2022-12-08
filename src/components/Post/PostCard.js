@@ -377,7 +377,12 @@ function PostCard({ post }) {
                 color: theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
               })}
             >
-              {<div dangerouslySetInnerHTML={createMarkup(post.selftext)} />}
+              {
+                <div
+                  className="post-body"
+                  dangerouslySetInnerHTML={createMarkup(post.selftext)}
+                />
+              }
             </Text>
           )}
           <div>
