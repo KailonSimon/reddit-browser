@@ -29,12 +29,14 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
     width: "min-content",
     minWidth: 30,
+    gap: "2px",
   },
   horizontalContainer: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     height: 30,
+    gap: "4px",
   },
   modalContainer: {
     display: "flex",
@@ -42,10 +44,12 @@ const useStyles = createStyles((theme) => ({
     gap: 16,
   },
   upArrow: {
-    "&:hover": { color: theme.colors.brand, cursor: "pointer" },
+    color: "#909296",
+    "&:hover": { color: theme.colors.brand },
   },
   downArrow: {
-    "&:hover": { color: theme.colors.accent, cursor: "pointer" },
+    color: "#909296",
+    "&:hover": { color: theme.colors.accent },
   },
 }));
 function SubmissionVotingControls({ variant, submission }) {
@@ -112,14 +116,15 @@ function SubmissionVotingControls({ variant, submission }) {
       }
     >
       <ActionIcon
-        variant="transparent"
+        variant="subtle"
         onClick={() => handleVoteClick("up")}
         className={classes.upArrow}
+        size="sm"
       >
         {isUpvoted ? (
           <TiArrowUpThick size={24} color="#59ba12" />
         ) : (
-          <TiArrowUpOutline size={20} color="#909296" />
+          <TiArrowUpOutline size={20} />
         )}
       </ActionIcon>
       <Text
@@ -142,14 +147,15 @@ function SubmissionVotingControls({ variant, submission }) {
           : condenseNumber(submission.score)}
       </Text>
       <ActionIcon
-        variant="transparent"
+        variant="subtle"
         onClick={() => handleVoteClick("down")}
         className={classes.downArrow}
+        size="sm"
       >
         {isDownvoted ? (
           <TiArrowDownThick size={24} color="#7312ba" />
         ) : (
-          <TiArrowDownOutline size={20} color="#909296" />
+          <TiArrowDownOutline size={20} />
         )}
       </ActionIcon>
     </div>
