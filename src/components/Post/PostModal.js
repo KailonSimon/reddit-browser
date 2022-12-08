@@ -10,6 +10,7 @@ const useStyles = createStyles((theme) => ({
       theme.colorScheme === "dark" ? "#474748" : theme.colors.gray[4]
     }`,
     borderRadius: 4,
+    maxWidth: "calc(100vw - 2rem)",
   },
 }));
 

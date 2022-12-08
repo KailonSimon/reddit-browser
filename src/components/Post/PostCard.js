@@ -18,7 +18,8 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { Speakerphone } from "tabler-icons-react";
+import { Carousel } from "@mantine/carousel";
+import { ArrowBigLeft, ArrowBigRight, Speakerphone } from "tabler-icons-react";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
 import { createImageBlurData, toBase64 } from "src/services/Format/Color";
 import { getRelativeTime } from "src/services/Format/Date";
@@ -37,6 +38,7 @@ const useStyles = createStyles((theme) => ({
     [theme.fn.smallerThan(800)]: {
       padding: "8px 21px 8px 8px",
       minWidth: 300,
+      maxWidth: "calc(100vw - 1rem)",
     },
   },
   details: {
@@ -44,6 +46,16 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
     flexFlow: "row wrap",
     margin: "0 0 4px",
+  },
+  galleryWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    width: "100%",
+    height: 500,
+    maxHeight: "40vh",
+    [theme.fn.smallerThan("sm")]: {
+      maxHeight: "25vh",
+    },
   },
   imageWrapper: {
     display: "flex",
@@ -344,6 +356,40 @@ function PostCard({ post }) {
                 </Anchor>
               </div>
             </>
+          ) : post.is_gallery ? (
+            <div className={classes.galleryWrapper}>
+              <Carousel
+                withIndicators
+                height="100%"
+                nextControlIcon={<ArrowBigRight size={20} />}
+                previousControlIcon={<ArrowBigLeft size={20} />}
+                controlSize={36}
+                sx={{ flex: 1 }}
+                styles={(theme) => ({
+                  slide: {
+                    width: "100%",
+                  },
+                  control: {
+                    backgroundColor: theme.colors.brand[7],
+                    color: theme.colors.dark[7],
+                    opacity: 1,
+                    border: "none",
+                  },
+                  indicator: { backgroundColor: theme.colors.brand[7] },
+                })}
+              >
+                {Object.entries(post.media_metadata).map((image) => (
+                  <Carousel.Slide key={image[0]}>
+                    <Image
+                      src={image[1]?.s?.u}
+                      alt={post.title}
+                      fill
+                      style={{ objectFit: "contain" }}
+                    />
+                  </Carousel.Slide>
+                ))}
+              </Carousel>
+            </div>
           ) : (
             <div
               style={{
