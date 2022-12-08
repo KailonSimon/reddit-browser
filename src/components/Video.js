@@ -1,14 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
-import parse from "html-react-parser";
+import React, { useRef } from "react";
 import { Loader } from "@mantine/core";
-import { createMarkup } from "src/services/Format/API";
 
 function Video({ type, content }) {
-  const [pathname, setPathname] = useState("");
   const videoRef = useRef(null);
-  useEffect(() => {
-    setPathname(window.location.pathname.split("/")[1]);
-  }, []);
 
   if (!content) {
     return <Loader />;
@@ -32,19 +26,6 @@ function Video({ type, content }) {
       </video>
     );
   }
-  if (pathname === "post") {
-    return (
-      <div
-        className="videoWrapper"
-        style={{
-          marginTop: 8,
-          maxHeight: "calc(100vh - 16rem)",
-          background: "#000",
-        }}
-        dangerouslySetInnerHTML={{ __html: parse(content) }}
-      />
-    );
-  }
   return (
     <div
       className="videoWrapper"
@@ -53,7 +34,7 @@ function Video({ type, content }) {
         maxHeight: "calc(100vh - 16rem)",
         background: "#000",
       }}
-      dangerouslySetInnerHTML={createMarkup(content)}
+      dangerouslySetInnerHTML={{ __html: content }}
     />
   );
 }
