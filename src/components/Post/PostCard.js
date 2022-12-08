@@ -32,9 +32,7 @@ const useStyles = createStyles((theme) => ({
 
     padding: "0.75rem 0.5rem",
     gap: "0.5rem",
-    width: "100%",
-    minWidth: 600,
-    maxWidth: 800,
+    width: 800,
 
     [theme.fn.smallerThan(800)]: {
       padding: "8px 21px 8px 8px",
