@@ -66,7 +66,7 @@ function CommentReplyArea({
           display: "flex",
           flexDirection: "column",
           width: "100%",
-          padding: isMobile ? "0 8px" : "0 2rem",
+          padding: isMobile ? "0 8px" : "0.5rem 40px",
           gap: "0.5rem",
         }}
       >

@@ -101,8 +101,6 @@ function PostTile({ post, handlePostTileClick, variant }) {
         >
           <div
             style={{
-              //display: "flex",
-              //alignItems: "center",
               flex: 1,
               paddingRight: "0.5rem",
             }}

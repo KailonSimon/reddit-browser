@@ -16,7 +16,7 @@ const useStyles = createStyles((theme) => ({
 export default function PostModal({ context, id, innerProps }) {
   const { classes } = useStyles();
   const handleCloseModal = () => {
-    if (innerProps.closeModal !== null) {
+    if (!!innerProps.closeModal) {
       innerProps.closeModal();
     }
     context.closeModal(id);

@@ -3,8 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useInView } from "framer-motion";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "src/store/store";
-import { selectHiddenSubmissions, visitPost } from "src/store/DemoUserSlice";
+import { selectHiddenSubmissions } from "src/store/DemoUserSlice";
 import PostTile from "../Post/PostTile";
 import CommentTile from "../Comment/CommentTile";
 import ErrorBoundary from "../ErrorBoundary";
@@ -36,6 +35,7 @@ const useStyles = createStyles((theme) => ({
     width: "fit-content",
   },
   modalInner: {
+    overflowX: "hidden",
     [theme.fn.smallerThan("xs")]: {
       padding: "3rem 0.5rem",
     },
@@ -54,8 +54,6 @@ function Feed({
   const isInView = useInView(ref);
   const [openPost, setOpenPost] = useState(null);
   const hiddenSubmissions = useSelector(selectHiddenSubmissions);
-  const dispatch = useAppDispatch();
-
   const { events } = useRouter();
 
   const handleCloseModal = useCallback(() => {
@@ -64,7 +62,6 @@ function Feed({
 
   const handlePostTileClick = (post) => {
     setOpenPost(post);
-    dispatch(visitPost(post));
     openContextModal({
       modal: "post",
       innerProps: {
