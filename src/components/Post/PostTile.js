@@ -101,6 +101,8 @@ function PostTile({ post, handlePostTileClick, variant }) {
         >
           <div
             style={{
+              //display: "flex",
+              //alignItems: "center",
               flex: 1,
               paddingRight: "0.5rem",
             }}
@@ -148,7 +150,13 @@ function PostTile({ post, handlePostTileClick, variant }) {
               </Badge>
             )}
             {variant !== "condensed" ? (
-              <div style={{ display: "inline-flex", marginRight: 8 }}>
+              <div
+                style={{
+                  display: "inline",
+                  verticalAlign: "bottom",
+                  marginRight: 8,
+                }}
+              >
                 <FlairContainer submission={post} type="link" />
               </div>
             ) : null}
@@ -182,7 +190,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
                   weight={700}
                   sx={(theme) => ({
                     whiteSpace: "nowrap",
-
+                    marginRight: 3,
                     color:
                       theme.colorScheme === "dark" ? "#D7DADC" : theme.black,
                     ":hover": {
@@ -195,15 +203,6 @@ function PostTile({ post, handlePostTileClick, variant }) {
                   r/{post.subreddit}
                 </Text>
               </Link>
-              <span
-                style={{
-                  margin: "0 4px",
-                  fontSize: "6px",
-                  color: "#818384",
-                }}
-              >
-                •
-              </span>
             </div>
           )}
           {variant !== "condensed" ? (

@@ -29,7 +29,7 @@ function FlairContainer({ submission, type }) {
   } else if (type === "link" && submission.link_flair_richtext?.length) {
     return (
       <Badge
-        size="md"
+        size="sm"
         radius={20}
         onClick={() => console.log(submission)}
         styles={(theme) => ({

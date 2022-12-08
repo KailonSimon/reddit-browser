@@ -44,7 +44,6 @@ function Layout({ currentUser, children }) {
       <Navbar currentUser={currentUser} />
       <div className={classes.container}>
         <main
-          className={classes.contentWrapper}
           style={{
             width: "100%",
           }}
