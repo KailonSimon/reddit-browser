@@ -11,7 +11,7 @@ import AwardsContainer from "../AwardsContainer";
 import FlairContainer from "../FlairContainer";
 import { createStyles, Text, Badge, Box } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { getCondensedDate, getRelativeTime } from "src/services/Format/Date";
+import { getRelativeTime } from "src/services/Format/Date";
 import { condenseNumber } from "src/services/Format/API";
 
 const useStyles = createStyles((theme) => ({
@@ -153,7 +153,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
               </div>
             ) : null}
 
-            {post.spoiler && (
+            {variant !== "condensed" && post.spoiler && (
               <Badge size="xs" mr={8} variant="outline" radius={4} color="gray">
                 spoiler
               </Badge>
@@ -221,6 +221,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
                 <Link href={`/user/${post.author}`} passHref>
                   <Text
                     sx={(theme) => ({
+                      marginRight: 3,
                       color:
                         post.distinguished === "moderator"
                           ? theme.colors.brand
@@ -270,7 +271,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
               {post.num_comments === 1 ? "" : "s"}
             </span>
             <span className={classes.condensedDetailsItem}>
-              {getCondensedDate(post.created)}
+              {getRelativeTime(post.created)}
             </span>
           </Box>
         )}
