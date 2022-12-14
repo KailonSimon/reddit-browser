@@ -1,29 +1,64 @@
 import { getToken } from "next-auth/jwt";
 import { getApplicationAccessToken } from "src/services/Authorization/server";
+import winston, { createLogger } from "winston";
+
+const logger = createLogger({
+  level: "info",
+  format: winston.format.json(),
+  defaultMeta: { service: "reddit-api-service" },
+});
+
+async function makeRedditRequest(
+  accessToken,
+  subreddit,
+  sorting,
+  limit,
+  pageParam
+) {
+  const url = `https://oauth.reddit.com/r/${subreddit}/${sorting}.json?limit=${limit}&after=${pageParam}&raw_json=1`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Reddit API returned a ${response.status} status code`);
+    }
+
+    return response;
+  } catch (error) {
+    logger.error(`Error making Reddit request: ${error.message}`);
+    throw error;
+  }
+}
+
+async function getAccessToken(req) {
+  const userAccessToken = getToken({ req })?.accessToken;
+
+  if (userAccessToken) {
+    return userAccessToken;
+  }
+
+  return (await getApplicationAccessToken()).access_token;
+}
 
 export default async function handler(req, res) {
   const { subreddit, sorting = "hot", limit = 5, pageParam } = req.query;
 
-  async function makeRedditRequest(accessToken) {
-    return fetch(
-      `https://oauth.reddit.com/r/${subreddit}/${sorting}.json?limit=${limit}&after=${pageParam}&raw_json=1`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-  }
-
-  const userAccessToken = getToken({ req })?.accessToken;
-
   try {
-    const accessToken =
-      userAccessToken || (await getApplicationAccessToken()).access_token;
-    const redditRes = await makeRedditRequest(accessToken);
+    const accessToken = await getAccessToken(req);
+    const redditRes = await makeRedditRequest(
+      accessToken,
+      subreddit,
+      sorting,
+      limit,
+      pageParam
+    );
     res.status(redditRes.status).json(await redditRes.json());
   } catch (error) {
-    console.log(error);
     res.status(500).end();
   }
 }

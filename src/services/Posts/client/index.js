@@ -5,11 +5,6 @@ export const fetchPosts = async (
   pageParam = ""
 ) => {
   try {
-    const data = await fetch("/api/auth/accessToken");
-    const access_token = data.json();
-    if (!access_token) {
-      throw Error("No access token");
-    }
     let res;
     if (!!subreddit) {
       res = await fetch(
