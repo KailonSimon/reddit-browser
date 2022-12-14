@@ -1,5 +1,6 @@
 import { useEffect, useState, useReducer } from "react";
 import Head from "next/head";
+import { useSession, signIn } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
@@ -58,6 +59,14 @@ function Subreddit({ subreddit, flairList, currentUser }) {
   );
   const authentication = useSelector(selectAuthentication);
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.error === "RefreshAccessTokenError") {
+      signIn();
+    }
+  }, [session]);
 
   const {
     status,

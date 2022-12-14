@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from "react";
 import Head from "next/head";
-import { useSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { wrapper } from "src/store/store";
@@ -87,6 +87,12 @@ export default function Home({
       },
     }
   );
+
+  useEffect(() => {
+    if (session?.error === "RefreshAccessTokenError") {
+      signIn();
+    }
+  }, [session]);
 
   useEffect(() => {
     refetch();

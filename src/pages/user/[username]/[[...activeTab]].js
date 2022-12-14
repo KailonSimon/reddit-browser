@@ -1,6 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import { getToken } from "next-auth/jwt";
+import { useSession, signIn } from "next-auth/react";
 import { useSelector } from "react-redux";
 import { wrapper } from "src/store/store";
 import { selectDemoUser } from "src/store/DemoUserSlice";
@@ -10,6 +11,13 @@ import { getCurrentUserData, getUserData } from "src/services/User/server";
 
 function User({ user, currentUser }) {
   const demoUser = useSelector(selectDemoUser);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.error === "RefreshAccessTokenError") {
+      signIn();
+    }
+  }, [session]);
 
   return (
     <>

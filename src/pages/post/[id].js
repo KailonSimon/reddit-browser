@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
+import { useSession, signIn } from "next-auth/react";
 import { Button, createStyles } from "@mantine/core";
 import { ArrowLeft } from "tabler-icons-react";
 import Layout from "src/components/Layout";
@@ -57,10 +58,17 @@ function Post({ post, subreddit, currentUser }) {
   const [contentWarningModalOpen, setContentWarningModalOpen] = useState(
     post.over_18
   );
+  const { data: session } = useSession();
 
   const handleCloseModal = () => {
     setContentWarningModalOpen(false);
   };
+
+  useEffect(() => {
+    if (session?.error === "RefreshAccessTokenError") {
+      signIn();
+    }
+  }, [session]);
 
   return (
     <>
