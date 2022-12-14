@@ -5,6 +5,7 @@ const logger = createLogger({
   level: "info",
   format: winston.format.json(),
   defaultMeta: { service: "reddit-api-service" },
+  transports: [new winston.transports.Console()],
 });
 
 async function makeRedditRequest(accessToken, sorting, limit, pageParam) {
