@@ -4,8 +4,6 @@ import Image from "next/image";
 import Video from "../Video";
 import SubmissionMenu from "../SubmissionMenu";
 import SubmissionVotingControls from "../SubmissionVotingControls";
-import AwardsContainer from "../AwardsContainer";
-import FlairContainer from "../FlairContainer";
 import SubredditSidebar from "../Subreddit/SubredditAbout";
 import {
   createStyles,
@@ -24,6 +22,14 @@ import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
 import { createImageBlurData, toBase64 } from "src/services/Format/Color";
 import { getRelativeTime } from "src/services/Format/Date";
 import { createMarkup } from "src/services/Format/API";
+import dynamic from "next/dynamic";
+
+const AwardsContainer = dynamic(() =>
+  import("../AwardsContainer").then((res) => res.AwardsContainer)
+);
+const FlairContainer = dynamic(() =>
+  import("../FlairContainer").then((res) => res.FlairContainer)
+);
 
 const useStyles = createStyles((theme) => ({
   container: {

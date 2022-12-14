@@ -6,8 +6,12 @@ import { useSelector } from "react-redux";
 import { wrapper } from "src/store/store";
 import { selectDemoUser } from "src/store/DemoUserSlice";
 import Layout from "src/components/Layout";
-import { ProfileFeed, UserCard } from "src/components/User";
-import { getCurrentUserData, getUserData } from "src/services/User/server";
+import dynamic from "next/dynamic";
+
+const ProfileFeed = dynamic(() =>
+  import("../../../components/User/ProfileFeed")
+);
+const UserCard = dynamic(() => import("../../../components/User/UserCard"));
 
 function User({ user, currentUser }) {
   const demoUser = useSelector(selectDemoUser);
@@ -64,9 +68,25 @@ export const getServerSideProps = wrapper.getServerSideProps(
       const { username } = query;
       const token = await getToken({ req });
 
+      if (!token && store.getState().auth.status !== "demo") {
+        return {
+          redirect: {
+            destination: "/auth/signin",
+            permanent: false,
+          },
+        };
+      }
+
       let user;
       let currentUser;
+      const getUserData = await import("../../../services/User/server").then(
+        (mod) => mod.getUserData
+      );
+
       if (token) {
+        const getCurrentUserData = await import(
+          "../../../services/User/server"
+        ).then((mod) => mod.getCurrentUserData);
         currentUser = (await getCurrentUserData(token.accessToken)).data;
         if (token.name === username) {
           user = currentUser;

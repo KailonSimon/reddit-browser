@@ -13,8 +13,12 @@ import {
   SubredditBanner,
   SubredditAbout,
 } from "src/components/Subreddit";
-import ContentWarningModal from "src/components/Modals/ContentWarningModal";
-import { getSubredditInfo } from "src/services/Subreddit/server";
+import { wrapper } from "src/store/store";
+import dynamic from "next/dynamic";
+
+const ContentWarningModal = dynamic(() =>
+  import("../../components/Modals/ContentWarningModal")
+);
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -105,32 +109,37 @@ function Comment({ commentId, post, subreddit }) {
 
 export default Comment;
 
-export async function getServerSideProps(context) {
-  const { id } = context.query;
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ req, context }) => {
+      const { id } = context.query;
+      const commentRes = await fetch(
+        `https://www.reddit.com/api/info.json?id=t1_${id}`
+      );
+      const comment = await commentRes.json();
+      const postRes = await fetch(
+        `https://www.reddit.com/api/info.json?id=${comment.data.children[0].data.link_id}&raw_json=1`
+      );
+      const post = await postRes.json();
+      const repliesRes = await fetch(
+        `https://www.reddit.com/comments/${post.data.children[0].data.id}.json?comment=${id}&limit=50&depth=10&sort=top`
+      );
+      const replies = await repliesRes.json();
 
-  const commentRes = await fetch(
-    `https://www.reddit.com/api/info.json?id=t1_${id}`
-  );
-  const comment = await commentRes.json();
-  const postRes = await fetch(
-    `https://www.reddit.com/api/info.json?id=${comment.data.children[0].data.link_id}&raw_json=1`
-  );
-  const post = await postRes.json();
-  const repliesRes = await fetch(
-    `https://www.reddit.com/comments/${post.data.children[0].data.id}.json?comment=${id}&limit=50&depth=10&sort=top`
-  );
-  const replies = await repliesRes.json();
+      const getSubredditInfo = await import(
+        "../../services/Subreddit/server"
+      ).then((mod) => mod.getSubredditInfo);
+      const subreddit = await getSubredditInfo(
+        post.data.children[0].data.subreddit
+      );
 
-  const subreddit = await getSubredditInfo(
-    post.data.children[0].data.subreddit
-  );
-
-  return {
-    props: {
-      commentId: id,
-      post: post.data.children[0].data,
-      replies: replies[1].data.children,
-      subreddit: subreddit.data,
-    },
-  };
-}
+      return {
+        props: {
+          commentId: id,
+          post: post.data.children[0].data,
+          replies: replies[1].data.children,
+          subreddit: subreddit.data,
+        },
+      };
+    }
+);

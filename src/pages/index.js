@@ -4,22 +4,27 @@ import { useSession, signIn } from "next-auth/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { wrapper } from "src/store/store";
-import { selectAuthentication } from "src/store/AuthSlice";
 import { selectDemoUser, selectVisitedPosts } from "src/store/DemoUserSlice";
 import { Feed, FeedControls } from "/src/components/Feed";
 import Layout from "src/components/Layout";
 import LoadingScreen from "src/components/LoadingScreen";
-import { TrendingSubsCard, RecentlyVisitedCard } from "src/components/Sidebar";
 import SidebarContainer from "src/components/Navigation/SidebarContainer";
 import { Text, createStyles } from "@mantine/core";
 import { getToken } from "next-auth/jwt";
 import { fetchPosts } from "src/services/Posts/client";
-import { getCurrentUserData } from "src/services/User/server";
 import {
   getSubscribedSubreddits,
   getTrendingSubreddits,
 } from "src/services/Subreddit/server";
 import { mergePages } from "src/services/Format/API";
+import dynamic from "next/dynamic";
+
+const TrendingSubsCard = dynamic(() =>
+  import("../components/Sidebar/TrendingSubsCard")
+);
+const RecentlyVisitedCard = dynamic(() =>
+  import("../components/Sidebar/RecentlyVisitedCard")
+);
 
 const useStyles = createStyles((theme) => ({
   main: {
@@ -59,7 +64,6 @@ export default function Home({
   const [state, dispatch] = useReducer(reducer, initialState);
   const visitedPosts = useSelector(selectVisitedPosts);
   const demoUser = useSelector(selectDemoUser);
-  const authentication = useSelector(selectAuthentication);
   const { data: session } = useSession();
 
   const {
@@ -81,7 +85,6 @@ export default function Home({
         pageParam
       ),
     {
-      enabled: authentication.status !== "unauthenticated",
       getNextPageParam: (lastPage, pages) => {
         return lastPage.data.after;
       },
@@ -168,9 +171,13 @@ export const getServerSideProps = wrapper.getServerSideProps(
     async ({ req }) => {
       const token = await getToken({ req });
 
+      const getCurrentUserData = await import("../services/User/server").then(
+        (mod) => mod.getCurrentUserData
+      );
       const currentUser = token?.accessToken
         ? (await getCurrentUserData(token.accessToken)).data
         : null;
+
       const subscribedSubreddits = token?.accessToken
         ? (await getSubscribedSubreddits(token.accessToken)).data.children.map(
             (subreddit) => subreddit.data.display_name

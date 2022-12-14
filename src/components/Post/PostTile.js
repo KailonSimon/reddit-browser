@@ -7,12 +7,18 @@ import { selectVisitedPosts } from "src/store/DemoUserSlice";
 import { Pinned, Speakerphone } from "tabler-icons-react";
 import SubmissionMenu from "../SubmissionMenu";
 import SubmissionVotingControls from "../SubmissionVotingControls";
-import AwardsContainer from "../AwardsContainer";
-import FlairContainer from "../FlairContainer";
 import { createStyles, Text, Badge, Box } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { getRelativeTime } from "src/services/Format/Date";
 import { condenseNumber } from "src/services/Format/API";
+import dynamic from "next/dynamic";
+
+const AwardsContainer = dynamic(() =>
+  import("../AwardsContainer").then((res) => res.AwardsContainer)
+);
+const FlairContainer = dynamic(() =>
+  import("../FlairContainer").then((res) => res.FlairContainer)
+);
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -77,7 +83,7 @@ function PostTile({ post, handlePostTileClick, variant }) {
             src={post.preview.images[0]?.source.url}
             alt={post.title}
             fill
-            sizes="100%"
+            sizes="96px"
             style={{
               objectFit: "cover",
               filter: post.spoiler ? "blur(25px)" : "",

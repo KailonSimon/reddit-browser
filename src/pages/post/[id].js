@@ -13,12 +13,13 @@ import {
   SubredditAbout,
   SubredditRules,
 } from "src/components/Subreddit";
-import ContentWarningModal from "src/components/Modals/ContentWarningModal";
 import { wrapper } from "src/store/store";
 import { getToken } from "next-auth/jwt";
-import { getCurrentUserData } from "src/services/User/server";
-import { getPostInfo } from "src/services/Posts/server";
-import { getSubredditInfo } from "src/services/Subreddit/server";
+import dynamic from "next/dynamic";
+
+const ContentWarningModal = dynamic(() =>
+  import("../../components/Modals/ContentWarningModal")
+);
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -117,7 +118,14 @@ export const getServerSideProps = wrapper.getServerSideProps(
       const { id } = query;
       const token = await getToken({ req });
 
+      const getPostInfo = await import("../../services/Posts/server").then(
+        (mod) => mod.getPostInfo
+      );
       const post = (await getPostInfo(id, token?.accessToken)).data;
+
+      const getSubredditInfo = await import(
+        "../../services/Subreddit/server"
+      ).then((mod) => mod.getSubredditInfo);
       const subreddit = (
         await getSubredditInfo(
           post.children[0].data.subreddit,
@@ -128,6 +136,9 @@ export const getServerSideProps = wrapper.getServerSideProps(
       let currentUser;
 
       if (token?.accessToken) {
+        const getCurrentUserData = await import(
+          "../../services/User/server"
+        ).then((mod) => mod.getCurrentUserData);
         currentUser = (await getCurrentUserData(token.accessToken)).data;
       }
 

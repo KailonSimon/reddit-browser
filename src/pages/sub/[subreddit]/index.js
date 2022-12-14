@@ -7,24 +7,29 @@ import { useSelector } from "react-redux";
 import { wrapper } from "src/store/store";
 import { selectAuthentication } from "src/store/AuthSlice";
 import LoadingScreen from "src/components/LoadingScreen";
-import { Feed, FeedControls } from "/src/components/Feed";
 import SidebarContainer from "src/components/Navigation/SidebarContainer";
 import Layout from "src/components/Layout";
 import {
   SubredditBanner,
   SubredditAbout,
   SubredditRules,
-  SubredditFlairFilter,
 } from "src/components/Subreddit";
-import ContentWarningModal from "src/components/Modals/ContentWarningModal";
 import { mergePages } from "src/services/Format/API";
 import { createStyles, Box, Text } from "@mantine/core";
 import { fetchPosts } from "src/services/Posts/client";
-import {
-  getSubredditInfo,
-  getSubredditFlair,
-} from "src/services/Subreddit/server";
-import { getCurrentUserData } from "src/services/User/server";
+import dynamic from "next/dynamic";
+
+const ContentWarningModal = dynamic(() =>
+  import("../../../components/Modals/ContentWarningModal")
+);
+const Feed = dynamic(() => import("../../../components/Feed/Feed"));
+
+const FeedControls = dynamic(() =>
+  import("../../../components/Feed/FeedControls")
+);
+const SubredditFlairFilter = dynamic(() =>
+  import("../../../components/Subreddit/SubredditFlairFilter")
+);
 
 const useStyles = createStyles((theme) => ({
   content: {
@@ -117,7 +122,7 @@ function Subreddit({ subreddit, flairList, currentUser }) {
           <Box className={classes.content}>
             <SidebarContainer>
               <SubredditAbout subreddit={subreddit} />
-              {flairList?.length ? (
+              {flairList?.length > 0 && (
                 <SubredditFlairFilter
                   flairList={flairList}
                   setFlairFilter={(values) =>
@@ -125,38 +130,40 @@ function Subreddit({ subreddit, flairList, currentUser }) {
                   }
                   shownFlair={state.shownFlair}
                 />
-              ) : null}
+              )}
               <SubredditRules subreddit={subreddit} />
             </SidebarContainer>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                flex: 1,
-              }}
-            >
-              <FeedControls
-                sorting={state.sorting}
-                setSorting={(value) =>
-                  dispatch({ type: "SET_SORTING", payload: value })
-                }
-                isRefetching={isRefetching}
-              />
+            {data.pages.length > 0 && (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flex: 1,
+                }}
+              >
+                <FeedControls
+                  sorting={state.sorting}
+                  setSorting={(value) =>
+                    dispatch({ type: "SET_SORTING", payload: value })
+                  }
+                  isRefetching={isRefetching}
+                />
 
-              <Feed
-                key={mergePages(data.pages)}
-                submissions={
-                  flairList?.length && state.shownFlair?.length
-                    ? mergePages(data.pages).filter((post) =>
-                        state.shownFlair.includes(post.link_flair_text)
-                      )
-                    : mergePages(data.pages)
-                }
-                fetchNextPage={fetchNextPage}
-                hasNextPage={hasNextPage}
-                isFetchingNextPage={isFetchingNextPage}
-              />
-            </Box>
+                <Feed
+                  key={mergePages(data.pages)}
+                  submissions={
+                    flairList?.length && state.shownFlair?.length
+                      ? mergePages(data.pages).filter((post) =>
+                          state.shownFlair.includes(post.link_flair_text)
+                        )
+                      : mergePages(data.pages)
+                  }
+                  fetchNextPage={fetchNextPage}
+                  hasNextPage={hasNextPage}
+                  isFetchingNextPage={isFetchingNextPage}
+                />
+              </Box>
+            )}
           </Box>
         </Layout>
         <ContentWarningModal
@@ -176,6 +183,9 @@ export const getServerSideProps = wrapper.getServerSideProps(
       const { subreddit } = query;
       const token = await getToken({ req });
 
+      const getSubredditInfo = await import(
+        "../../../services/Subreddit/server"
+      ).then((mod) => mod.getSubredditInfo);
       const subredditInfo = (
         await getSubredditInfo(subreddit, token?.accessToken)
       ).data;
@@ -184,7 +194,14 @@ export const getServerSideProps = wrapper.getServerSideProps(
       let currentUser;
 
       if (token?.accessToken) {
+        const getSubredditFlair = await import(
+          "../../../services/Subreddit/server"
+        ).then((mod) => mod.getSubredditFlair);
         flairList = await getSubredditFlair(subreddit, token.accessToken);
+
+        const getCurrentUserData = await import(
+          "../../../services/User/server"
+        ).then((mod) => mod.getCurrentUserData);
         currentUser = (await getCurrentUserData(token.accessToken)).data;
       }
 

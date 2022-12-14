@@ -11,6 +11,7 @@ import { markdown } from "snudown-js";
 import { getSubredditInfo } from "src/services/Subreddit/server";
 import { getSubredditWikiPage } from "src/services/Subreddit/client";
 import { getRelativeTime } from "src/services/Format/Date";
+import { wrapper } from "src/store/store";
 
 const useStyles = createStyles((theme) => ({
   content: {
@@ -80,15 +81,18 @@ function WikiPage({ subreddit, wikiPage }) {
 
 export default WikiPage;
 
-export async function getServerSideProps(context) {
-  const { subreddit, page } = context.query;
-  const subredditInfo = await getSubredditInfo(subreddit);
-  const wikiPageInfo = await getSubredditWikiPage(subreddit, page);
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ req, context }) => {
+      const { subreddit, page } = context.query;
+      const subredditInfo = await getSubredditInfo(subreddit);
+      const wikiPageInfo = await getSubredditWikiPage(subreddit, page);
 
-  return {
-    props: {
-      subreddit: subredditInfo.data,
-      wikiPage: wikiPageInfo.data || null,
-    },
-  };
-}
+      return {
+        props: {
+          subreddit: subredditInfo.data,
+          wikiPage: wikiPageInfo.data || null,
+        },
+      };
+    }
+);

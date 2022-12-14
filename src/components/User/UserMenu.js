@@ -3,10 +3,9 @@ import { ChevronDown, Logout } from "tabler-icons-react";
 import { Avatar, Text, Menu, UnstyledButton } from "@mantine/core";
 import { signOut, useSession } from "next-auth/react";
 import { openConfirmModal } from "@mantine/modals";
-import { useAppDispatch } from "src/store/store";
-import { setAuthenticationStatus } from "src/store/AuthSlice";
 import Link from "next/link";
 import { condenseNumber } from "src/services/Format/API";
+import { useRouter } from "next/router";
 
 const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
   <UnstyledButton
@@ -73,18 +72,16 @@ const UserButton = forwardRef(({ user, icon, ...others }, ref) => (
 UserButton.displayName = "UserButton";
 
 function UserMenu({ user }) {
-  const reduxDispatch = useAppDispatch();
   const { data: session } = useSession();
+  const { push } = useRouter();
 
   const openSignOutModal = () =>
     openConfirmModal({
       title: "Sign out of Reddit?",
       centered: true,
-      labels: { confirm: "Sign out", cancel: "Cancel" },
+      labels: { confirm: session ? "Sign out" : "End demo", cancel: "Cancel" },
       confirmProps: { color: "red" },
-      onConfirm: !session
-        ? () => reduxDispatch(setAuthenticationStatus("unauthenticated"))
-        : () => signOut(),
+      onConfirm: !session ? () => push("/auth/signin") : () => signOut(),
     });
 
   return (

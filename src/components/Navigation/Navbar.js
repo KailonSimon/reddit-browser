@@ -69,7 +69,7 @@ function Navbar({ currentUser }) {
               weight={700}
               className={classes.title}
             >
-              Reddit<span>B</span>rowser
+              RedditBrowser
             </Text>
           </Link>
           <div

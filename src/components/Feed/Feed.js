@@ -4,11 +4,15 @@ import { useRouter } from "next/router";
 import { useInView } from "framer-motion";
 import { useSelector } from "react-redux";
 import { selectHiddenSubmissions } from "src/store/DemoUserSlice";
-import PostTile from "../Post/PostTile";
-import CommentTile from "../Comment/CommentTile";
 import ErrorBoundary from "../ErrorBoundary";
 import { createStyles, Skeleton, Text } from "@mantine/core";
 import { openContextModal, closeAllModals } from "@mantine/modals";
+import dynamic from "next/dynamic";
+
+const PostTile = dynamic(() => import("../../components/Post/PostTile"));
+const CommentTile = dynamic(() =>
+  import("../../components/Comment/CommentTile")
+);
 
 const useStyles = createStyles((theme) => ({
   submissions: {

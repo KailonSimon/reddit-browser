@@ -1,5 +1,3 @@
-import Color from "color";
-
 export const getOverlayColor = (awards) => {
   if (awards.filter((award) => award.name === "Gold").length > 0) {
     return "linear-gradient(188deg,rgba(255,230,0,.15) 1.7%,rgba(255,230,0,0) 46%),hsla(0,0%,100%,0)";
@@ -10,7 +8,8 @@ export const getOverlayColor = (awards) => {
   }
 };
 
-export const isColorDark = (hexColor) => {
+export const isColorDark = async (hexColor) => {
+  const Color = await import("color").default;
   const color = Color(hexColor);
   return color.isDark();
 };

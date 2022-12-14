@@ -3,8 +3,6 @@ import Link from "next/link";
 import { ActionIcon, Box, Text } from "@mantine/core";
 import CommentReplyArea from "./CommentReplyArea";
 import CommentTileControls from "./CommentTileControls";
-import AwardsContainer from "../AwardsContainer";
-import FlairContainer from "../FlairContainer";
 import { ChevronDown, Lock, Pinned } from "tabler-icons-react";
 import {
   fetchMoreChildrenComments,
@@ -13,6 +11,14 @@ import {
 import { getOverlayColor } from "src/services/Format/Color";
 import { getRelativeTime } from "src/services/Format/Date";
 import { createMarkup } from "src/services/Format/API";
+import dynamic from "next/dynamic";
+
+const AwardsContainer = dynamic(() =>
+  import("../../components/AwardsContainer").then((res) => res.AwardsContainer)
+);
+const FlairContainer = dynamic(() =>
+  import("../../components/FlairContainer").then((res) => res.FlairContainer)
+);
 
 const initialState = {
   isCollapsed: false,

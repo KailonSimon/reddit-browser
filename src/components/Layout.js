@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Navbar from "./Navigation/Navbar";
 import { createStyles, Button, Affix, Transition } from "@mantine/core";
 import { ArrowUp } from "tabler-icons-react";
+import dynamic from "next/dynamic";
+const Navbar = dynamic(() => import("../components/Navigation/Navbar"));
 
 const useStyles = createStyles((theme) => ({
   container: {

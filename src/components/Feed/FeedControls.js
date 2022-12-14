@@ -1,6 +1,13 @@
 import { Box, Center, SegmentedControl, Text } from "@mantine/core";
 import { EggCracked, Flame, Medal, TrendingUp } from "tabler-icons-react";
 
+const sortingOptions = [
+  { value: "hot", title: "Hot", icon: <Flame size={16} /> },
+  { value: "top", title: "Top", icon: <Medal size={16} /> },
+  { value: "new", title: "New", icon: <EggCracked size={16} /> },
+  { value: "rising", title: "Rising", icon: <TrendingUp size={16} /> },
+];
+
 function FeedControls({ sorting, setSorting, isRefetching }) {
   return (
     <Box
@@ -23,57 +30,31 @@ function FeedControls({ sorting, setSorting, isRefetching }) {
         color="brand"
         size="md"
         radius={4}
-        label={
-          <Text color="#D7DADC" mb={4}>
-            Sort By
-          </Text>
-        }
         value={sorting}
         onChange={setSorting}
-        data={[
-          {
-            value: "hot",
+        data={sortingOptions.map((option) => {
+          return {
+            value: option.value,
             label: (
               <Center>
-                <Flame size={16} />
-                <Box ml={6}>Hot</Box>
+                {option.icon}
+                <Text weight={700} ml={6}>
+                  {option.title}
+                </Text>
               </Center>
             ),
-          },
-          {
-            value: "top",
-            label: (
-              <Center>
-                <Medal size={16} />
-                <Box ml={6}>Top</Box>
-              </Center>
-            ),
-          },
-          {
-            value: "new",
-            label: (
-              <Center>
-                <EggCracked size={16} />
-                <Box ml={6}>New</Box>
-              </Center>
-            ),
-          },
-          {
-            value: "rising",
-            label: (
-              <Center>
-                <TrendingUp size={16} />
-                <Box ml={6}>Rising</Box>
-              </Center>
-            ),
-          },
-        ]}
+          };
+        })}
         styles={(theme) => ({
           root: {
             backgroundColor:
               theme.colorScheme === "dark"
                 ? "transparent"
                 : theme.colors.gray[1],
+          },
+          label: { color: "#fff" },
+          labelActive: {
+            color: "#1A1A1B !important",
           },
         })}
         variant="default"
