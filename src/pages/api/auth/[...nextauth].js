@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import RedditProvider from "next-auth/providers/reddit";
+import { refreshAccessToken } from "src/services/Authorization/server";
 
 export const authOptions = {
   providers: [
@@ -17,11 +18,29 @@ export const authOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, account }) {
-      if (account) {
-        token.accessToken = account.access_token;
+    async jwt({ token, user, account }) {
+      if (account && user) {
+        return {
+          accessToken: account.access_token,
+          accessTokenExpires: Date.now() + account.expires_at * 1000,
+          refreshToken: account.refresh_token,
+          user,
+        };
       }
-      return token;
+
+      if (Date.now() < token.accessTokenExpires) {
+        return token;
+      }
+
+      return refreshAccessToken(token);
+    },
+
+    async session({ session, token }) {
+      session.user = token.user;
+      session.accessToken = token.accessToken;
+      session.error = token.error;
+
+      return session;
     },
   },
   pages: {
