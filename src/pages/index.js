@@ -161,24 +161,26 @@ export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>
     async ({ req }) => {
       const token = await getToken({ req });
-      let subscribedSubreddits;
-      let currentUser;
 
-      if (token?.accessToken) {
-        currentUser = (await getCurrentUserData(token.accessToken)).data;
-        subscribedSubreddits = (
-          await getSubscribedSubreddits(token.accessToken)
-        ).data.children?.map((subreddit) => subreddit.data.display_name);
-      }
+      const currentUser = token?.accessToken
+        ? (await getCurrentUserData(token.accessToken)).data
+        : null;
+      const subscribedSubreddits = token?.accessToken
+        ? (await getSubscribedSubreddits(token.accessToken)).data.children.map(
+            (subreddit) => subreddit.data.display_name
+          )
+        : null;
 
-      const trendingSubreddits = (
-        await getTrendingSubreddits(token?.accessToken)
-      ).data?.children.map((subreddit) => subreddit.data);
+      const trendingSubreddits = token?.accessToken
+        ? (await getTrendingSubreddits(token.accessToken)).data.children.map(
+            (subreddit) => subreddit.data
+          )
+        : null;
 
       return {
         props: {
-          subscribedSubreddits: subscribedSubreddits || null,
-          trendingSubreddits: trendingSubreddits || null,
+          subscribedSubreddits,
+          trendingSubreddits,
           currentUser: currentUser || store.getState().demoUser,
         },
       };

@@ -3,37 +3,20 @@ import { Badge } from "@mantine/core";
 import { isColorDark } from "src/services/Format/Color";
 
 function FlairContainer({ submission, type }) {
-  if (type === "author" && submission.author_flair_richtext?.length) {
+  const flair =
+    type === "author"
+      ? submission.author_flair_richtext
+      : submission.link_flair_richtext;
+  if (flair?.length) {
     return (
       <Badge
-        size="xs"
-        variant="filled"
-        color="gray"
-        radius={4}
-        styles={{
-          inner: { display: "flex", gap: "4px", color: "#fff" },
-          root: { padding: "0 4px", width: "min-content" },
-        }}
-      >
-        {submission.author_flair_richtext?.map((item, i) => {
-          if ("t" in item) {
-            return item.t;
-          } else if ("u" in item) {
-            return (
-              <Image height={14} width={14} key={i} src={item.u} alt={item.a} />
-            );
-          }
-        })}
-      </Badge>
-    );
-  } else if (type === "link" && submission.link_flair_richtext?.length) {
-    return (
-      <Badge
-        size="sm"
-        radius={20}
-        onClick={() => console.log(submission)}
+        size={type === "author" ? "xs" : "sm"}
+        radius={type === "author" ? 4 : 20}
+        onClick={type === "link" ? () => console.log(submission) : null}
         styles={(theme) => ({
           root: {
+            width: "min-content",
+            padding: "0 4px",
             fontSize: 12,
             color: submission.link_flair_background_color
               ? isColorDark(submission.link_flair_background_color)
@@ -46,15 +29,21 @@ function FlairContainer({ submission, type }) {
           inner: { display: "flex", gap: "4px" },
         })}
       >
-        {submission.link_flair_richtext?.map((item, i) => {
-          if ("t" in item) {
-            return <span key={i}>{item.t}</span>;
-          } else if ("u" in item) {
-            return (
-              <Image height={16} width={16} key={i} src={item.u} alt={item.a} />
-            );
-          }
-        })}
+        {flair?.map((item, i) =>
+          "t" in item ? (
+            <span key={i}>{item.t}</span>
+          ) : (
+            "u" in item && (
+              <Image
+                height={type === "author" ? 14 : 16}
+                width={type === "author" ? 14 : 16}
+                key={i}
+                src={item.u}
+                alt={item.a}
+              />
+            )
+          )
+        )}
       </Badge>
     );
   } else {

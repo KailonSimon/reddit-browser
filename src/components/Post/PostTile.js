@@ -55,11 +55,11 @@ function PostTile({ post, handlePostTileClick, variant }) {
         gap: "0.5rem",
       })}
     >
-      {variant !== "condensed" && !isMobile ? (
+      {variant !== "condensed" && !isMobile && (
         <div style={{ marginRight: 4 }}>
           <SubmissionVotingControls variant="vertical" submission={post} />
         </div>
-      ) : null}
+      )}
       {post.preview?.images[0]?.source.url && (
         <div
           style={{

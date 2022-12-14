@@ -27,18 +27,13 @@ export const fetchPosts = async (
 };
 
 export const voteOnSubmission = async (id, direction) => {
-  let directionNumber;
-  switch (direction) {
-    case "up":
-      directionNumber = 1;
-      break;
-    case "down":
-      directionNumber = -1;
-      break;
-    default:
-      directionNumber = 0;
-      break;
-  }
+  const directionNumbers = {
+    up: 1,
+    down: -1,
+    default: 0,
+  };
+  const directionNumber =
+    directionNumbers[direction] || directionNumbers.default;
   const res = await fetch("/api/vote", {
     method: "POST",
     body: JSON.stringify({ id, direction: directionNumber }),

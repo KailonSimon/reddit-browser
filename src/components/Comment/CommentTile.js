@@ -34,8 +34,6 @@ function reducer(state, action) {
       return { ...state, moreChildrenLoaded: action.payload };
     case "SET_REPLIES":
       return { ...state, replies: action.payload };
-    default:
-      return initialState;
   }
 }
 
@@ -45,18 +43,15 @@ function CommentTile({ comment, depth = 0, variant = "full" }) {
   useEffect(() => {
     dispatch({
       type: "SET_REPLIES",
-      payload: comment?.replies?.data?.children?.reduce(function (data, reply) {
-        if (reply.kind !== "more") {
-          data.push(reply.data);
-        }
-        return data;
-      }, []),
+      payload: comment?.replies?.data?.children
+        ?.filter((reply) => reply.kind !== "more")
+        .map((reply) => reply.data),
     });
   }, [comment]);
 
-  const hiddenReplies = comment?.replies?.data?.children?.filter(
+  const hiddenReplies = comment?.replies?.data?.children?.find(
     (reply) => reply.kind === "more"
-  )[0]?.data;
+  )?.data;
 
   if (!comment.body || comment.body === "[removed]") {
     return null;

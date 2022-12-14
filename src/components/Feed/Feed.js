@@ -60,26 +60,29 @@ function Feed({
     setOpenPost("");
   }, [setOpenPost]);
 
-  const handlePostTileClick = (post) => {
-    setOpenPost(post);
-    openContextModal({
-      modal: "post",
-      innerProps: {
-        post,
-        closeModal: handleCloseModal,
-      },
-      classNames: {
-        modal: classes.modal,
-        body: classes.modalBody,
-        inner: classes.modalInner,
-      },
-      withCloseButton: false,
-      transition: "slide-right",
-      padding: "1rem 0",
-      overlayOpacity: 0.65,
-      overlayBlur: 3,
-    });
-  };
+  const handlePostTileClick = useCallback(
+    (post) => {
+      setOpenPost(post);
+      openContextModal({
+        modal: "post",
+        innerProps: {
+          post,
+          closeModal: handleCloseModal,
+        },
+        classNames: {
+          modal: classes.modal,
+          body: classes.modalBody,
+          inner: classes.modalInner,
+        },
+        withCloseButton: false,
+        transition: "slide-right",
+        padding: "1rem 0",
+        overlayOpacity: 0.65,
+        overlayBlur: 3,
+      });
+    },
+    [handleCloseModal, setOpenPost, classes]
+  );
 
   useEffect(() => {
     if (isInView && hasNextPage) {
