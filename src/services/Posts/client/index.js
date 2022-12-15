@@ -8,7 +8,9 @@ export const fetchPosts = async (
     let res;
     if (!!subreddit) {
       res = await fetch(
-        `/api/posts/${subreddit}?sorting=${sorting}&limit=${limit}&pageParam=${pageParam}&raw_json=1`
+        `/api/posts/${encodeURIComponent(
+          subreddit
+        )}?sorting=${sorting}&limit=${limit}&pageParam=${pageParam}&raw_json=1`
       );
     } else {
       res = await fetch(
