@@ -76,16 +76,14 @@ function CommentReplyArea({
               Comment as{" "}
               <Link
                 href={
-                  authentication.status === "demo"
-                    ? `/user/demoUserID`
-                    : `/user/${session.user.name}`
+                  session?.user
+                    ? `/user/${session.user.name}`
+                    : `/user/demoUserID`
                 }
                 passHref
               >
                 <Text color="brand">
-                  {authentication.status === "demo"
-                    ? "DemoUser"
-                    : session.user.name}
+                  {session?.user ? session.user.name : "DemoUser"}
                 </Text>
               </Link>
             </Text>

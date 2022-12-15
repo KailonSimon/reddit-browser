@@ -36,7 +36,6 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
     color: "#D7DADC",
-
     padding: "0.75rem 0.5rem",
     gap: "0.5rem",
     width: 800,
@@ -128,7 +127,7 @@ function PostCard({ post }) {
           style={{
             width: "100%",
             position: "relative",
-            paddingLeft: isMobile ? 0 : "2.5rem",
+            paddingLeft: isMobile ? 0 : "3rem",
           }}
         >
           <div
