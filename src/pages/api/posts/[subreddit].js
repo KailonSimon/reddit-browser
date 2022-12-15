@@ -16,7 +16,7 @@ async function makeRedditRequest(
   limit,
   pageParam
 ) {
-  const url = `https://oauth.reddit.com/r/${subreddit}/${sorting}.json?limit=${limit}&after=${pageParam}&raw_json=1`;
+  const url = `https://oauth.reddit.com/r/${subreddit}/${sorting}?limit=${limit}&after=${pageParam}&raw_json=1`;
 
   try {
     const response = await fetch(url, {
@@ -24,9 +24,10 @@ async function makeRedditRequest(
         Authorization: `Bearer ${accessToken}`,
       },
     });
-
     if (!response.ok) {
-      throw new Error(`Reddit API returned a ${response.status} status code`);
+      throw new Error(
+        `Reddit API call to ${url} returned a ${response.status} status code`
+      );
     }
 
     return response;

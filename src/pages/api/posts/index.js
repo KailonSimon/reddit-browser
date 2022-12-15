@@ -19,7 +19,9 @@ async function makeRedditRequest(accessToken, sorting, limit, pageParam) {
     });
 
     if (!response.ok) {
-      throw new Error(`Reddit API returned a ${response.status} status code`);
+      throw new Error(
+        `Reddit API call to ${url} returned a ${response.status} status code`
+      );
     }
 
     return response.json();
