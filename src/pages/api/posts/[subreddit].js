@@ -16,7 +16,9 @@ async function makeRedditRequest(
   limit,
   pageParam
 ) {
-  const url = `https://oauth.reddit.com/r/${subreddit}/${sorting}?limit=${limit}&after=${pageParam}&raw_json=1`;
+  const url = `https://oauth.reddit.com/r/${encodeURIComponent(
+    subreddit
+  )}/${sorting}?limit=${limit}&after=${pageParam}&raw_json=1`;
 
   try {
     const response = await fetch(url, {
